@@ -1,0 +1,612 @@
+/* ==========================================================================================
+   screens/room.css — room/waiting screen: invite key, 4 seat cards, bottom action bar.
+   ========================================================================================== */
+
+.room-screen .topbar { height: 1.36rem; }
+.room-ping { display: flex; flex-direction: column; align-items: flex-start; gap: .04rem; }
+
+/* ---- invite key ---------------------------------------------------------------------------------------- */
+.invite {
+  --bk-c: var(--mint-500);
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: .2rem;
+  row-gap: .06rem;
+  align-items: center;
+  padding: .1rem .16rem .12rem;
+  background: rgba(0, 0, 0, .38);
+  border: 1px solid var(--line);
+}
+.invite__label { grid-column: 1 / -1; display: flex; align-items: center; gap: .07rem; font-size: calc(.14 * var(--t)); color: var(--text-lo); }
+.invite__label .icon { width: .16rem; height: .16rem; color: var(--mint-500); }
+.invite__code { display: flex; gap: .06rem; }
+.invite__code span {
+  display: grid;
+  place-items: center;
+  width: .46rem;
+  height: .58rem;
+  background: linear-gradient(180deg, rgba(78, 216, 175, .1), rgba(78, 216, 175, .02));
+  border-bottom: 2px solid var(--mint-600);
+  color: var(--mint-400);
+  font-size: calc(.44 * var(--t));
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 0 .16rem rgba(23, 249, 183, .45);
+}
+.invite__btns { display: flex; flex-direction: column; gap: .06rem; }
+.solo-note { display: flex; flex-direction: column; align-items: flex-end; gap: .03rem; font-size: calc(.16 * var(--t)); color: var(--text-lo); }
+
+/* ---- seats ------------------------------------------------------------------------------------------------ */
+/* 100-seat variant: the upstream rule was four fixed columns in ONE row, which only fits its 1-4 seats — with
+   MAX_SEATS=100 the grid ran past the page and everything after the first rows was clipped and unreachable. The grid
+   keeps the upstream card size and wraps into as many rows as it needs, and the box scrolls vertically.
+   `align-content: start` keeps the first row at the top of the scroller instead of centring a 25-row grid.
+   Sizing note: this design's `1rem` is only ~83px (measured `oneRemPx`), so `3.8rem` is ~317px — a wider minimum
+   than it looks, i.e. only about four columns fit a 1600px window. */
+.seats {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  /* Four columns of `3.8rem` (~317px here: this design's 1rem is only ~83px, measured). That width is REQUIRED, not
+     cosmetic: `.seat` is `height: 100%` (its height comes from this grid's 6rem rows) and `.seat__art` is `flex: 1;
+     overflow: hidden`, so a narrower column clips the card's own content — an `auto-fill` minimum of ~160px produced
+     eight columns of fragments (measured: only the action buttons and the seat number stayed visible). Verified good
+     at this size: 100 cards, scrollHeight 758 > clientHeight 662, and the last seat fully visible after scrolling. */
+  /* MEASURED (1600px window, this design's 1rem = 83.33px): the upstream `repeat(4, 3.8rem)` gives four 317px columns,
+     so 100 seats span 25 rows. Six ~240px columns cut that to 17 rows and still fit the card — an empty card is 100px
+     tall (head 20 + footer 38 + ~42 padding, measured) and an occupied one is driven by `.seat { height: 100% }`.
+     A narrower cell is NOT safe: `.seat__art` is `flex: 1; overflow: hidden`, so below ~230px the card clips itself
+     (an 8-column `auto-fill` at ~160px left only the action buttons visible). */
+  grid-template-columns: repeat(auto-fill, minmax(2.85rem, 1fr));
+  /* a FIXED 6rem row, not `minmax(0, 6rem)`: `.seat` is `height: 100%`, which resolves to `auto` inside a row that
+     may shrink to its content, so an empty card collapsed to a ~30px strip (measured). Upstream never showed this —
+     all four seats were occupied — but a 100-seat room is mostly empty seats, and 99 thin strips is what made the grid
+     read as "cramped". A fixed row gives every seat the same 6rem card, occupied or not. */
+  /* rows size to their content: a row holding an occupied card is 6rem (`.seat { height: 100% }` against this row),
+     a row of empty cards collapses to the ~100px they actually need (measured head 20 + footer 38 + padding) */
+  grid-auto-rows: minmax(1.2rem, auto);
+  align-content: start;
+  gap: .3rem;
+  padding: .3rem .6rem .24rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(78, 216, 175, .45) transparent;
+}
+/* Few OCCUPIED seats: the box must still scroll and must never grow past what it can show. An earlier version set
+   `overflow: visible` here, which silently disabled the scrolling above and let the grid overflow its parent
+   (`overflow: hidden` on .app-root): 100 cards were laid out and everything past the first rows was unreachable
+   (measured: scrollHeight 376 > clientHeight 336 with overflow-y "visible"). */
+.seats--compact {
+  align-content: start;
+  /* the tallest a 4-seat room ever needs: four rows + gaps + padding */
+  max-height: calc(4 * 6rem + 3 * .3rem + .54rem);
+}
+.seats--solo { grid-template-columns: 3.8rem minmax(0, 6.4rem); }
+
+
+.seat {
+  --bk-c: var(--line-3);
+  --bk-l: .18rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .07rem;
+  /* NOTE for the 100-seat variant: this `height: 100%` needs a row with a definite height. With `grid-auto-rows:
+     minmax(1.2rem, auto)` the row is content-sized and the card resolves to its natural height (a full card once
+     occupied, the ~100px empty card otherwise) — verified clean: 100 cards, 5 columns, no overlap. Pairing it with a
+     content-sized row AND `min-height` instead made the rows overlap. */
+  height: 100%;
+  min-height: 0;
+  padding: .16rem .2rem .18rem;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .014) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, rgba(29, 35, 32, .95), rgba(11, 14, 13, .97));
+  border: 1px solid var(--line);
+  box-shadow: 0 .14rem .34rem rgba(0, 0, 0, .4);
+  transition: border-color var(--t-med), box-shadow var(--t-med);
+  animation: seat-in var(--t-slow) var(--ease-out) backwards;
+  /* 100-seat variant: the per-card stagger was 60ms, so card #100 started fading in 99 x 60ms ≈ 6 s after the room
+     opened — the grid itself renders in ~16 ms (measured), the perceived "slow loading" was this queue. 6ms keeps
+     the cascade legible and finishes the whole room in ~0.6 s. */
+  animation-delay: calc(var(--seat-i, 0) * 6ms);
+}
+@keyframes seat-in { from { opacity: 0; transform: translateY(.18rem); } }
+.seat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: var(--line-2);
+  transition: background var(--t-med), box-shadow var(--t-med);
+}
+.seat__head { align-self: stretch; display: flex; align-items: center; gap: .1rem; }
+.seat__no { font-size: calc(.22 * var(--t)); font-weight: 700; color: var(--text-md); padding-left: .08rem; border-left: 3px solid var(--line-3); line-height: 1.1; }
+.seat__host {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: .04rem;
+  padding: .02rem .09rem;
+  background: var(--gold);
+  color: #1d1400;
+  font-size: calc(.13 * var(--t));
+  font-weight: 700;
+}
+.seat__host .icon { width: .15rem; height: .15rem; }
+.seat__art {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .08rem;
+  margin: .06rem 0 .04rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(78, 216, 175, .08), transparent 62%),
+    linear-gradient(rgba(78, 216, 175, .04) 1px, transparent 1px) 0 0 / .3rem .3rem,
+    linear-gradient(90deg, rgba(78, 216, 175, .04) 1px, transparent 1px) 0 0 / .3rem .3rem,
+    #0b0e0d;
+  border: 1px solid rgba(255, 255, 255, .04);
+}
+.seat__stripes {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: .14rem;
+  background: repeating-linear-gradient(-45deg, rgba(255, 255, 255, .06) 0 .05rem, transparent .05rem .1rem);
+}
+.seat__art .avatar { --av: 2.1rem; }
+.seat__bot-label {
+  display: flex;
+  align-items: center;
+  gap: .05rem;
+  padding: .02rem .1rem;
+  background: rgba(159, 212, 255, .1);
+  border: 1px solid rgba(159, 212, 255, .35);
+  color: var(--ice);
+  font-size: calc(.14 * var(--t));
+  font-weight: 700;
+}
+.seat__bot-label .icon { width: .16rem; height: .16rem; }
+.seat__who { display: flex; align-items: center; gap: .08rem; max-width: 100%; }
+.seat__name { font-size: calc(.26 * var(--t)); font-weight: 700; max-width: 3rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.seat__you { flex: none; padding: .01rem .07rem; background: var(--mint-500); color: var(--text-on-mint); font-size: calc(.13 * var(--t)); font-weight: 700; }
+.seat__foot {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .1rem;
+  min-height: .46rem;
+  margin-top: .06rem;
+  padding-top: .1rem;
+  border-top: 1px solid var(--line);
+}
+.seat__foot .tt-anchor { position: absolute; right: .14rem; bottom: .14rem; }
+.seat__state { display: flex; align-items: center; gap: .06rem; font-size: calc(.18 * var(--t)); font-weight: 700; letter-spacing: .06em; }
+.seat__state .icon { width: .22rem; height: .22rem; }
+/* 服务器承载保护 (room.js SeatCard): why 「添加 AI 队友」 is off on a seat past the human cap (${'\u670d\u52a1\u5668'} busy) */
+.seat__hint { display: block; margin-top: .06rem; font-size: .12rem; line-height: 1.35; text-align: center; }
+.seat__state--ready { color: var(--mint-400); }
+.seat__state--waiting { color: var(--text-lo); }
+.seat__state--offline { color: var(--orange-hi); }
+.seat__state--host { color: var(--gold-2); }
+
+.seat.is-ready { --bk-c: var(--mint-500); border-color: var(--mint-800); }
+.seat.is-ready::before { background: var(--mint-500); box-shadow: 0 0 .12rem rgba(23, 249, 183, .6); }
+.seat.is-host .seat__no { border-left-color: var(--gold); }
+.seat.is-me { box-shadow: 0 0 0 1px rgba(78, 216, 175, .28), 0 0 .44rem rgba(23, 249, 183, .12), 0 .14rem .34rem rgba(0, 0, 0, .4); }
+.seat.is-me .seat__no { color: var(--mint-400); }
+.seat.is-offline::before { background: var(--orange); }
+.seat.is-bot .seat__art { background:
+    radial-gradient(circle at 50% 42%, rgba(159, 212, 255, .08), transparent 62%),
+    linear-gradient(rgba(159, 212, 255, .04) 1px, transparent 1px) 0 0 / .3rem .3rem,
+    linear-gradient(90deg, rgba(159, 212, 255, .04) 1px, transparent 1px) 0 0 / .3rem .3rem,
+    #0b0e10; }
+
+.seat--empty { background: rgba(10, 13, 12, .5); border-style: dashed; border-color: var(--line-2); box-shadow: none; }
+.seat--empty .seat__art { background: transparent; border: 0; }
+.seat__radar {
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(circle, transparent 0 .2rem, rgba(78, 216, 175, .14) .2rem .21rem),
+    /* same geometry as .title-bg__sweep: bright edge at 100% (== 0deg) so it leads the clockwise
+       rotation and the glow trails behind; see the comment in screens/title.css. */
+    conic-gradient(from 0deg, transparent 0 75%, rgba(23, 249, 183, .2) 100%);
+  -webkit-mask-image: radial-gradient(circle, #000 60%, transparent 71%);
+  mask-image: radial-gradient(circle, #000 60%, transparent 71%);
+  animation: radar-sweep 4s linear infinite;
+}
+@keyframes radar-sweep { to { transform: rotate(360deg); } }
+.seat__wait { font-size: calc(.2 * var(--t)); color: var(--text-lo); letter-spacing: .08em; }
+.seat--empty .seat__foot { border-top-style: dashed; }
+
+.solo-brief {
+  --bk-c: var(--mint-500);
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: .14rem;
+  height: 100%;
+  padding: .34rem .4rem;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .014) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, rgba(24, 29, 27, .92), rgba(11, 14, 13, .95));
+  border: 1px solid var(--line);
+  animation: seat-in var(--t-slow) 80ms var(--ease-out) backwards;
+}
+.solo-brief h2 { font-size: calc(.36 * var(--t)); font-weight: 900; letter-spacing: .06em; }
+.solo-brief p { font-size: calc(.18 * var(--t)); color: var(--text-md); }
+.solo-brief ul { margin: .06rem 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .08rem; font-size: calc(.16 * var(--t)); color: var(--text-lo); }
+.solo-brief li::before { content: ''; display: inline-block; width: .06rem; height: .06rem; margin: 0 .12rem .02rem 0; background: var(--mint-600); transform: rotate(45deg); vertical-align: middle; }
+.solo-brief b { color: var(--text-hi); }
+
+/* ---- spectator seats (观战席, community report #26) -------------------------------------------------------------- */
+.specbar {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .14rem;
+  padding: 0 .6rem .16rem;
+  font-size: calc(.15 * var(--t));
+  color: var(--text-lo);
+}
+.specbar__label { display: flex; align-items: baseline; gap: .06rem; font-weight: 700; color: var(--text-md); }
+.specbar__label .icon { width: .18rem; height: .18rem; align-self: center; color: var(--mint-500); }
+.specbar__label b { color: var(--mint-400); }
+.specbar__who {
+  display: inline-flex;
+  align-items: center;
+  gap: .06rem;
+  min-height: .36rem;
+  padding: 0 .14rem;
+  border: 1px solid var(--line-2);
+  background: rgba(0, 0, 0, .32);
+  color: var(--text-hi);
+}
+.specbar__who.is-me { border-color: var(--mint-600); }
+.specbar__who.is-offline { color: var(--text-dim); }
+.specbar__who > .icon { width: .16rem; height: .16rem; }
+
+/* ---- bottom bar ----------------------------------------------------------------------------------------- */
+.room-bar {
+  position: relative;
+  flex: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: .3rem;
+  height: 1.5rem;
+  /* 角标允许画到底栏边界外一点点；绝不允许裁掉按钮（见下面 .btn--xl 那条注释） */
+  overflow: visible;
+  padding: 0 .6rem;
+  background: linear-gradient(0deg, rgba(7, 9, 8, .96), rgba(10, 13, 12, .7));
+  border-top: 1px solid var(--line);
+}
+.room-bar::before {
+  content: '';
+  position: absolute;
+  left: .6rem;
+  right: .6rem;
+  top: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--mint-700), transparent 30%, transparent 70%, var(--mint-700));
+}
+.room-bar__left { display: flex; align-items: center; gap: .22rem; min-width: 0; }
+.room-bar__label { display: flex; flex-direction: column; font-size: calc(.17 * var(--t)); font-weight: 700; color: var(--text-md); line-height: 1.35; }
+.room-bar__center { display: flex; flex-direction: column; align-items: center; gap: .06rem; min-width: 0; }
+/* `min-width: 0` 让这一组的盒子跟随它的网格轨道、而不是跟随内容：不写它时，网格项的自动最小尺寸=内容宽度，
+   而 `.room-bar` 的两个侧栏轨道是 `minmax(0, 1fr)`，轨道本身收窄后这一组仍按内容宽渲染；它又被
+   `justify-self: end` 钉在底栏右边缘，于是超出的部分向左溢出、直接盖住中间栏（详见下面 .btn--xl 那条注释）。 */
+.room-bar__right { justify-self: end; display: flex; align-items: center; gap: .16rem; min-width: 0; }
+.room-bar__status { font-size: calc(.15 * var(--t)); }
+.room-bar__status .icon { width: .18rem; height: .18rem; margin-right: .05rem; vertical-align: -.03rem; }
+
+.dpick { display: flex; border: 1px solid var(--line-2); background: rgba(0, 0, 0, .3); }
+.dpick__opt {
+  --d-color: var(--amber);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .06rem;
+  height: .54rem;
+  padding: 0 .2rem;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: transparent;
+  color: var(--text-lo);
+  font-size: calc(.18 * var(--t));
+  font-weight: 700;
+  letter-spacing: .08em;
+  transition: color var(--t-fast), background-color var(--t-med), box-shadow var(--t-med);
+}
+.dpick__opt:last-child { border-right: 0; }
+.dpick__opt .icon { width: .2rem; height: .2rem; color: var(--d-color); opacity: .55; transition: opacity var(--t-fast); }
+.dpick__opt:hover:not(:disabled) { color: var(--text-hi); background: rgba(255, 255, 255, .03); }
+.dpick__opt:hover:not(:disabled) .icon { opacity: 1; }
+.dpick__opt:disabled { cursor: default; }
+.dpick__opt.is-active {
+  color: var(--d-color);
+  background: transparent; background: color-mix(in srgb, var(--d-color) 17%, transparent);
+  box-shadow: inset 0 -3px 0 var(--d-color);
+}
+.dpick__opt.is-active .icon { opacity: 1; filter: drop-shadow(0 0 5px var(--d-color)); }
+.dpick--ro { border: 0; background: none; gap: .18rem; align-items: center; font-size: calc(.14 * var(--t)); }
+
+/* 「AI 队友最后选择」 (GitHub #338, co-op): the difficulty picker and this switch stacked in one column, so the
+   switch sits under the picker instead of beside it (the bar is already tight at 40 seats). */
+.room-bar__opts { display: flex; flex-direction: column; align-items: flex-start; gap: .08rem; min-width: 0; }
+.ailast { display: flex; align-items: center; gap: .12rem; font-size: calc(.14 * var(--t)); }
+.ailast__opt { --d-color: var(--mint-400); height: .36rem; padding: 0 .14rem; border: 1px solid var(--line-2); background: rgba(0, 0, 0, .3); font-size: calc(.15 * var(--t)); letter-spacing: .04em; }
+.ailast__opt .icon { opacity: .25; }
+.ailast__opt .icon.is-on { opacity: 1; }
+
+.ready-count[hidden] { display: none; }
+/* `min-width: 0` + a clip keep this column from ever pushing the 开始模拟 button out of the window: the ready ICONS are
+   one per player (~25px each), so a full 100-seat room used to demand ~2500px and `.app-root { overflow: hidden }` made
+   the button unreachable. The JS drops the strip past READY_ICON_MAX players; these two lines are the belt-and-braces
+   so no future icon count can break the layout again. */
+.ready-count { display: flex; align-items: baseline; gap: .06rem; font-size: calc(.16 * var(--t)); min-width: 0; max-width: 100%; overflow: hidden; }
+.ready-count b { font-size: calc(.36 * var(--t)); line-height: 1; color: var(--mint-400); text-shadow: 0 0 .14rem rgba(23, 249, 183, .45); }
+.ready-count .t-dim { font-size: calc(.22 * var(--t)); }
+.ready-count__icons { display: flex; gap: .02rem; margin-left: .12rem; align-self: center; min-width: 0; flex: 0 1 auto; overflow: hidden; }
+.ready-count__icons .icon { width: .28rem; height: .28rem; color: var(--line-3); transition: color var(--t-med); }
+.ready-count__icons .icon.is-on { color: var(--mint-400); filter: drop-shadow(0 0 4px var(--mint-glow)); }
+
+.room-bar .btn--xl { min-width: 3.2rem; letter-spacing: .2em; }
+
+/* 底栏四按钮（设置 / 干员调配 / 踢出所有未准备玩家 / 开始模拟）必须**同处一行**、始终可见可点，且谁都不能盖住
+   中间的「已就绪 + 状态文字」。原来 `.room-bar__right` 没有 `min-width: 0`，它的自动最小尺寸=内容宽度：房主多出的
+   第二个 .btn--xl 让内容宽到 705 px，而侧栏轨道只有 ~513 px；它被 `justify-self: end` 钉在右边缘，多出来的 192 px
+   就**向左**画在「干员调配」（连它后面的绿色数字徽标）与中间栏文字上面。那一行是 `nowrap`，所以不是把谁挤开、
+   而是直接盖住 —— 这正是用户截到的现象。三道措施：
+   1) `.room-bar__right { min-width: 0 }` —— 让盒子跟随网格轨道，而不是跟随内容（否则内容一超就必然向左溢）；
+   2) `room.js` 把「踢出…」「开始模拟」从 `size="xl"` 降一档到 `"lg"`，右侧组自然宽 705 → 537 px，单行放得下；
+   3) 「干员调配」自带的三个角标的宽度**从布局里拿掉**（见下面 .lo-entry__n/.lo-entry__own 那条）—— 它们会随玩家
+      改过的干员数、未持有数、自选数出现，最宽时给按钮 +71 px，单靠 2) 会再次溢出。改成**贴在按钮上沿/下沿**的
+      角标后，按钮宽度恒定 124 px，「开始模拟」永远在同一行、同一个位置，角标本身也依旧完整可见可点。 */
+.room-bar .btn--xl { min-width: 0; letter-spacing: .2em; }
+.room-bar .tt-anchor { min-width: 0; }
+
+/* 房间底栏里的「干员调配」：绿色数字徽标贴右上角、替补/自选胶囊贴下沿，两者都**不再参与按钮宽度**
+   （`.lo-entry` 本来就是 `position: relative`）。放在 `room.css` 而不是 `loadout.css`，所以大厅 / 简报页的
+   干员调配按钮保持原样，只有这条已经挤满的底栏用紧凑版。`pointer-events: none` 让角标不抢按钮的点击。 */
+.room-bar .lo-entry { padding-right: .2rem; }
+.room-bar .lo-entry__n {
+  position: absolute; top: -.46em; right: -.5em; margin: 0; pointer-events: none;
+  min-width: 1.4em; height: 1.4em; padding: 0 .25em; font-size: .7em;
+  box-shadow: 0 0 0 2px #0a0d0c;
+}
+.room-bar .lo-entry__own {
+  position: absolute; left: 50%; bottom: -.6em; transform: translateX(-50%); margin: 0; pointer-events: none;
+  height: 1.3em; padding: 0 .3em; gap: .1em; font-size: .6em;
+  box-shadow: 0 0 0 2px #0a0d0c;
+}
+
+/* 房主的「主页公开」开关：紧挨密钥与复制按钮，语义相关 */
+.invite__listed {
+  display: flex;
+  align-items: center;
+  gap: .1rem;
+  margin-top: .06rem;
+  padding-top: .08rem;
+  border-top: 1px dashed var(--line-2);
+}
+.invite__listed-hint { font-size: .12rem; color: var(--text-dim); }
+
+/* ---- 解锁 100 人(ui 里的 UnlockBox)------------------------------------------------------------------------
+   同盟房默认 40 个真人位,其余 60 个位置存在但只给 AI 队友用。这里给房主一个输入解锁码的入口 —— 码由服务端校验
+   (lobby.unlock),前端只负责把你输入的东西送上去,所以它不会出现在打包产物里。解锁后整块变成一个已解锁提示。 */
+.unlock {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .08rem .1rem;
+  margin-top: .06rem;
+  padding-top: .08rem;
+  border-top: 1px dashed var(--line-2);
+}
+.unlock__head { display: flex; align-items: center; gap: .08rem; font-size: .13rem; color: var(--text-md); }
+.unlock__head .icon { width: .16rem; height: .16rem; color: var(--gold-2); }
+/* 输入框跟项目里的 .num 一致(解锁码是等宽字符),宽度够放下 19 个字符 */
+.unlock__code {
+  width: 2.6rem;
+  padding: .05rem .08rem;
+  background: var(--bg-1);
+  border: 1px solid var(--line-2);
+  color: var(--text-hi);
+  font-size: calc(.14 * var(--t));
+  letter-spacing: .06em;
+}
+.unlock__code:focus { outline: none; border-color: var(--mint-600); }
+.unlock__code::placeholder { color: var(--text-dim); letter-spacing: normal; }
+.unlock__hint { flex-basis: 100%; font-size: .12rem; color: var(--text-dim); }
+
+.unlock--on { font-size: .14rem; color: var(--mint-400); }
+.unlock--on .icon { width: .18rem; height: .18rem; color: var(--mint-400); }
+
+
+
+/* 2026-10-13 座位容器 .rs-seats：紧凑格子多行铺开 + 滚动，别 100 个挤成一条 */
+main.rs-seats, .rs-seats {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(max(1.4rem, 82px), 1fr)) !important;
+  grid-auto-rows: min-content !important;
+  justify-items: stretch !important;
+  align-content: start !important;
+  gap: max(.1rem, 8px) !important;
+  width: 100% !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding: max(.08rem, 6px);
+}
+
+/* 2026-10-13 房间座位格（按你的草图）：竖排 = 头像方框 / 名字 / #编号 */
+.rseat, .rseat--empty {
+  min-height: 0 !important; height: auto !important; padding: max(.06rem, 5px) !important;
+  display: flex !important; flex-direction: column !important; align-items: center !important;
+  justify-content: flex-start !important; gap: max(.04rem, 3px) !important; border-radius: 6px;
+}
+.rseat__clip, .rseat__noinfo, .rseat__plate, .rseat__state, .rseat__host, .rseat__lost, .rseat__doc { display: none !important; }
+/* 头像：方框（草图里的红框） */
+.rseat__art {
+  order: 1; width: max(.78rem, 46px) !important; height: max(.78rem, 46px) !important;
+  min-height: 0 !important; border-radius: 6px !important; overflow: hidden; flex: 0 0 auto;
+  border: 1px solid rgba(255,255,255,.18);
+}
+.rseat__art img, .rseat__art svg, .rseat__art canvas { width: 100% !important; height: 100% !important; object-fit: cover; }
+/* 名字（草图里的蓝条） */
+.rseat__who { order: 2; width: 100%; text-align: center; display: block !important; }
+.rseat__name { font-size: max(.17rem, 11px) !important; line-height: 1.2 !important; display: block; }
+/* 编号 #1（草图里的 #123） */
+.rseat__strip { order: 3; display: flex !important; justify-content: center !important; align-items: center;
+  background: transparent !important; border: 0 !important; padding: 0 !important; min-height: 0 !important; }
+.rseat__strip .num, .rseat__strip i { font-size: max(.15rem, 10px) !important; opacity: .65; }
+.rseat__strip i { display: none !important; }
+/* 房主移出按钮与「你」标记尽量不撑高 */
+.rseat__kick { width: max(.28rem, 17px) !important; height: max(.28rem, 17px) !important; padding: 0 !important; }
+.rseat__me { font-size: max(.15rem, 10px) !important; }
+
+/* 2026-10-13 座位网格对齐修正：左右对称内边距 + 居中，修掉"整体偏左 / #1 被裁" */
+main.rs-seats, .rs-seats {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: max(.28rem, 22px) !important;
+  padding-right: max(.28rem, 22px) !important;
+  justify-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  max-width: min(100%, 19.2rem) !important;
+}
+
+/* 2026-10-13 座位格：不再用"名片干员"，改显示玩家头像 → 隐藏选名片入口 */
+.rseat__pick, .rseat__doc { display: none !important; }
+.rseat__art { cursor: default !important; }
+
+/* 2026-10-13 座位区：网格多行 + 自身可滚动（外层没有滚动容器，之前导致滑不动） */
+main.rs-seats, .rs-seats {
+  max-height: calc(100vh - 3.4rem) !important;   /* 顶部工具条 + 密钥条之下 */
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  align-content: start !important;
+  margin-bottom: max(.3rem, 24px);               /* 给底部那排按钮留空，别被盖住 */
+}
+main.rs-seats::-webkit-scrollbar, .rs-seats::-webkit-scrollbar { width: 8px; }
+main.rs-seats::-webkit-scrollbar-thumb, .rs-seats::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius: 4px; }
+
+/* 2026-10-13 座位动态头像：DynAvatar 填满方格；动态时隐藏静态 <img> */
+.rseat__art.is-dyn img { visibility: hidden !important; }
+.rseat__art > .dynavatar, .rseat__art > canvas, .rseat__art > svg { width: 100% !important; height: 100% !important; }
+.rseat__art { position: relative; }
+.rseat__art > * { position: absolute; inset: 0; }
+
+/* 2026-10-13 座位按钮：右下角机器人（加 AI）+ 右上角红×（踢人）；不再显示邀请键 */
+.rseat { position: relative; }
+.rseat__invite { display: none !important; }
+.rseat__bot {
+  order: 9; position: absolute; right: 2px; bottom: 2px; width: max(.34rem, 20px); height: max(.34rem, 20px);
+  display: grid; place-items: center; padding: 0; border-radius: 4px; cursor: pointer;
+  background: rgba(78, 216, 175, .16); border: 1px solid rgba(78, 216, 175, .55); color: #7fe7c4;
+}
+.rseat__bot .icon, .rseat__bot svg { width: 70% !important; height: 70% !important; }
+.rseat__kick {
+  order: 10; position: absolute; right: 2px; top: 2px; width: max(.34rem, 20px); height: max(.34rem, 20px);
+  display: grid; place-items: center; padding: 0; border-radius: 4px; cursor: pointer;
+  background: rgba(255, 90, 90, .18); border: 1px solid rgba(255, 90, 90, .6); color: #ff8a8a;
+}
+.rseat__kick .icon, .rseat__kick svg { width: 70% !important; height: 70% !important; }
+
+/* 2026-10-13 修正：机器人按钮锚定到"头像方框"的右下角（之前锚到整格 → 跑到右上 ✗） */
+.rseat__art { position: relative !important; }
+.rseat__bot  { position: absolute !important; right: 1px !important; bottom: 1px !important; top: auto !important; left: auto !important; z-index: 3; }
+.rseat__kick { position: absolute !important; right: 1px !important; top: 1px !important; bottom: auto !important; left: auto !important; z-index: 3; }
+.rseat__bot, .rseat__kick { opacity: .95; }
+
+/* 2026-10-13 名字/机器人修正：.rseat__plate 里装的是名字，之前被我隐藏 ✗ → 恢复显示 */
+.rseat__plate { display: flex !important; flex-direction: column; align-items: center; gap: 1px;
+  order: 2; width: 100%; border: 0 !important; background: none !important; padding: 0 !important; min-height: 0 !important; }
+.rseat__plate .rseat__doc { display: none !important; }   /* AUTONOMOUS UNIT / DOCTOR #n 不要 */
+.rseat__who { order: 2; display: block !important; width: 100%; text-align: center; }
+.rseat__name { font-size: max(.17rem, 11px) !important; line-height: 1.2 !important; }
+/* 机器人图标（座位里没头像时显示的那个） */
+.rseat__glyph { display: grid; place-items: center; width: 100%; height: 100%; color: #7fe7c4; }
+.rseat__glyph .icon, .rseat__glyph svg { width: 62% !important; height: 62% !important; }
+
+/* 2026-10-13 座位格下方：不要重复头像（plate 里的 AvatarFrame），只留 名字 + #编号 */
+.rseat__plate > .avframe, .rseat__plate > .avatar-frame, .rseat__plate > .av, .rseat__plate > .avcell,
+.rseat__plate > [class*="avatar"], .rseat__plate > [class*="avframe"] { display: none !important; }
+.rseat__plate { display: flex !important; flex-direction: column !important; align-items: center !important; gap: 0 !important; }
+.rseat__who { order: 1 !important; }
+.rseat__strip { order: 2 !important; display: flex !important; justify-content: center !important; margin-top: 1px; }
+.rseat__strip .num { font-size: max(.15rem, 10px) !important; opacity: .6; }
+
+/* 2026-10-13 AvatarFrame 精确隐藏（座位格下方不再重复显示头像） */
+.rseat__plate > .avatar,
+.rseat__plate > .avatar__img,
+.rseat__plate > .avatar__empty,
+.rseat__plate > .avatar__bot,
+.rseat__plate > .avatar__glyph,
+.rseat__plate > .avatar__badge,
+.rseat__plate > .avatar__tag,
+.rseat__plate > .pbanner,
+.rseat__plate > .pbanner__band,
+.rseat__plate > .pbanner__chev { display: none !important; }
+
+/* 2026-10-13 名字强力显示：头像正下方 = 名字，再下面 = #编号（隐藏其它干扰元素） */
+.rseat__who, .rseat__name, .rseat .rseat__who b { display: block !important; visibility: visible !important; opacity: 1 !important;
+  width: 100% !important; max-width: 100% !important; text-align: center !important; color: #f2f5f4 !important;
+  font-size: max(.17rem, 11px) !important; line-height: 1.25 !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rseat__plate { display: flex !important; flex-direction: column !important; align-items: center !important;
+  position: static !important; width: 100% !important; height: auto !important; min-height: 0 !important;
+  border: 0 !important; background: none !important; padding: 0 !important; overflow: visible !important; }
+.rseat__plate > .avatar { display: none !important; }       /* 重复头像 ✗ */
+.rseat__doc, .rseat__state, .rseat__box, .rseat__me, .rseat__pick, .rseat__noinfo { display: none !important; }
+.rseat__strip { display: flex !important; justify-content: center !important; width: 100% !important; }
+.rseat__strip .num { font-size: max(.15rem, 10px) !important; opacity: .62 !important; }
+
+/* 2026-10-13 名字区域最终修正：中和祖先的定位/裁切，确保名字出现在头像正下方 */
+.rseat { height: auto !important; max-height: none !important; overflow: visible !important; }
+.rseat__plate { position: static !important; inset: auto !important; transform: none !important; height: auto !important;
+  clip: auto !important; clip-path: none !important; z-index: auto !important; }
+.rseat__who, .rseat__name { position: static !important; inset: auto !important; transform: none !important;
+  clip: auto !important; clip-path: none !important; height: auto !important; max-height: none !important;
+  color: #f2f5f4 !important; font-size: max(.17rem, 11px) !important; }
+
+/* 2026-10-13 决定性修正：lobby.css 在 room.css 之后加载，同特异性的 .rs-seats{display:flex} 会赢 ✗
+   → 用更高特异性（html body main.rs-seats / html .rs-seats）强制网格，格子才有正常宽度，名字才看得见 */
+html body main.rs-seats,
+html body .rs-seats,
+main.rs-seats.rs-seats {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(max(1.5rem, 88px), 1fr)) !important;
+  grid-auto-rows: min-content !important;
+  align-content: start !important;
+  align-items: start !important;
+  justify-content: stretch !important;
+  justify-items: stretch !important;
+  gap: max(.1rem, 8px) !important;
+  width: 100% !important;
+  max-width: min(100%, 19.2rem) !important;
+  margin-left: auto !important; margin-right: auto !important;
+  padding-left: max(.28rem, 22px) !important; padding-right: max(.28rem, 22px) !important;
+  box-sizing: border-box !important;
+  max-height: calc(100vh - 3.4rem) !important;
+  overflow-y: auto !important;
+}
+html body .rseat, html body .rseat--empty { min-width: 0 !important; width: auto !important; }
+html body .rseat__art { max-width: 100% !important; }
+html body .rseat__plate, html body .rseat__who, html body .rseat__name { width: 100% !important; min-width: 0 !important; }

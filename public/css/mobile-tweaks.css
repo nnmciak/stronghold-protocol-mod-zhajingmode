@@ -1,0 +1,242 @@
+/* 2026-10-13 手机端适配（本次新做的界面为主）：窄屏 / 触屏设备
+   只覆盖样式，不动结构 ✓ */
+@media (max-width: 720px), (pointer: coarse) {
+  /* ---- 房间座位格：更小更紧凑，每行多放几个 ---- */
+  main.rs-seats, .rs-seats {
+    grid-template-columns: repeat(auto-fill, minmax(max(1.1rem, 62px), 1fr)) !important;
+    gap: max(.06rem, 5px) !important;
+    padding-left: max(.12rem, 8px) !important;
+    padding-right: max(.12rem, 8px) !important;
+    max-height: calc(100vh - 5.6rem) !important;
+  }
+  .rseat, .rseat--empty { padding: max(.04rem, 3px) !important; }
+  .rseat__art { width: max(.62rem, 38px) !important; height: max(.62rem, 38px) !important; }
+  .rseat__who, .rseat__name { font-size: max(.14rem, 10px) !important; }
+  .rseat__strip .num, .rseat__strip i { font-size: max(.12rem, 9px) !important; }
+  .rseat__bot, .rseat__kick { width: max(.28rem, 18px) !important; height: max(.28rem, 18px) !important; }
+
+  /* ---- 卡池预选浮层：手机上几乎满屏，关闭键更大好点 ---- */
+  .bp {
+    left: max(.24rem, 6px) !important; right: max(.24rem, 6px) !important;
+    top: max(1.1rem, 18px) !important; bottom: max(.4rem, 8px) !important;
+    width: auto !important; padding: max(.16rem, 12px) !important;
+  }
+  .bp__head h2 { font-size: max(.22rem, 17px) !important; }
+  .bp__lead { font-size: max(.13rem, 10px) !important; }
+  .bp__diffs { gap: max(.05rem, 4px) !important; }
+  .bp-diff, .bp-chip { font-size: max(.13rem, 10px) !important; padding: max(.04rem, 3px) max(.08rem, 6px) !important; }
+  .bp__x { width: max(.52rem, 32px) !important; height: max(.52rem, 32px) !important; right: max(.14rem, 10px) !important; top: max(.14rem, 10px) !important; }
+
+  /* ---- 商店：手机更小，别盖住干员 ---- */
+  .scard { width: 1.08rem !important; height: 1.56rem !important; }
+  .shopbar__row { padding: .06rem !important; gap: .05rem !important; }
+
+  /* ---- 工具条按钮：触屏更好点 ---- */
+  .settings-btn { min-width: max(.5rem, 32px) !important; min-height: max(.5rem, 32px) !important; }
+  .lo-assist, .lo-quickbtn { min-height: max(.44rem, 28px) !important; }
+
+  /* ---- 干员调配卡面：手机上略小，列更多 ---- */
+  .lo-op { --lo-card-w: max(1.5rem, 96px); }
+  .lo-card__trait-txt, .lo-op__trait-txt { font-size: max(.13rem, 9px) !important; }
+}
+@media (max-width: 460px) {
+  main.rs-seats, .rs-seats { grid-template-columns: repeat(auto-fill, minmax(max(1rem, 56px), 1fr)) !important; }
+  .scard { width: 1rem !important; height: 1.44rem !important; }
+}
+
+/* ===== 2026-10-15 商店条（右下角）手机优化 · v2「紧凑优先」=====
+   用户反馈：v1 把卡片放大后【比原来更挡战场】。方向改为 ——
+   目标是【占得比原来更少】，文字靠【两行名字 + 像素保底字号】而不是靠放大卡片来装下。
+   桌面零影响（全部在 media query 内）；刘海屏安全区偏移 --sa-b 照旧保留。 */
+/* ★ 2026-10-15：原来第一条依赖 (pointer: coarse)，但部分手机浏览器（尤其带鼠标/桌面模式）
+   报 pointer: fine ⇒ 三条全不中 ⇒ 整块手机样式【一条都不生效】（用户现场：字根本没变小）。
+   改成【按尺寸判断】：横屏手机的 CSS 尺寸通常宽 ≤1100、高 ≤700，一定命中；
+   桌面 1920×1080 或更大窗口不会命中，所以桌面仍然零影响。
+   ★ 同时把 game-shop.css:325 的 `:root { --sg: 1.24 }` 压回 1 —— 那是 2026-10-14 为
+   「看不清人了」做的整体放大，在手机上正是要把字缩小的反向力。它没有 !important，
+   这里后加载同特异性即可覆盖。 */
+/* ★ 2026-10-15（第三次修）：前两次条件都太紧，手机上一条都没命中 ——
+   根因是【设备像素 ÷ DPR = CSS 像素】这一步没算对：截图 2868 设备像素，
+   DPR=2 时 CSS 宽是 1434（>1100，不中），DPR=3 时是 956（中）。
+   现在把四条并起来，手机横竖屏、各种 DPR、各种 pointer 都覆盖；
+   桌面常见 1920×1080 与更大窗口四条都不中，所以桌面仍然零影响。 */
+@media (pointer: coarse), (any-pointer: coarse), (max-width: 720px),
+       (max-height: 620px), (max-width: 1600px) and (max-height: 900px) {
+  :root { --sg: 1; }
+
+  /* ---- 整条商店：贴到底、收边距 ---- */
+  .shopbar { right: max(.08rem, 6px) !important; bottom: calc(max(.06rem, 4px) - var(--sa-b, 0px)) !important; gap: .04rem !important; }
+  .shopbar__row { padding: .05rem !important; gap: .04rem !important; align-items: flex-start !important; }
+  /* 卡片固定高度 ⇒ 别被 stretch 拉高；行高由最高那一项决定，所以资金栏必须够矮 */
+  .scard, .lvcard, .funds { align-self: flex-start !important; }
+  .shopbar__cards { gap: .04rem !important; }
+
+  /* ---- 卡片：比原版还小 ---- */
+  /* ★ 2026-10-15 用户选 Ⓒ：卡片加宽到 1.3rem，让盟约名能完整显示。
+     宽度账（1rem≈50px）：卡片 65px − 立绘 ≈30px − 边距 ≈2px = 文字区 ≈43px；
+     盟约 2 列 ⇒ 每列 ≈21.5px ⇒ 5px 字号可放 4 个字 ⇒「维多利亚」放得下。 */
+  .shopbar .scard { width: 1.3rem !important; height: 1.42rem !important; }
+  /* ★ 用户 2026-10-15 的诉求：「把干员小卡上的文字缩小，好让立绘露出」。
+     卡片的布局本来就是 flex column + justify-content: flex-end（game-shop.css:91），
+     立绘 .scard__art 是绝对定位铺满整卡、底部渐隐，文字块贴在它上面 ——
+     所以【文字块多高，就盖住多少立绘】。缩小文字 = 立绘直接露出，不需要动立绘。 */
+  /* ★ 右侧留出立绘的位置 —— 电脑版文字和立绘是【并排】的，手机上要维持这个构图就得让文字块变窄。
+     立绘宽 = 卡片高 ÷ 2 ≈ 33px（卡宽 50px）⇒ 文字可用宽度约 50 × 46% ≈ 23px。 */
+  .shopbar .scard__body { padding: .12rem .02rem .02rem .02rem !important; gap: 0 !important;
+    /* ★ 2026-10-15（用户：「还是有遮挡」）：立绘实际占宽 =
+       卡片高 1.42rem × 84% ÷ 2 = .6rem，卡片宽 1.3rem ⇒ **46%**。
+       原来写 28% 不够，名字右半截仍压在立绘上。改成 46% 后文字区 ≈35px，
+       8px 字号可放 4 个字；超宽走省略号。 */
+    padding-right: 46% !important; }
+  /* ---- 盟约：每行最多 2 个 ---- ★ 用户 2026-10-15：
+     「盟约太挤了，能不能每行最多显示两个，多于两个再开一行」。
+     shopBar.js:140 里是 `bonds.slice(0, 3)` —— 一张卡最多 3 个盟约，
+     所以 2 列网格正好排成 2 + 1 两行，不会再挤成一团。 */
+  .shopbar .scard__bonds {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0 max(.02rem, 1px) !important;
+  }
+  /* ★ 2026-10-15（第四版）：并排时【图标吃掉了近一半列宽】——
+     最坏情况 1rem≈40.7px ⇒ 卡片 53px、立绘 24px、文字区 35px、每列仅 17.5px，
+     图标 7px + 间距 1px 就占掉 8px，5px 字号只剩 1.9 个字 ⇒ 截图里全是「维…」。
+     改成【图标在上、名字在下】：名字独占整列宽（≈17.5px，4px 字号可放 4 字），
+     代价只是每个盟约高 ≈9px，两个盟约一行仍然放得下。 */
+  .shopbar .scard__bond {
+    min-width: 0 !important; overflow: hidden !important;
+    flex-direction: column !important; align-items: flex-start !important;
+    gap: 0 !important; line-height: 1.05 !important;
+  }
+  /* ★ 2026-10-15 算过账：手机卡片约 50px 宽 − 立绘 28px − 边距 2px ⇒ 文字区只剩 ≈20px。
+     2 列网格 ⇒ 每列 ≈10px ⇒ 5px 字号只能放 2 个字 ——「维多利亚」必然被截成「维多…」，
+     那还是「挤」。所以这里【只显示图标】：
+       · 每个盟约 = 一枚 ~7px 的盟约图标，2 列网格 ⇒ 一行正好 2 个；
+       · 一张卡最多 3 个盟约（shopBar.js:140 的 bonds.slice(0, 3)）⇒ 排成 2 + 1 两行；
+       · 名字没丢 —— shopBar.js:143 给每个盟约都写了 title，
+         手机上【长按】图标仍能看到完整名字（off 的还会显示「本局禁用」的原因）。 */
+  /* ★ 卡片已加宽 ⇒ 名字恢复显示；超宽仍用省略号兜底，绝不换行挤成竖排。 */
+  .shopbar .scard__bond > span:last-child {
+    overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important;
+    min-width: 0 !important;
+  }
+  .shopbar .scard__bond .bglyph { width: max(.07rem, 5px) !important; height: max(.07rem, 5px) !important; }
+  /* 名字：两行（避免长名字又变成「坚守…」），但字号降到 9px 保底 */
+  .shopbar .scard__name {
+    font-size: max(.075rem, 6px) !important;
+    line-height: 1.02 !important;
+    letter-spacing: 0 !important;
+    white-space: normal !important;
+    text-overflow: ellipsis !important;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden !important;
+  }
+  /* 盟约 / 职业：7px 保底，行高收到 1.0，两行之间的间距也压掉 */
+  /* 4px：4 个汉字 = 16px；最坏情况每列 17.5px ⇒ 放得下「维多利亚」✓ */
+  .shopbar .scard__bond, .shopbar .scard__class { font-size: max(.05rem, 4px) !important; line-height: 1.05 !important; }
+  .shopbar .scard__bonds { gap: 0 .02rem !important; }
+  /* ★ 图标也要跟着缩，否则 7px 的字旁边杵着一个 8px 的图标，行高还是下不来 */
+  .shopbar .scard__prof { width: max(.065rem, 5px) !important; height: max(.065rem, 5px) !important; }
+  .shopbar .scard__class { min-width: 0 !important; }
+  .shopbar .scard__class > span { overflow: hidden !important; text-overflow: ellipsis !important;
+    white-space: nowrap !important; min-width: 0 !important; }
+  /* 卡面顶部徽章（tier / 价格）也收一点，给立绘头部让路 */
+  /* ---- 立绘：保持电脑版的「右侧一条」----
+     ★ 2026-10-15 用户澄清：「立绘的意思就是右边一条」—— 桌面（game-shop.css:104）本来就是
+     `right: -.14rem; height: 100%; width: auto`：立绘贴右、按卡片高度等比缩放，
+     180×360 的头像立绘（高/宽 = 2.0）因此是【一条竖着的半身像】，文字在左侧与它并排。
+     手机上要保持这个构图，只需要两件事：
+       ① 立绘【完整露出】—— 去掉底部渐隐（手机卡片矮，55% 起的渐隐会吃掉下半张脸）；
+       ② 文字块【只占左侧】—— 见下面的 .scard__body padding-right，否则文字横跨整卡压在立绘上。 */
+  .shopbar .scard__art {
+    left: auto !important; right: -.06rem !important;
+    width: auto !important; height: 84% !important; top: auto !important; bottom: 0 !important;
+    object-fit: cover !important;
+    -webkit-mask-image: none !important; mask-image: none !important;
+  }
+  /* 水印缩到不出画（默认 left:-.2rem 会顶出去） */
+  .shopbar .scard__water { left: -.1rem !important; top: .3rem !important; width: .9rem !important; height: .9rem !important; }
+
+  .shopbar .scard__top { left: .03rem !important; right: .03rem !important; top: .03rem !important; }
+  .shopbar .scard__price .hex, .shopbar .scard__price { --hex-h: max(.18rem, 13px) !important; }
+  .shopbar .scard__pips { padding: .01rem .015rem !important; }
+  .shopbar .scard__pips i { width: max(.02rem, 2px) !important; height: max(.02rem, 2px) !important; }
+  .scard__idesc { font-size: max(.1rem, 8px) !important; line-height: 1.12 !important;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden !important; }
+  .scard__soldtxt { font-size: max(.11rem, 9px) !important; }
+  .scard__price .hex, .scard__price { --hex-h: max(.24rem, 17px) !important; }
+  .scard__pips i { width: max(.03rem, 3px) !important; height: max(.03rem, 3px) !important; }
+
+  /* ---- 升级卡：与卡片同高，数字不抢戏 ---- */
+  .lvcard { width: 1.02rem !important; height: 1.42rem !important; padding: .14rem .05rem .04rem !important; }
+  .lvcard__num { font-size: max(.36rem, 24px) !important; }
+  .lvcard__label { font-size: max(.13rem, 10px) !important; letter-spacing: .1em !important; padding-left: .1em !important; }
+  .lvcard__micro { font-size: max(.09rem, 7px) !important; letter-spacing: .1em !important; }
+  .lvcard__frame { padding: .02rem .08rem .01rem !important; }
+
+  /* ---- 资金栏：★ 等比压到【和卡片同高】----
+     它原本是整条商店里最高的一块（hex + 目前资金 + 下回合最少获得 + 收起）
+     ⇒ 把 .shopbar__row 撑高 ⇒ 左边的卡片下方留出一条空缺（用户 2026-10-15 现场）。
+     这里让它整块 ≤ 卡片高度：hex 44×38、两个字号降到 6–7px、收起键收扁。
+     ★ 关键约束：加起来必须 ≤ .scard 的 1.42rem，否则空缺会回来。 */
+  .funds { width: max(.62rem, 52px) !important; gap: 0 !important; padding: 0 !important; justify-content: flex-start !important; }
+  .funds__hex { width: max(.52rem, 42px) !important; height: max(.44rem, 36px) !important; }
+  .funds__coin { width: max(.15rem, 11px) !important; height: max(.15rem, 11px) !important; }
+  .funds__num { font-size: max(.2rem, 14px) !important; }
+  .funds__label { font-size: max(.08rem, 6px) !important; letter-spacing: 0 !important; line-height: 1.1 !important; }
+  /* ★ 「下回合最少获得：11（包含1利息）」原本折 3 行 ⇒ 强制 2 行，省掉约 7px，
+     这样资金栏总高（≈63px）稳稳低于卡片（1.42rem ≈ 67px），卡片下方不再留空缺。 */
+  .funds__next { font-size: max(.08rem, 6px) !important; line-height: 1.08 !important; letter-spacing: 0 !important;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden !important; }
+  .funds__collapse { font-size: max(.09rem, 7px) !important; padding: 0 !important; min-height: 0 !important; line-height: 1.1 !important; }
+
+  /* ---- 冻结 / 刷新：矮一点，但触屏仍有点击面积 ---- */
+  .toolbtn { height: auto !important; min-height: max(.42rem, 28px) !important; font-size: max(.14rem, 10px) !important; padding: 0 max(.08rem, 6px) 0 max(.05rem, 4px) !important; gap: .05rem !important; }
+  .toolbtn__img { width: max(.24rem, 16px) !important; height: max(.24rem, 16px) !important; }
+  .toolbtn .icon { width: max(.17rem, 12px) !important; height: max(.17rem, 12px) !important; }
+  .toolbtn .hex, .toolbtn .hexbadge { --hex-h: max(.2rem, 14px) !important; }
+  kbd { font-size: max(.09rem, 7px) !important; padding: 0 .03rem !important; }
+
+  /* ---- 顶上的两行标签也收一收 ---- */
+  .shopbar__remain { font-size: max(.12rem, 9px) !important; padding: .02rem .07rem !important; border-left-width: 2px !important; }
+  .shopbar__tools { gap: .03rem .06rem !important; }
+  .rwtag { padding: .03rem .05rem !important; }
+  .rwtag__title { font-size: max(.13rem, 10px) !important; }
+  .rwtag__sub, .rwtag__micro, .rwtag__later { font-size: max(.1rem, 8px) !important; }
+  .rwtag__later { padding: 0 .05rem !important; }
+}
+
+/* 竖屏窄手机（<460px）：再收一档 */
+@media (max-width: 460px) {
+  .shopbar .scard, .shopbar .lvcard { width: .9rem !important; height: 1.3rem !important; }
+  .lvcard__num { font-size: max(.3rem, 20px) !important; }
+  .funds__next, .funds__label { display: none !important; }
+}
+
+/* ==========================================================================================
+   ★ 2026-10-15 文字半透明底板（手机）—— 与桌面同一套做法，参数按手机的卡片尺寸调。
+   手机卡片 1.3rem 宽、立绘占 46%，所以文字块取 54%，底板同样 62% 半透明 + 上缘渐隐。
+   ========================================================================================== */
+/* ★ 立绘还原（同桌面）：手机回到「右侧一条」，不再铺满。文字底板保留。 */
+.shopbar .scard__body {
+  width: 54% !important; margin-right: auto !important;
+  padding: calc(.13rem * var(--sg)) .02rem .02rem !important;
+  background: rgba(8, 11, 10, .62) !important;
+  -webkit-backdrop-filter: blur(2px) !important; backdrop-filter: blur(2px) !important;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16%) !important;
+  mask-image: linear-gradient(180deg, transparent 0, #000 16%) !important;
+}
+.shopbar .scard--item .scard__body { width: 100% !important; background: rgba(8, 11, 10, .5) !important; }
+.shopbar .scard--item .scard__art { display: none !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 宽幅立绘兜底（纯 CSS）
+   问题：char_1052_kalts2（凯尔希·思衡托）的立绘是 720×960（高/宽 1.33），
+        而卡片按 180×360（1:2）布局 ⇒ height:100% + width:auto 让图片比卡片宽 50%，
+        溢出到相邻的卡片上，还把它自己的文字挤成一列。
+   为什么不用 .is-wideart：那个类要靠 shopBar.js 挂上，而 JS 模块在页面刷新前不会重载 ——
+        只改 CSS 是看不到效果的（用户现场：改完仍溢出）。
+   这里用 :has() 直接按【图片地址】匹配那张卡，纯 CSS、立刻生效，且不依赖任何 JS 改动。
+   要放开给别的干员：把 [src*=...] 里那串换成对应的立绘路径片段即可。
+   ========================================================================================== */
+
+/* 它的文字区也收窄一点，避免压在脸上（宽幅图铺满后左右都是画面） */
+

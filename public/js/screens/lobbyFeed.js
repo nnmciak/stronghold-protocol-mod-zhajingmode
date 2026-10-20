@@ -1,0 +1,208 @@
+// screens/lobbyFeed.js — the public lobby feed (online count + open room list) shared by the entry screen and the
+// alliance lobby.
+//
+// It lives in its own module rather than in either screen because BOTH need it and the two screens already depend on
+// each other in one direction (title.js imports difficultyInfo from lobby.js); putting the feed in title.js would make
+// lobby.js's import circular.
+//
+// The data comes from `/lobby.json` over plain HTTP rather than a push, on purpose: the entry screen has no session —
+// the client does not send `hello` until a name is entered, so the server closes that screen's socket with 4002 every
+// 30 s and the client quietly opens a new one (net.js). A push channel would have to solve that churn for no benefit;
+// a small poll is invisible at this size and keeps both screens working before login.
+
+import { useEffect, useState } from '../../vendor/hooks.module.js';
+import { html, MicroLabel } from '../ui/components.js';
+import { DIFFICULTY_COLORS } from '../../../shared/constants.js';
+import { t } from '../../../shared/i18n.js';
+
+/**
+ * 一个对端服务器的公开房间，每个都打上 `peer`（对方 origin）。
+ *
+ * 先走**本服代取**（`/peer-lobby?url=…`）：这台服是 http、主服是 https，浏览器直连会被混合内容拦住；
+ * 服务端取回没有这个限制，也不需要主服配 CORS。旧版服务端没有这个入口（404/403）时退回浏览器直连 ——
+ * 那正是 2026-10-17 版本的行为，联通只是可选装饰，任何一步失败都返回空数组、绝不抛。
+ * @param {string} base 对端 origin
+ * @returns {Promise<any[]>}
+ */
+async function loadPeerRooms(base) {
+  const origin = String(base).replace(/\/+$/, '');
+  const tag = (list, name) => list.map((rm) => ({ ...rm, peer: origin, peerName: name || '', nodeName: name || '' }));
+  try {
+    const r = await fetch(`/peer-lobby?url=${encodeURIComponent(origin)}`, { cache: 'no-store' });
+    if (r.ok) {
+      const j = await r.json();
+      // ★ 2026-10-18：对端自己报的名字（"2服"），房间行直接显示它
+      if (Array.isArray(j && j.rooms)) return tag(j.rooms, j.name);
+    }
+  } catch { /* 旧版服务端：退回直连 */ }
+  try {
+    const r = await fetch(`${origin}/lobby.json`, { cache: 'no-store' });
+    if (!r.ok) return [];
+    const j = await r.json();
+    const list = Array.isArray(j && j.rooms) ? j.rooms : [];
+    return tag(list, j && j.name);
+  } catch { return []; }
+}
+
+/**
+ * The public lobby feed: how many people are online and which rooms are open.
+ *
+ * Plain HTTP (`/lobby.json`, server/http/routes.js) rather than a push, on purpose: the title screen has no session —
+ * the client does not send `hello` until a name is entered, so the server closes this screen's socket with 4002 every
+ * 30 s and the client quietly opens a new one (net.js). A push channel would have to solve that churn for no benefit;
+ * a small poll is invisible at this size and keeps the screen working before login.
+ *
+ * Refreshes every `ms` while the tab is visible, immediately when it becomes visible again, and never overlaps
+ * requests. Failures are silent — a title screen must not surface errors for an optional extra.
+ * @param {number} ms
+ * @returns {{ online: number|null, rooms: any[], peers: string[], maxSeats: number, loaded: boolean }}
+ */
+export function useLobbyFeed(ms = 3000) {
+  const [feed, setFeed] = useState({ online: null, rooms: [], peers: [], maxSeats: 100, loaded: false });
+  useEffect(() => {
+    let stopped = false;
+    let inflight = false;
+    const load = async () => {
+      if (inflight || stopped) return;
+      inflight = true;
+      try {
+        const r = await fetch('/lobby.json', { cache: 'no-store' });
+        if (!r.ok) return;
+        const j = await r.json();
+        if (stopped || !j || typeof j !== 'object') return;
+        // ★ 2026-10-17（轻量联通）：把「对端服务器」的大厅也拉一份合并进来。
+        //   每个对端房间带 `peer`（对方 origin），本服房间没有这个字段。
+        //   失败静默忽略 —— 联通只是可选装饰，绝不能拖累本服大厅。
+        const peers = Array.isArray(j.peers) ? j.peers : [];
+        let peerRooms = [];
+        if (peers.length) {
+          const got = await Promise.all(peers.slice(0, 4).map(loadPeerRooms));
+          peerRooms = got.flat();
+        }
+        if (stopped) return;
+        setFeed({
+          online: Number.isFinite(j.online) ? j.online : null,
+          // ★ 2026-10-18 修（owner：「又不显示几服了」）：本服房间原来**完全没带**服名，
+          //   而大厅行读的是 r.nodeName ⇒ 本服房间永远没有标签。这里把 /lobby.json 顶层的 name 贴上去。
+          rooms: [
+            ...(Array.isArray(j.rooms) ? j.rooms : []).map((rm) => ({ ...rm, nodeName: j.name || '' })),
+            ...peerRooms,
+          ],
+          // 联通了哪几个服（只用于大厅标题的小角标；拉失败的对端不进来）
+          peers: peers.slice(0, 4).map((b) => String(b).replace(/\/+$/, '')),
+          maxSeats: Number.isFinite(j.maxSeats) ? j.maxSeats : 100,
+          loaded: true,
+        });
+      } catch { /* optional extra: stay quiet */ } finally { inflight = false; }
+    };
+    load();
+    const id = setInterval(() => { if (!document.hidden) load(); }, ms);
+    const onVis = () => { if (!document.hidden) load(); };
+    document.addEventListener('visibilitychange', onVis);
+    return () => { stopped = true; clearInterval(id); document.removeEventListener('visibilitychange', onVis); };
+  }, [ms]);
+  return feed;
+}
+
+const DIFF_TONE = { FUNNY: 'funny', TRAINING: 'funny', NORMAL: 'normal', HARD: 'hard', ABYSS: 'abyss' };
+
+/**
+ * Short label a room row shows for a difficulty. A row prints the raw difficulty key, except 炸惊模拟, which reads
+ * 「BOOM!」 here (the 模拟难度 card itself keeps calling it 炸惊模拟). Every other difficulty keeps its key.
+ */
+const DIFF_LABEL = { ZHAJING: 'BOOM!' };
+
+/** "3 分钟前" / "刚刚" — the room's age; the server computes it (a pre-login client has no clock offset). */
+function ageLabel(sec) {
+  const s = Math.max(0, Number(sec) || 0);
+  if (s < 60) return '刚刚';
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m} 分钟前`;
+  return `${Math.floor(m / 60)} 小时前`;
+}
+
+/**
+ * "https://43.161.200.36/" → "43.161.200.36" — the chip a federated row shows. A host:port keeps its port (it is how
+ * you would reach that server), a bare host loses the scheme and `www.`.
+ */
+function peerLabel(base) {
+  try {
+    return new URL(String(base)).host.replace(/^www\./, '');
+  } catch {
+    return String(base).replace(/^https?:\/\//, '').replace(/\/+$/, '');
+  }
+}
+
+/**
+ * A federated room lives on another server, so joining it is a navigation, not a socket command: that server's title
+ * screen already understands `?room=CODE` (main.js consumes it), which means name entry, difficulty and the seat check
+ * all happen there. `location.assign` (not `open`) keeps one tab — the same thing a pasted invite link does.
+ * @param {{ code: string, peer: string }} room
+ */
+function openPeer(room) {
+  const base = String(room.peer).replace(/\/+$/, '');
+  globalThis.location.assign(`${base}/?room=${encodeURIComponent(room.code)}`);
+}
+
+/**
+ * The open-room list. Clicking a room joins through the same path as a `?room=CODE` link: it drops the code into
+ * `ui.pendingJoin` (main.js joins once entered + online) and starts the session. `canJoin` is false until a valid name
+ * is typed, so the buttons are visibly disabled instead of failing on click.
+ *
+ * Federated rows (`r.peer`, from `useLobbyFeed`) are the exception: they belong to another server, so they are enabled
+ * regardless of the local name and clicking one navigates there (`openPeer`). They are hidden while picking a key
+ * (`onPick`), because a key only exists on the server that issued it.
+ *
+ * @param {{ rooms: any[], peers?: string[], loaded: boolean, onJoin: (code: string) => void, canJoin: boolean,
+ *           inline?: boolean, onPick?: (code: string) => void }} o
+ */
+export function RoomList({ rooms, peers = [], loaded, onJoin, canJoin, inline = false, onPick }) {
+  const cls = inline ? 'roomlist roomlist--inline' : 'roomlist';
+  // 选密钥时只列本服房间：对端的房间密钥在本服不存在。
+  const rows = onPick ? rooms.filter((r) => !r.peer) : rooms;
+  if (!loaded) {
+    return html`<aside class=${cls} aria-label=${'房间列表'}>
+      <div class="roomlist__head"><${MicroLabel} tone="mint">OPEN ALLIANCES<//><span class="roomlist__n">…</span></div>
+      <p class="roomlist__empty">暂无公开同盟房间</p>
+    </aside>`;
+  }
+  return html`<aside class=${cls} aria-label=${'房间列表'}>
+    <div class="roomlist__head">
+      <${MicroLabel} tone="mint">OPEN ALLIANCES<//>
+      <span class="roomlist__headr">
+        ${peers.length ? html`<span class="roomlist__fed" title=${peers.join(' · ')}>联通 ${peers.length}</span>` : null}
+        <span class="roomlist__n num">${rows.length}</span>
+      </span>
+    </div>
+    ${rows.length
+      ? html`<ul class="roomlist__ul">
+          ${rows.map((r) => {
+            // 颜色：CSS 里的 is-* 色调表（title.css）负责它列出的难度 —— 房间列表一直用的那套旧色调。
+            // 炸惊不在那张表里，就取难度选项自己的颜色：DIFFICULTY_COLORS，和「模拟难度」卡片同一个常量。
+            const color = DIFF_TONE[r.difficulty] ? '' : DIFFICULTY_COLORS[r.difficulty];
+            const peer = r.peer ? String(r.peer).replace(/\/+$/, '') : '';
+            // ★ 2026-10-18：优先用对端自报的名字（"2服"），没有就退回 host
+            const peerText = r.peerName ? String(r.peerName) : peerLabel(peer);
+            const roomTitle = peer
+              ? `前往 ${peerText}（${peerLabel(peer)}）加入 ${r.code}`
+              : (onPick ? '填入密钥' : (canJoin ? `加入 ${r.code}` : '先输入博士代号'));
+            return html`<li key=${peer ? `${peer}#${r.code}` : r.code}>
+              <button type="button" class=${peer ? 'roomrow is-peer' : 'roomrow'} disabled=${!peer && !canJoin}
+                title=${roomTitle}
+                onClick=${() => (peer ? openPeer({ code: r.code, peer }) : (onPick ? onPick(r.code) : onJoin(r.code)))}>
+                <span class="roomrow__code num">${r.code}</span>
+                ${peer ? html`<span class="roomrow__peer">${peerText}</span>` : null}
+                <span class=${`roomrow__diff is-${DIFF_TONE[r.difficulty] || 'normal'}`}
+                  style=${color ? `color:${color}` : ''}
+                >${DIFF_LABEL[r.difficulty] || r.difficulty}</span>
+                <span class="roomrow__seats num">${r.occupied}<i>/${r.capacity}</i></span>
+                ${r.inMatch ? html`<span class="roomrow__tag is-match">对局中</span>` : null}
+                ${r.spectators > 0 ? html`<span class="roomrow__tag">观战 ${r.spectators}</span>` : null}
+                <span class="roomrow__age">${ageLabel(r.ageSec)}</span>
+              </button>
+            </li>`;
+          })}
+        </ul>`
+      : html`<p class="roomlist__empty">暂无房间，去「同盟模拟」创建一个吧</p>`}
+  </aside>`;
+}

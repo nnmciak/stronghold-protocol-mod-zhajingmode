@@ -1,0 +1,317 @@
+// server/http/routes.js — the node:http request listener. Every response gets the security headers (common.js), then:
+// (i18n-ignore-file: the error pages are bilingual by design, 中文 · English — docs/I18N.md)
+//
+//   * a URL longer than 4096 characters → 414; one that does not parse → 400;
+//   * any method but GET / HEAD → 405 with `Allow: GET, HEAD`;
+//   * GET /healthz → JSON status (protocol `version`, release `app`, uptime, the served `build`, sockets, sessions,
+//     rooms, matches), never cached;
+//   * everything else → the static files (static.js).
+// A route that throws is logged and answers 500.
+
+import { PROTOCOL_VERSION, APP_VERSION, MAX_SEATS } from '../../shared/constants.js';
+import os from 'node:os';
+import { buildTag } from './buildTag.js';
+import { setSecurityHeaders, sendError, sendJson, sendJsonCached, splitUrl } from './common.js';
+// 作弊模式开关 (SP_CHEAT=1, 本地测试用),只用来在 /healthz 里如实报告状态。
+import { cheatEnabled } from '../match/player/cheat.js';
+import { exportSkins, mergeSkins } from '../skinsMemory.js';
+import { exportLoadouts, mergeLoadouts } from '../loadoutMemory.js';
+
+/**
+ * 维护闸是否开着 (SP_NO_ROOM=1, 临时):拒绝创建房间。
+ * **拒绝建房的那道闸在 `server/lobby.js` 的 `create()` 里**(唯一真相源);这里再判一次只是为了
+ * `/healthz` 能如实报告状态 —— 环境变量不出现在进程命令行里,光看 `node server/index.js` 判断不了
+ * (和上面 cheat 同样的理由)。改规则时两处一起改。
+ * @returns {boolean}
+ */
+function noRoomEnabled() {
+  const v = String(process.env.SP_NO_ROOM ?? '').trim().toLowerCase();
+  return v === '1' || v === 'true' || v === 'on' || v === 'yes';
+}
+
+const MAX_URL_LENGTH = 4096;
+
+/** 上次采样点,用来算"两次 /healthz 之间"的 CPU 占用(见 cpuSample)。 */
+let _cpuPrev = null;
+
+/**
+ * 进程 CPU 占用与系统负载。放在 /healthz 里是为了回答"AI 到底吃多少性能"这类问题 ——
+ * 光看在线人数看不出负载,而生产机是 1 核 2 线程的小机器,很容易被压满。
+ * 第一次调用没有基线,只返回内存并记下采样点;之后每次返回距上次的 CPU 百分比。
+ *
+ * `os.cpus()` 每次调用都会新建一份"每核对象数组"（实测 0.221 ms，占 /healthz 0.55 ms 的 40%），
+ * 而这两个值在进程生命周期内不变 → 提到模块级只算一次（用户 2026-10-13 审计）。
+ */
+const OS_CORES = os.cpus().length;
+const OS_MEM_TOTAL_MB = Math.round(os.totalmem() / 1048576);
+
+function cpuSample() {
+  const now = process.hrtime.bigint();
+  const cpu = process.cpuUsage();
+  const load = (() => { try { return os.loadavg().map((x) => Math.round(x * 100) / 100); } catch { return null; } })();
+  const mem = process.memoryUsage();
+  const base = {
+    rssMB: Math.round(mem.rss / 1048576),
+    heapMB: Math.round(mem.heapUsed / 1048576),
+    load1: load ? load[0] : null,
+    cores: OS_CORES,
+    memFreeMB: Math.round(os.freemem() / 1048576),
+    memTotalMB: OS_MEM_TOTAL_MB,
+  };
+  if (!_cpuPrev) { _cpuPrev = { t: now, cpu }; return { ...base, cpuPct: null }; }
+  const dWallUs = Number(now - _cpuPrev.t) / 1000;
+  const dCpuUs = (cpu.user - _cpuPrev.cpu.user) + (cpu.system - _cpuPrev.cpu.system);
+  _cpuPrev = { t: now, cpu };
+  return { ...base, cpuPct: dWallUs > 0 ? Math.round((dCpuUs / dWallUs) * 1000) / 10 : null, sinceMs: Math.round(dWallUs / 1000) };
+}
+
+/**
+ * The GET /healthz body.
+ * @param {{ startedAt: number, network: import('../net.js').Network, registry: import('../net.js').SessionRegistry,
+ *           lobby: import('../lobby.js').Lobby }} health
+ */
+export function healthReport({ startedAt, network, registry, lobby, assetIndex = null, views = null }) {
+  return {
+    ok: true, version: PROTOCOL_VERSION, app: APP_VERSION, uptimeSec: Math.round((Date.now() - startedAt) / 1000),
+    // the runtime the server is serving right now (public/js/ui/buildGuard.js): a page whose own build is
+    // older than this reloads itself, so a deploy reaches clients that never reload
+    build: buildTag(),
+    // 作弊模式是否开启 (SP_CHEAT=1, 本地测试用)。放这里是为了能【一眼确认】开关状态 ——
+    // 环境变量不会出现在进程命令行里,光看 `node server/index.js` 无法判断(之前就为这个绕过一圈)。
+    cheat: cheatEnabled(),
+    noRoom: noRoomEnabled(),
+    sockets: network.connectionCount, sessions: registry.size, ...lobby.stats(),
+    // CPU / 内存 / 负载:连续调用两次即可算出这段区间的 CPU 占用(回答"AI 占多少性能")
+    perf: cpuSample(),
+    // 广播账本(用户 2026-10-13):回答"广播到底占多少" —— 帧数/收件人数/压前压后字节都是累计值,
+    // 两次调用相减就是这段时间的广播量。压缩字节只在开了共享压缩时统计(它才是真正上网的字节)。
+    broadcast: lobby.bcast ? { ...lobby.bcast } : null,
+    // ★ 2026-10-14：内容哈希索引的状态（0.2.6 assetIndex.js / assetViews.js）——
+    // off / building / ready（含文件数、字节数、以及两个清单视图的哈希）。
+    assetHashes: assetIndex ? { ...assetIndex.stats(), views: views ? views.stats() : null } : null,
+  };
+}
+
+/**
+ * The request listener for `http.createServer`.
+ * @param {{ serveStatic: (req: import('node:http').IncomingMessage, res: import('node:http').ServerResponse,
+ *             rawPath: string, query: string) => Promise<void>,
+ *           health: Parameters<typeof healthReport>[0], log: object }} deps
+ * @returns {(req: import('node:http').IncomingMessage, res: import('node:http').ServerResponse) => void}
+ */
+/**
+ * Strict loopback test for the announce trigger — deliberately NOT net.js `isLocalIp`, which also accepts RFC 1918 /
+ * CGNAT / ULA addresses. On a hosted box those are the provider's private network, not this machine, so reusing that
+ * helper would let anything inside the VPC post announcements.
+ */
+function isLoopback(req) {
+  const ip = (req.socket && req.socket.remoteAddress) || '';
+  return ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+}
+
+/**
+ * 联通的对端服务器列表：`SP_FEDERATION_PEERS`（逗号分隔的绝对 URL），尾部斜杠去掉。
+ * `/lobby.json` 把它下发给客户端，`/peer-lobby` 拿它当白名单 —— 两处必须是同一份口径。
+ */
+function federationPeers() {
+  return String(process.env.SP_FEDERATION_PEERS || '')
+    .split(',').map((s) => s.trim().replace(/\/+$/, '')).filter((s) => /^https?:\/\//.test(s));
+}
+
+/**
+ * 本服的名字，给大厅房间标签用（`SP_SERVER_NAME`，例如 "1服" / "2服"）。
+ * 没配就留空 —— 客户端会退回到"对端的 host"。
+ */
+function serverName() {
+  return String(process.env.SP_SERVER_NAME || '').trim().slice(0, 24);
+}
+
+const PEER_TIMEOUT_MS = 4000;
+const PEER_MAX_BYTES = 256 * 1024;
+
+/**
+ * 服务端替浏览器取回对端大厅（`GET /peer-lobby?url=…`）。
+ *
+ * 为什么不在浏览器里直接 fetch：这台服是 http、主服是 https。https 页面拉 http 是**混合内容**，
+ * 浏览器直接拦；反过来 http 页面拉 https 又要求对端给 CORS。服务端取回两头都不受这些限制。
+ *
+ * 安全：`url` 必须逐字等于 `SP_FEDERATION_PEERS` 里的一项（否则这里就是一个开放代理，能拿它扫内网），
+ * 只透传大厅本身需要的字段，超时/超长都直接放弃。
+ * @param {import('node:http').IncomingMessage} req
+ * @param {import('node:http').ServerResponse} res
+ * @param {string} base 已确认在白名单里的对端 origin
+ * @param {object} log
+ */
+async function relayPeerLobby(req, res, base, log) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), PEER_TIMEOUT_MS);
+  try {
+    const r = await fetch(`${base}/lobby.json`, { signal: ctrl.signal, headers: { Accept: 'application/json' } });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const text = await r.text();
+    if (text.length > PEER_MAX_BYTES) throw new Error('lobby.json too large');
+    const j = JSON.parse(text);
+    const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
+    const str = (v, n) => String(v == null ? '' : v).slice(0, n);
+    const rooms = (Array.isArray(j && j.rooms) ? j.rooms : []).slice(0, 200).map((rm) => ({
+      code: str(rm && rm.code, 16),
+      mode: str(rm && rm.mode, 12) || 'coop',
+      difficulty: str(rm && rm.difficulty, 24),
+      occupied: num(rm && rm.occupied),
+      humans: num(rm && rm.humans),
+      capacity: num(rm && rm.capacity),
+      inMatch: !!(rm && rm.inMatch),
+      spectators: num(rm && rm.spectators),
+      ageSec: num(rm && rm.ageSec),
+    }));
+    sendJson(req, res, 200, {
+      online: num(j && j.online), rooms, maxSeats: num(j && j.maxSeats, MAX_SEATS),
+      // 对端自己的名字（"2服"），客户端拿它给房间打标签
+      name: str(j && j.name, 24),
+    });
+  } catch (e) {
+    log.warn?.(`[federation] 对端大厅取回失败 · peer lobby failed: ${base}: ${e.message}`);
+    sendError(req, res, 502, '对端大厅不可达 · peer lobby unreachable');
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export function createRequestHandler({ serveStatic, health, log, lobby = null }) {
+  // Admin trigger for the 全服公告 (lobby.announce). Two ways in, in this order:
+  //   * a request from THIS MACHINE (loopback) is trusted — the operator is on the box over SSH, which is the
+  //     authentication; requiring a token there only means editing the service's .cmd to set one (and that file has
+  //     to stay pure ASCII), for no extra safety.
+  //   * anything else needs `Authorization: Bearer <SP_ANNOUNCE_TOKEN>`; with that variable unset, remote callers are
+  //     refused outright, so the endpoint is never open to the internet by accident.
+  const announceToken = typeof process.env.SP_ANNOUNCE_TOKEN === 'string' ? process.env.SP_ANNOUNCE_TOKEN.trim() : '';
+
+  async function handleRequest(req, res) {
+    const url = req.url || '/';
+    if (url.length > MAX_URL_LENGTH) { sendError(req, res, 414, '请求地址过长 · URI too long'); return; }
+    const parts = splitUrl(url);
+    if (!parts) { sendError(req, res, 400, '请求地址无效 · Bad request'); return; }
+
+    // ---- 全服公告 -------------------------------------------------------------------------------------
+    // GET  /notice  → the outstanding notice (plain JSON, { notice: null } when there is none)
+    // POST /announce { text, level?, ttlSec? } | { clear: true } → fan out to every connected socket.
+    //   from this machine (loopback) → allowed; from anywhere else → `Authorization: Bearer <SP_ANNOUNCE_TOKEN>`
+    if (parts.rawPath === '/notice') {
+      if (req.method !== 'GET' && req.method !== 'HEAD') { res.setHeader('Allow', 'GET, HEAD'); sendError(req, res, 405, '不支持的请求方法 · Method not allowed'); return; }
+      sendJson(req, res, 200, { notice: lobby ? lobby.noticeFor() : null });
+      return;
+    }
+    if (parts.rawPath === '/announce') {
+      if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); sendError(req, res, 405, '不支持的请求方法 · Method not allowed'); return; }
+      if (!lobby) { sendError(req, res, 503, '公告不可用 · announce unavailable'); return; }
+      if (!isLoopback(req)) {
+        // 到这里已经确定「不是本机」——`isLoopback` 上面那一条就是判据，所以这里只看有没有 token。
+        // （原来写的是 `!announceToken && !loopback`，`loopback` 根本没有这个变量 → 未设 token 时远程一发就是
+        //  ReferenceError/500，而不是这里想给的 403。设了 token 时因为 && 短路侥幸不炸，所以一直没被发现。）
+        if (!announceToken) { sendError(req, res, 403, '未启用公告接口(需设置 SP_ANNOUNCE_TOKEN)· announce disabled'); return; }
+        const auth = String(req.headers.authorization || '');
+        if (auth !== `Bearer ${announceToken}`) { sendError(req, res, 401, '未授权 · Unauthorized'); return; }
+      }
+      let body = '';
+      try {
+        for await (const chunk of req) {
+          body += chunk;
+          if (body.length > 4096) { sendError(req, res, 413, '请求体过大 · Payload too large'); return; }
+        }
+      } catch { sendError(req, res, 400, '读取请求失败 · Bad request'); return; }
+      let parsed = null;
+      try { parsed = JSON.parse(body || '{}'); } catch { sendError(req, res, 400, 'JSON 无效 · Invalid JSON'); return; }
+      const out = lobby.announce(parsed || {});
+      if (!out.ok) sendJson(req, res, 400, out);
+      else sendJson(req, res, 200, out);
+      return;
+    }
+
+    // ---- 皮肤记忆联通（2026-10-18）------------------------------------------------------------------
+    // 两个节点各记一份「玩家名 → 皮肤选择」（data/skins-by-name.json）。同一个玩家换服时，那个 origin 的
+    // localStorage 是空的，只能靠服务端记忆回填 —— 于是要让两台定期做**并集**，否则换服就回到默认皮肤。
+    //   GET  /skins-export  → 整份记忆
+    //   POST /skins-sync    → 并入对端的一份（按玩家取并集，同一玩家"键更多"的赢）
+    // 认证：请求头 `x-sp-token: <SP_SYNC_TOKEN>`；两台须配同一个值，没配就是完全不开放。
+    // 定时推送由 deploy/skins-sync.sh（cron 每 2 分钟）负责。
+    if (parts.rawPath === '/skins-export' || parts.rawPath === '/skins-sync'
+      || parts.rawPath === '/loadouts-export' || parts.rawPath === '/loadouts-sync') {
+      const isLoadout = parts.rawPath.startsWith('/loadouts');
+      const token = typeof process.env.SP_SYNC_TOKEN === 'string' ? process.env.SP_SYNC_TOKEN.trim() : '';
+      const got = String(req.headers['x-sp-token'] || '');
+      let ok = !!token && got.length === token.length;
+      if (ok) {
+        let d = 0;
+        for (let i = 0; i < got.length; i++) d |= got.charCodeAt(i) ^ token.charCodeAt(i);
+        ok = d === 0;
+      }
+      if (!ok) { sendError(req, res, 403, '未授权 · Unauthorized'); return; }
+      if (parts.rawPath.endsWith('-export')) {
+        sendJson(req, res, 200, isLoadout ? exportLoadouts() : exportSkins());
+        return;
+      }
+      if (req.method !== 'POST') { sendError(req, res, 405, '只接受 POST · POST only'); return; }
+      let body = '';
+      try {
+        for await (const chunk of req) {
+          body += chunk;
+          if (body.length > 8 * 1024 * 1024) { sendError(req, res, 413, '请求体过大 · Payload too large'); return; }
+        }
+      } catch { sendError(req, res, 400, '读取请求失败 · Bad request'); return; }
+      let parsed = null;
+      try { parsed = JSON.parse(body || '{}'); } catch { sendError(req, res, 400, 'JSON 无效 · Invalid JSON'); return; }
+      const merged = isLoadout ? mergeLoadouts(parsed) : mergeSkins(parsed);
+      sendJson(req, res, 200, { ok: true, merged });
+      return;
+    }
+
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      res.setHeader('Allow', 'GET, HEAD');
+      sendError(req, res, 405, '不支持的请求方法 · Method not allowed');
+      return;
+    }
+    if (parts.rawPath === '/healthz') {
+      sendJson(req, res, 200, healthReport(health));
+      return;
+    }
+    // The title screen's public feed: how many people are online and which rooms are open. The client has no session
+    // there (it never sends `hello`), so this is plain HTTP rather than a push — it also keeps the lobby list working
+    // while that screen's socket is being closed and quietly reopened by the 4002 hello timeout.
+    // Nothing player-identifying travels here: see Lobby.listing.
+    if (parts.rawPath === '/lobby.json') {
+      // 可校验：内容没变就 304（标题页每 3 秒轮询一次；100 房时一份 17 KB，全在浪费上行）
+      // ★ 2026-10-17（轻量联通）：把「对端服务器」列表一起下发，客户端据此合并两边的大厅房间。
+      //   由环境变量 `SP_FEDERATION_PEERS`（逗号分隔的绝对 URL）配置；没配就是空数组，行为与以前一致。
+      sendJsonCached(req, res, {
+        online: lobby ? lobby.stats().humans : 0,
+        rooms: lobby ? lobby.publicRooms() : [],
+        maxSeats: MAX_SEATS,
+        peers: federationPeers(),
+        // ★ 2026-10-18：本服的名字（"1服" / "2服"）。对端拉 /peer-lobby 时能看到，
+        //   房间列表就按它给外服房间打标签 —— 玩家一眼知道这房在哪台机器上。
+        name: serverName(),
+      });
+      return;
+    }
+    // ★ 2026-10-18：对端大厅由**本服**代取（浏览器直连会被 CORS / 混合内容拦掉，见 relayPeerLobby）。
+    //   GET /peer-lobby?url=https://peer.example → { online, rooms, maxSeats }
+    if (parts.rawPath === '/peer-lobby') {
+      const asked = String(new URLSearchParams(parts.query).get('url') || '').trim().replace(/\/+$/, '');
+      if (!asked || !federationPeers().includes(asked)) {
+        sendError(req, res, 403, '未联通的服务器 · peer not federated');
+        return;
+      }
+      await relayPeerLobby(req, res, asked, log);
+      return;
+    }
+    await serveStatic(req, res, parts.rawPath, parts.query);
+  }
+
+  return (req, res) => {
+    setSecurityHeaders(res);
+    handleRequest(req, res).catch((e) => {
+      log.error('[http] request failed', e);
+      sendError(req, res, 500, '服务器内部错误 · Internal error');
+    });
+  };
+}

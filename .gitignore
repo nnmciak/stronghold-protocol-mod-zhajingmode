@@ -1,0 +1,40 @@
+# —— 素材（1.58 GB，版权不归本项目，绝不入库）——
+public/assets/
+assets/
+
+# —— 依赖与缓存 ——
+node_modules/
+.cache/
+
+# —— 日志 ——
+logs/
+*.log
+_devserver.log*
+_devserver.err.log
+
+# —— 历史备份 / 临时目录 ——
+_backup-*/
+_scratch/
+_pv-tools/
+_staged-*/
+_bak-*/
+
+# —— 打包与补丁产物 ——
+*.zip
+sp100.patch
+MANIFEST.json
+UPDATE.json*
+.update-applied.json
+
+# —— 开发期一次性脚本 ——
+probe-*.mjs
+_mk*.mjs
+_*.mjs
+smoke100.mjs
+Install-SP100.ps1
+SKINS-BUILTIN-PLAN.md
+
+# —— 系统垃圾 ——
+Thumbs.db
+desktop.ini
+.DS_Store

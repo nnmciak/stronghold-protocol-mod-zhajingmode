@@ -1,0 +1,115 @@
+/* 2026-10-13 卡池预选样式（完整版）：从旧备份照搬所有含 .bp 的规则（含定位/容器）*/
+.bp { padding: .14rem .16rem .2rem; overflow-y: auto; }
+.bp__head h2 { margin: 0 0 .06rem; font-size: max(.2rem, 15px); display: flex; align-items: baseline; gap: .08rem; }
+.bp__lead { margin: 0 0 .12rem; font-size: max(.13rem, 10px); line-height: 1.6; color: var(--text-dim); max-width: 78ch; }
+.bp__diffs { display: flex; flex-wrap: wrap; gap: .06rem; margin-bottom: .1rem; }
+.bp-diff { position: relative; display: inline-flex; align-items: center; gap: .06rem; padding: .05rem .12rem; background: rgba(255, 255, 255, .04); border: 1px solid var(--line-2); color: var(--text-lo); cursor: pointer; font-size: max(.14rem, 11px); }
+.bp-diff:hover { border-color: var(--line-3); color: var(--text-hi); }
+.bp-diff.is-on { border-color: var(--mint-500); color: var(--mint-400); background: rgba(78, 216, 175, .1); }
+.bp-diff.is-changed .bp-diff__name { font-weight: 700; }
+.bp-diff__q { font-size: max(.12rem, 9px); color: var(--text-dim); }
+.bp-diff__dot { width: max(.06rem, 5px); height: max(.06rem, 5px); border-radius: 50%; background: var(--mint-400); }
+.bp__bar { display: flex; flex-wrap: wrap; align-items: center; gap: .14rem; padding: .08rem .1rem; margin-bottom: .12rem; background: rgba(0, 0, 0, .25); border: 1px solid var(--line); border-left: 3px solid var(--mint-500); }
+.bp__quota { font-size: max(.14rem, 11px); color: var(--text-hi); }
+.bp__fav-count { font-size: max(.14rem, 11px); color: var(--gold-2); }
+.bp__fill { margin-left: auto; }
+.bp__sec { margin-bottom: .14rem; }
+.bp__sec-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem; margin-bottom: .06rem; }
+.bp__sec-head h3 { margin: 0; font-size: max(.16rem, 12px); display: flex; align-items: baseline; gap: .06rem; }
+.bp__hint { font-size: max(.12rem, 9px); color: var(--text-dim); }
+.bp__chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(max(1.5rem, 116px), 1fr)); gap: .06rem; }
+.bp-chip { position: relative; display: flex; align-items: stretch; background: rgba(255, 255, 255, .03); border: 1px solid var(--line-2); min-width: 0; }
+.bp-chip__main { flex: 1 1 auto; display: flex; align-items: center; justify-content: space-between; gap: .05rem; padding: .06rem .08rem; background: none; border: 0; color: var(--text-lo); cursor: pointer; font: inherit; font-size: max(.14rem, 11px); text-align: left; min-width: 0; }
+.bp-chip__main:hover:not(:disabled) { color: var(--text-hi); }
+.bp-chip__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bp-chip__mark .icon { width: max(.16rem, 12px); height: max(.16rem, 12px); color: var(--red-hi); }
+.bp-chip.is-on { border-color: #b33333; background: rgba(200, 40, 40, .14); }
+.bp-chip.is-on .bp-chip__main { color: var(--text-hi); font-weight: 700; }
+.bp-chip.is-fav { border-color: var(--gold-2); background: rgba(255, 198, 0, .12); }
+.bp-chip.is-fav .bp-chip__main { color: var(--gold-2); font-weight: 700; }
+.bp-chip__fav { flex: 0 0 auto; padding: 0 .07rem; background: none; border: 0; border-left: 1px solid var(--line-2); color: var(--text-dim); cursor: pointer; font-size: max(.16rem, 12px); line-height: 1; }
+.bp-chip__fav:hover { color: var(--red-hi); }
+.bp-chip__fav.is-on { color: var(--gold-2); border-left-color: var(--gold-2); }
+.bp-chip.is-locked { opacity: .42; }
+.bp-chip.is-locked .bp-chip__main { cursor: not-allowed; }
+.bp-chip__lock { font-size: max(.11rem, 8px); color: var(--ice); white-space: nowrap; }
+.bp-chip.is-off { opacity: .34; }
+.bp-chip.is-off .bp-chip__main { cursor: not-allowed; }
+.bp__note { display: flex; align-items: flex-start; gap: .06rem; margin: .1rem 0 0; font-size: max(.12rem, 9px); line-height: 1.6; color: var(--text-dim); }
+.bp__note .icon { width: max(.16rem, 12px); height: max(.16rem, 12px); flex: none; margin-top: .02rem; }
+
+
+/* 2026-10-13 卡池预选：标题条 + 关闭键 */
+.lo-bans { display: flex; flex-direction: column; min-height: 0; }
+.lo-bans__bar { display: flex; align-items: center; gap: max(.08rem, 6px); padding: max(.1rem, 8px) max(.2rem, 16px);
+  border-bottom: 1px solid var(--line-2); background: #0c1110; position: sticky; top: 0; z-index: 3; }
+.lo-bans__t { font-size: max(.2rem, 15px); font-weight: 700; }
+.lo-bans__bar small { color: var(--text-dim); font-size: max(.13rem, 10px); }
+.lo-bans__bar .btn { margin-left: auto; }
+
+/* 2026-10-13 卡池预选最终形态：固定居中浮层（自带暗背景 + 内部滚动）
+   关闭方式：点右上角「卡池预选」开关，或点暗背景外的任一按钮切走 ✓ */
+.bp {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1500 !important;
+  margin: auto !important;
+  width: min(94vw, 48rem) !important;
+  height: min(86vh, 42rem) !important;
+  max-height: 86vh !important;
+  overflow-y: auto !important;
+  background: #0b100f !important;
+  border: 1px solid var(--line-2) !important;
+  border-radius: 8px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.6);
+  padding: max(.2rem, 16px) max(.24rem, 20px) max(.24rem, 20px) !important;
+  display: block !important;
+}
+.bp::before {
+  content: ''; position: fixed; inset: 0; z-index: -1;
+  background: rgba(3, 6, 5, .82); backdrop-filter: blur(2px);
+}
+.bp__head h2 { font-size: max(.24rem, 18px) !important; }
+.bp__lead { font-size: max(.14rem, 11px) !important; }
+.bp__chips { display: flex !important; flex-wrap: wrap !important; gap: max(.06rem, 6px) !important; }
+.bp-diff, .bp-chip { max-width: 100%; }
+
+/* 2026-10-13 关键修正：浮层避开顶部工具条 → 右上角「卡池预选」按钮始终可点（= 可关闭 ✓）*/
+.bp {
+  inset: auto !important;
+  top: max(2.9rem, 46px) !important;
+  bottom: max(.7rem, 11px) !important;
+  left: max(.6rem, 10px) !important;
+  right: max(.6rem, 10px) !important;
+  margin: auto !important;
+  width: min(94vw, 48rem) !important;
+  height: auto !important;
+  max-height: none !important;
+}
+.bp::before { inset: max(2.6rem, 42px) 0 0 0 !important; }
+
+/* 2026-10-13 卡池预选：标题行关闭按钮 */
+.bp__x { position: absolute; right: max(.16rem, 12px); top: max(.16rem, 12px); width: max(.44rem, 26px); height: max(.44rem, 26px);
+  display: grid; place-items: center; background: rgba(255,255,255,.06); border: 1px solid var(--line-2); color: var(--text-hi);
+  border-radius: 4px; cursor: pointer; z-index: 4; }
+.bp__x:hover { background: rgba(255,90,90,.18); border-color: rgba(255,90,90,.6); color: #ff9a9a; }
+.bp__x .icon, .bp__x svg { width: 60% !important; height: 60% !important; }
+
+/* 2026-10-13 用户选定「图二」样式：暗背景盖满全屏（含工具条），面板内缩居中；
+   关闭仍由面板内的 .bp__x × 负责（不依赖工具条 ✓）*/
+.bp::before { inset: 0 !important; }
+.bp {
+  top: max(3rem, 48px) !important;
+  bottom: max(.7rem, 11px) !important;
+  left: max(.7rem, 12px) !important;
+  right: max(.7rem, 12px) !important;
+  width: min(94vw, 48rem) !important;
+  height: auto !important;
+}
+
+/* 2026-10-13 面板上移：垂直不再居中，顶对齐（上边距 2.2rem/34px）*/
+.bp {
+  margin: 0 auto !important;
+  top: max(2.2rem, 34px) !important;
+  bottom: max(.6rem, 10px) !important;
+}

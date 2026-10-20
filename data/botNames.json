@@ -1,0 +1,2675 @@
+{
+  "_comment": "明日方舟全体干员名单，用作 AI 队友取名池（server/match/bot.js randomBotName）。",
+  "_source": "https://prts.wiki/w/干员一览/干员id （MediaWiki action=parse&pageid=28558）",
+  "_extracted": "2026-10-09",
+  "_fields": "name 干员/主播名；rarity 稀有度(0–5，主播为 null)；inSp 是否卫戍协议参战；kind operator|streamer；hidden=true 仅最后一个 AI 位生效",
+  "_count": 441,
+  "names": [
+    {
+      "name": "Lancet-2",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "Castle-3",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "夜刀",
+      "rarity": 1,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "黑角",
+      "rarity": 1,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "巡林者",
+      "rarity": 1,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "杜林",
+      "rarity": 1,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "12F",
+      "rarity": 1,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "芬",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "香草",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "翎羽",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "玫兰莎",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "卡缇",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "米格鲁",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "克洛丝",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "安德切尔",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "炎熔",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "芙蓉",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "安赛尔",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "史都华德",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "梓兰",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "夜烟",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "远山",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "杰西卡",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "流星",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "白雪",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "讯使",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "清道夫",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "红豆",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "杜宾",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "缠丸",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "霜叶",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "艾丝黛尔",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "慕斯",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "砾",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "暗索",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "末药",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "嘉维尔",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "调香师",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "角峰",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "蛇屠箱",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "古米",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "深海色",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "地灵",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "阿消",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "白面鸮",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "凛冬",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "德克萨斯",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "芙兰卡",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "因陀罗",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "拉普兰德",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "幽灵鲨",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "蓝毒",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "白金",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "陨星",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "阿米娅",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "天火",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "梅尔",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "赫默",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "华法琳",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "临光",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "红",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "雷蛇",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "可颂",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "火神",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "普罗旺斯",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "守林人",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "崖心",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "初雪",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "真理",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "空",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "狮蝎",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "食铁兽",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "能天使",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "推进之王",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "伊芙利特",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "艾雅法拉",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "安洁莉娜",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "闪灵",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "夜莺",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "星熊",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "塞雷娅",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "银灰",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "暴行",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "空爆",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "月见夜",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "猎蜂",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "夜魔",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "格拉尼",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "斯卡蒂",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "泡普卡",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "斑点",
+      "rarity": 2,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "格雷伊",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "诗怀雅",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "陈",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "苏苏洛",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "锡兰",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "格劳克斯",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "黑",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "桃金娘",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "星极",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "赫拉格",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "坚雷",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "红云",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "炎客",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "送葬人",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "麦哲伦",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "伊桑",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "微风",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "梅",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "拜松",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "槐琥",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "莫斯提马",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "苇草",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "布洛卡",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "安比尔",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "灰喉",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "煌",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "雪雉",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "吽",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "阿",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "年",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "惊蛰",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "刻俄柏",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "清流",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "宴",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "柏喙",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "慑砂",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "风笛",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "断罪者",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "刻刀",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "铸铁",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "巫恋",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "傀影",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "THRM-EX",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "极境",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "温蒂",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "W",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "石棉",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "月禾",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "波登可",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "苦艾",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "莱恩哈特",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "早露",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "卡达",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "亚叶",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "断崖",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "铃兰",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "稀音",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "蜜蜡",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "贾维",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "孑",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "安哲拉",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "棘刺",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "酸糖",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "特米米",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "燧石",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "森蚺",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "芳汀",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "薄绿",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "四月",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "史尔特尔",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "泡泡",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "鞭刃",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "奥斯塔",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "瑕光",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "杰克",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "絮雨",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "泥岩",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "迷迭香",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "阿米娅(近卫)",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "松果",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "罗宾",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "卡夫卡",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "山",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "豆苗",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "爱丽丝",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "空弦",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "图耶",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "炎狱炎熔",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "乌有",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "嵯峨",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "夕",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "战车",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "闪击",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "霜华",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "灰烬",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "暴雨",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "熔泉",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "异客",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "赤冬",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "歌蕾蒂娅",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "凯尔希",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "浊心斯卡蒂",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "深靛",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "贝娜",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "绮良",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "卡涅利安",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "帕拉斯",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "龙舌兰",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "羽毛笔",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "水月",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "假日威龙陈",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "罗比菈塔",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "桑葚",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "琴柳",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "灰毫",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "远牙",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "正义骑士号",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "布丁",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "蜜莓",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "野鬃",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "蚀清",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "焰尾",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "耀骑士临光",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "耶拉",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "极光",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "灵知",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "暮落",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "九色鹿",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "寒芒克洛丝",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "夜半",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "老鲤",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "令",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "夏栎",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "澄闪",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "见行者",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "风丸",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "菲亚梅塔",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "褐果",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "海蒂",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "洛洛",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "号角",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "掠风",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "流明",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "艾丽妮",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "归溟幽灵鲨",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "埃拉托",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "车尔尼",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "濯尘芙蓉",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "黑键",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "星源",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "承曦格雷伊",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "多萝西",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "至简",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "晓歌",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "鸿雪",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "百炼嘉维尔",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "但书",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "玛恩纳",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "罗小黑",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "海沫",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "铅踝",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "达格达",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "明椒",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "白铁",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "石英",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "雪绒",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "子月",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "伺夜",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "斥罪",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "缄默德克萨斯",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "谜图",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "和弦",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "焰影苇草",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "截云",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "火哨",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "林",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "重岳",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "铎铃",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "仇白",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "泰拉大陆调查团",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "火龙S黑角",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "麒麟R夜刀",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "U-Official",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "休谟斯",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "摩根",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "洋灰",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "伊内丝",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "玫拉",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "淬羽赫默",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "霍尔海雅",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "缪尔赛思",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "Friston-3",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "隐现",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "空构",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "圣约送葬人",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "寒檀",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "提丰",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "凛视",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "苍苔",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "青枳",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "琳琅诗怀雅",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "纯烬艾雅法拉",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "冰酿",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "杏仁",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "涤火杰西卡",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "维荻",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "戴菲恩",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "刺玫",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "赫德雷",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "跃跃",
+      "rarity": 3,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "折光",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "深律",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "止颂",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "薇薇安娜",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "塑心",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "哈洛德",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "烈夏",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "锏",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "温米",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "莱伊",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "万顷",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "小满",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "左乐",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "黍",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "红隼",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "导火索",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "双月",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "医生",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "艾拉",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "露托",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "奥达",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "阿罗玛",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "阿斯卡纶",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "PhonoR-0",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "历阵锐枪芬",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "魔王",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "逻各斯",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "维什戴尔",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "阿米娅(医疗)",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "深巡",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "海霓",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "乌尔比安",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "渡桥",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "妮芙",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "锡人",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "莎草",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "衡沙",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "娜仁图亚",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "佩佩",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "森西",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "齐尔查克",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "莱欧斯",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "玛露西尔",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "凯瑟琳",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "波卜",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "维娜·维多利亚",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "云迹",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "菲莱",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "裁度",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "弑君者",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "忍冬",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "荒芜拉普兰德",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "瑰盐",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "特克诺",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "引星棘刺",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "行箸",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "寻澜",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "烛煌",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "余",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "诺威尔",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "隐德来希",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "水灯心",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "钼铅",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "死芒",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "骋风",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "阿兰娜",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "Mon3tr",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "CONFESS-47",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "聆音",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "信仰搅拌机",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "蕾缪安",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "新约能天使",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "Miss.Christine",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "蒂比",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "酒神",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "录武官",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "司霆惊蛰",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "电弧",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "松桐",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "吉星",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "遥",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "斩业星熊",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "祐天寺若麦",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "八幡海铃",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "若叶睦",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "三角初华",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "丰川祥子",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "冬时",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "折桠",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "真言",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "协律",
+      "rarity": 3,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "哈蒂娅",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "雪猎",
+      "rarity": 4,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "溯光星源",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "圣聆初雪",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "凛御银灰",
+      "rarity": 5,
+      "inSp": true,
+      "kind": "operator"
+    },
+    {
+      "name": "天空盒",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "响石",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "娜斯提",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "摆渡人",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "撷英调香师",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "缇缇",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "矩",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "风絮",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "赤刃明霄陈",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "望",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "复奏",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "贝洛内",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "伯塔尼",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "乌啾",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "怒潮凛冬",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "GALLUS²",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "裂响",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "维伊",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "可露希尔",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "凯尔希·思衡托",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "罗德岛隐秘队",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "雷狼龙S空爆",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "焰狐龙梓兰",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "佩德洛",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "谬因",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "机械师",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "时隙",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "嘉辛塔",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "珊比",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "予愿安洁莉娜",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "虎狼丸",
+      "rarity": 0,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "岳羽由加莉",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "埃癸斯",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "结城理",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "旅骨",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "德·托莱多",
+      "rarity": 4,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "克莱门莎",
+      "rarity": 5,
+      "inSp": false,
+      "kind": "operator"
+    },
+    {
+      "name": "魔法Zc目录",
+      "rarity": null,
+      "inSp": false,
+      "kind": "streamer",
+      "note": "新图攻略(低配/高配)"
+    },
+    {
+      "name": "维云斯",
+      "rarity": null,
+      "inSp": false,
+      "kind": "streamer",
+      "note": "干员测评 / 肉鸽向"
+    },
+    {
+      "name": "杨颜同学",
+      "rarity": null,
+      "inSp": false,
+      "kind": "streamer",
+      "note": "剧情向"
+    },
+    {
+      "name": "绝命笋干",
+      "rarity": null,
+      "inSp": false,
+      "kind": "streamer",
+      "note": "干员测评"
+    },
+    {
+      "name": "血狼破军",
+      "rarity": null,
+      "inSp": false,
+      "kind": "streamer",
+      "note": "高难关卡 / 攻略"
+    },
+    {
+      "name": "龙哥哥今天又鸽了",
+      "rarity": null,
+      "inSp": false,
+      "kind": "streamer",
+      "note": "主播"
+    },
+    {
+      "name": "海猫络合物",
+      "rarity": null,
+      "inSp": false,
+      "kind": "streamer",
+      "note": "彩蛋:仅当房间只剩 1 个空位且加 AI 时出现",
+      "hidden": true
+    }
+  ],
+  "_streamers": [
+    "魔法Zc目录",
+    "维云斯",
+    "杨颜同学",
+    "绝命笋干",
+    "血狼破军",
+    "龙哥哥今天又鸽了",
+    "海猫络合物"
+  ],
+  "_hidden": [
+    "海猫络合物"
+  ]
+}

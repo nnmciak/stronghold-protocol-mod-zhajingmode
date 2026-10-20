@@ -1,0 +1,111 @@
+/* ==========================================================================================
+   惊变一览 (2026-10-13, 用户要求) — 干员调配右下角的按钮与其面板 (js/ui/jibianList.js, 自包含组件)。
+   独立小文件，在 public/index.html 里**排在 loadout.css 之后**引入，避免被 loadout.css 的既有规则（含 !important）覆盖。
+
+   Button: 底部「干员 / 道具」页签与 I–VI 阶页签右边那片空白的右下角。它绝对定位在 overlay 内（.lo 是 fixed/inset:0），
+   底距 = 底栏高度 (max(.8rem,46px)) + 一个间距 —— 于是它就落在底栏上方、deck 的右下角，既不会压住 I–VI 阶页签，
+   也不会被底栏盖住；z-index 5 让它压在 deck 的卡片之上。窄屏 (≤960px) 缩小字号、去掉英文小字，
+   与既有「卡片 / 列表视图」的 900px 断点同一套写法。
+   Panel: 遮罩 + 居中盒子；盒子自己滚动 (max-height 84vh)；✕ / Esc / 点遮罩均可关闭。
+   ========================================================================================== */
+
+.jbl { position: absolute; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; }
+.jbl__scrim { position: absolute; inset: 0; background: rgba(4, 7, 6, .68); backdrop-filter: blur(2px); animation: lo-in 160ms ease-out both; }
+.jbl__box {
+  position: relative; display: flex; flex-direction: column; width: min(92vw, 8.4rem); max-height: 84vh;
+  background: var(--bg-2, #121615); border: 1px solid var(--line-3); border-top: 3px solid var(--mint-500);
+  box-shadow: 0 .2rem .8rem rgba(0, 0, 0, .65);
+}
+.jbl__head { flex: none; display: flex; align-items: center; gap: .12rem; padding: .12rem .16rem; border-bottom: 1px solid var(--line); }
+.jbl__title { font-size: max(.24rem, 15px); font-weight: 900; letter-spacing: .1em; color: var(--text-hi); }
+.jbl__count { font-size: max(.13rem, 9px); color: var(--text-lo); }
+.jbl__x {
+  margin-left: auto; display: grid; place-items: center; width: max(.4rem, 26px); height: max(.4rem, 26px); padding: 0;
+  color: var(--text-md); background: none; border: 1px solid var(--line-2); cursor: pointer;
+}
+.jbl__x .icon { width: max(.2rem, 13px); height: max(.2rem, 13px); }
+.jbl__x:hover { color: var(--red-premium); border-color: var(--red-premium); }
+.jbl__scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin; scrollbar-color: var(--line-3) transparent; padding: .12rem .16rem .16rem; }
+.jbl__sec + .jbl__sec { margin-top: .16rem; }
+.jbl__lbl { position: sticky; top: 0; z-index: 1; display: flex; align-items: baseline; gap: .1rem; padding: .04rem 0;
+  font-size: max(.16rem, 11px); font-weight: 900; letter-spacing: .08em; background: var(--bg-2, #121615); }
+.jbl__lbln { color: var(--text-lo); font-size: max(.13rem, 9px); font-weight: 400; }
+.jbl__sec[data-rarity="normal"] .jbl__lblname { color: #3fb6ff; }
+.jbl__sec[data-rarity="rare"] .jbl__lblname { color: #5b8cff; }
+.jbl__sec[data-rarity="epic"] .jbl__lblname { color: #b47cff; }
+.jbl__sec[data-rarity="legend"] .jbl__lblname { color: var(--gold); }
+.jbl__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(max(3.2rem, 210px), 1fr)); gap: .1rem; }
+.jbl__row { flex-direction: row; align-items: flex-start; gap: .12rem; }
+.jbl__icon { flex: none; display: grid; place-items: center; width: max(.76rem, 42px); height: max(.76rem, 42px);
+  background: #151a18; border: 1px solid var(--line-2); }
+.jbl__icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.jbl__icon .icon { width: 60%; height: 60%; color: var(--text-lo); }
+.jbl__main { min-width: 0; display: flex; flex-direction: column; gap: calc(.06 * var(--t)); }
+.jbl__top { display: flex; align-items: baseline; gap: .08rem; }
+.jbl__top .jbc__name { min-width: 0; }
+.jbl__badge { white-space: nowrap; }
+.jbl__none { padding: .4rem; text-align: center; font-size: max(.16rem, 11px); color: var(--text-dim); }
+
+@media (max-width: 960px) {
+  .jbl__box { width: 96vw; max-height: 88vh; }
+  .jbl__list { grid-template-columns: 1fr; }
+  .jbl__icon { width: max(.6rem, 34px); height: max(.6rem, 34px); }
+}
+
+/* 有盟约关联的惊变（13 / 55 条，data 里的 `bond` 字段）：显示【该盟约自己的图标】——
+   默认的 .bglyph 只有 .24rem 且被 filter 染成单色，这里放大到卡片图标尺寸并保留彩色，
+   一眼就能认出是哪个盟约（2026-10-14）。 */
+.jbl__icon--bond .bglyph { width: 70%; height: 70%; }
+.jbl__icon--bond .bglyph img { filter: none; }
+.jbl__icon--bond { background: #101614; }
+
+/* 敌方惊变按钮（2026-10-14）：红色的「敌方惊变」——内容是 modes[<id>].enemyJibian.pool
+   （规则14：第 1 / 第 6 回合各抽一张，两张同时生效叠加）。红色与「惊变一览」区分；
+   位置紧贴在「惊变一览」上方——那个按钮已经贴着屏幕底边，它下面没有空间。 */
+/* 敌方一览：标题/分组标签走红色系，一眼区分 */
+.jbl--enemy .jbl__title { color: var(--red-premium); }
+.jbl--enemy .jbl__box { border-color: var(--red-premium); }
+/* 窄屏：按钮文字缩小、隐藏英文小字（两个惊变按钮一起，见文件末尾的 .lo-jbbar） */
+@media (max-width: 900px) {
+}
+
+/* ============================ 两个惊变按钮（我方 / 敌方）============================
+   容器竖排：各自绝对定位 + 手算偏移会在不同字号/缩放下重叠（2026-10-14 踩过），
+   flex 排布则永远不会。两个按钮共用 .lo-jbbtn 外观（边框 + 右侧 3px 竖条 + 左浅右深渐变），
+   只靠 --ally / --enemy 换色。 */
+.lo-jbbar {
+  position: absolute; right: .36rem; bottom: calc(max(.8rem, 46px) + .22rem); z-index: 5;
+  display: flex; flex-direction: column; align-items: flex-end; gap: .06rem;
+}
+.lo-jbbtn {
+  display: inline-flex; flex-direction: column; align-items: flex-end; gap: 1px;
+  padding: .06rem .16rem .05rem; font: inherit;
+  border: 1px solid var(--mint-800); border-right-width: 3px;
+  background: linear-gradient(90deg, rgba(23, 217, 160, .1), rgba(0, 0, 0, .5) 80%);
+  color: var(--mint-400); cursor: pointer; touch-action: manipulation;
+  transition: color var(--t-fast), background var(--t-fast), border-color var(--t-fast);
+}
+.lo-jbbtn__txt { font-size: max(.2rem, 13px); font-weight: 900; letter-spacing: .1em; line-height: 1.2; }
+.lo-jbbtn__micro { font-family: var(--font-num); font-size: max(.11rem, 8px); letter-spacing: .2em; opacity: .75; }
+/* 我方：薄荷绿 */
+.lo-jbbtn--ally:hover, .lo-jbbtn--ally:focus-visible {
+  color: var(--text-hi); background: linear-gradient(90deg, rgba(23, 217, 160, .2), rgba(0, 0, 0, .6) 80%);
+}
+.lo-jbbtn--ally.is-on { color: var(--text-on-mint); background: var(--mint-500); border-color: var(--mint-400); }
+/* 敌方：红（同一个结构，只换色）*/
+.lo-jbbtn--enemy {
+  color: var(--red-premium); border-color: var(--red-premium);
+  background: linear-gradient(90deg, rgba(255, 84, 84, .12), rgba(0, 0, 0, .5) 80%);
+}
+.lo-jbbtn--enemy:hover, .lo-jbbtn--enemy:focus-visible {
+  color: #fff; background: linear-gradient(90deg, rgba(255, 84, 84, .3), rgba(0, 0, 0, .6) 80%);
+}
+.lo-jbbtn--enemy.is-on { color: #fff; background: var(--red-premium); border-color: var(--red-premium); }
+
+@media (max-width: 960px) {
+  .lo-jbbar { right: .16rem; bottom: calc(max(.8rem, 46px) + .14rem); }
+  .lo-jbbtn { padding: .04rem .1rem .03rem; }
+  .lo-jbbtn__txt { font-size: max(.16rem, 11px); }
+  .lo-jbbtn__micro { display: none; }
+}

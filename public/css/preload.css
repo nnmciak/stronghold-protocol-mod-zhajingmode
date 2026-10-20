@@ -1,0 +1,363 @@
+/* ==========================================================================================
+   preload.css — 首页的「资源预下载」浮标与面板 (public/js/preload/panel.js).
+
+   Sizes are px, not the game's rem scale: 1rem is 100 design px at 1920×1080 but never drops below
+   40px (theme.css), so a .24rem panel on a phone in landscape would come out ~10px tall. This is a
+   utility overlay — it has to stay readable at any viewport, not scale with the battlefield.
+
+   z-index 190/195: above the game's screens (max 200 is the modal layer, which should still win).
+   Colours fall back to the literals so the panel survives a page that never loaded theme.css.
+   ========================================================================================== */
+
+.spp {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 195;
+  font-family: "Noto Sans SC", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-md, #c3cbc7);
+}
+
+/* A match is no place for a floating button. */
+.spp--in-match {
+  display: none;
+}
+
+/* ---- floating button ------------------------------------------------------------------- */
+
+.spp-fab {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 190;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 14px 8px 11px;
+  border: 1px solid var(--line, #2f3a35);
+  border-radius: 999px;
+  background: var(--bg-glass, rgba(16, 20, 18, .82));
+  backdrop-filter: blur(6px);
+  color: var(--text-md, #c3cbc7);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+
+.spp-fab:hover {
+  border-color: var(--mint-a35, rgba(78, 216, 175, .35));
+  color: var(--text-hi, #f2f2f2);
+}
+
+.spp-fab__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-dim, #5d6863);
+  flex: none;
+}
+
+.spp[data-phase="done"] .spp-fab__dot { background: var(--mint-500, #4ed8af); }
+.spp[data-phase="error"] .spp-fab__dot { background: var(--red, #e73118); }
+.spp[data-phase="downloading"] .spp-fab__dot,
+.spp[data-phase="checking"] .spp-fab__dot { background: var(--gold, #ffc600); }
+
+.spp-fab.is-busy .spp-fab__dot {
+  animation: spp-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes spp-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .25; }
+}
+
+.spp-fab__pct {
+  font-variant-numeric: tabular-nums;
+  color: var(--mint-500, #4ed8af);
+}
+
+.spp-fab__label { white-space: nowrap; }
+
+/* ---- panel ----------------------------------------------------------------------------- */
+
+.spp-panel {
+  position: absolute;
+  left: 0;
+  bottom: 44px;
+  width: min(420px, calc(100vw - 24px));
+  max-height: min(76vh, 620px);
+  overflow: auto;
+  padding: 14px 16px 12px;
+  border: 1px solid var(--line, #2f3a35);
+  border-radius: 10px;
+  background: var(--bg-glass, rgba(16, 20, 18, .92));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .55);
+}
+
+.spp-panel[hidden] { display: none; }
+
+.spp-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spp-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-hi, #f2f2f2);
+  letter-spacing: .5px;
+}
+
+.spp-badge {
+  padding: 1px 7px;
+  border: 1px solid var(--mint-a35, rgba(78, 216, 175, .35));
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--mint-500, #4ed8af);
+  white-space: nowrap;
+}
+
+.spp-badge--warn {
+  border-color: var(--amber-a20, rgba(246, 163, 41, .2));
+  color: var(--amber, #f6a329);
+}
+
+.spp-close {
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-lo, #8a948f);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.spp-close:hover { color: var(--text-hi, #f2f2f2); background: var(--bg-3, #252c29); }
+
+.spp-sub {
+  display: flex;
+  gap: 10px;
+  margin: 6px 0 10px;
+  font-size: 12px;
+  color: var(--text-lo, #8a948f);
+}
+
+.spp-version {
+  margin-left: auto;
+  color: var(--text-dim, #5d6863);
+  font-variant-numeric: tabular-nums;
+}
+
+.spp-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bg-3, #252c29);
+  overflow: hidden;
+}
+
+.spp-bar__fill {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--mint-700, #2a9e7f), var(--mint-500, #4ed8af));
+  transition: width .3s ease;
+}
+
+.spp[data-phase="error"] .spp-bar__fill { background: var(--red, #e73118); }
+
+.spp-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.spp-stats b { color: var(--text-hi, #f2f2f2); font-weight: 600; }
+
+.spp-current {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: var(--text-dim, #5d6863);
+  direction: rtl;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spp-groups {
+  margin: 10px 0 0;
+  border-top: 1px solid var(--line, #2f3a35);
+  padding-top: 8px;
+}
+
+.spp-groups summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-lo, #8a948f);
+  list-style: none;
+}
+
+.spp-groups summary::-webkit-details-marker { display: none; }
+.spp-groups summary::before { content: "▸ "; }
+.spp-groups[open] summary::before { content: "▾ "; }
+
+.spp-groups__list {
+  display: grid;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.spp-group {
+  display: grid;
+  grid-template-columns: 1fr 84px 96px;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.spp-group__name {
+  color: var(--text-md, #c3cbc7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spp-group__bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-3, #252c29);
+  overflow: hidden;
+}
+
+.spp-group__bar i {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--mint-600, #35d8b4);
+  transition: width .3s ease;
+}
+
+.spp-group__num {
+  text-align: right;
+  color: var(--text-dim, #5d6863);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.spp-note {
+  margin: 10px 0 0;
+  padding: 7px 9px;
+  border-left: 2px solid var(--amber, #f6a329);
+  background: var(--amber-a20, rgba(246, 163, 41, .2));
+  border-radius: 0 4px 4px 0;
+  font-size: 11px;
+  color: var(--text-md, #c3cbc7);
+}
+
+.spp-note--error {
+  border-left-color: var(--red, #e73118);
+  background: var(--red-a20, rgba(231, 49, 24, .22));
+}
+
+.spp-storage {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: var(--text-dim, #5d6863);
+}
+
+.spp-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.spp-actions button {
+  padding: 6px 12px;
+  border: 1px solid var(--line-2, #3e4b45);
+  border-radius: 6px;
+  background: var(--bg-2, #1e2421);
+  color: var(--text-md, #c3cbc7);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color .15s, color .15s, opacity .15s;
+}
+
+.spp-actions button:hover:not(:disabled) {
+  border-color: var(--mint-a35, rgba(78, 216, 175, .35));
+  color: var(--text-hi, #f2f2f2);
+}
+
+.spp-actions button:disabled { opacity: .4; cursor: default; }
+
+.spp-primary {
+  border-color: var(--mint-700, #2a9e7f) !important;
+  background: var(--mint-900, #0d2c24) !important;
+  color: var(--mint-400, #59f4ca) !important;
+  font-weight: 600;
+}
+
+.spp-auto {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-lo, #8a948f);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.spp-auto input { accent-color: var(--mint-500, #4ed8af); margin: 0; }
+
+.spp-hint {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: var(--text-dim, #5d6863);
+}
+
+@media (max-width: 560px) {
+  .spp-panel { width: calc(100vw - 24px); }
+  .spp-fab__label { display: none; }
+}
+
+
+/* 一次性预下载引导条（2026-10-13）：浮标正上方，进对局自动隐藏，可关闭
+   ★ 单位用 px —— 本文件的约定（见文件头）：1rem = 40~100px，用 rem 会糊满屏幕 */
+.spp-callout {
+  position: absolute; left: 0; bottom: 46px; z-index: 190;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  max-width: min(420px, calc(100vw - 24px));
+  padding: 10px 12px; border-radius: 10px;
+  background: var(--bg-glass, rgba(16, 20, 18, .94));
+  border: 1px solid var(--mint-a35, rgba(78, 216, 175, .35));
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .45);
+  font: inherit;
+  color: var(--text-md, #c3cbc7);
+  animation: spp-callout-in 300ms ease-out;
+}
+@keyframes spp-callout-in { from { opacity: 0; transform: translateY(6px); } }
+.spp-callout__text { flex: 1 1 180px; min-width: 150px; }
+.spp-callout__go {
+  padding: 4px 10px; border-radius: 6px; cursor: pointer; font: inherit;
+  border: 1px solid var(--mint-a35, rgba(78, 216, 175, .5));
+  background: rgba(78, 216, 175, .14); color: var(--mint-500, #4ed8af);
+}
+.spp-callout__go:hover { background: rgba(78, 216, 175, .26); }
+.spp-callout__no {
+  padding: 4px 8px; border-radius: 6px; cursor: pointer; font: inherit;
+  border: 1px solid var(--line, #2f3a35); background: transparent; color: var(--text-dim, #5d6863);
+}
+.spp--in-match .spp-callout { display: none; }

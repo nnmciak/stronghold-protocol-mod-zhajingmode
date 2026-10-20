@@ -1,0 +1,76 @@
+// server/sim/content/jibianBonds.js — 惊变羁绊（凑齐固定惊变卡 → 特殊效果）。
+//
+// 这个文件会被**浏览器**加载（/sim/* 是客户端战斗用的同一套模拟代码），所以不能 import node:fs。
+// 数据内联在这里（纯 JS，两端都能跑）；data/jibianBonds.json 只是人类可读的镜像。
+//
+//   activeBonds(ownedIds) → [{ def, tier, have }]
+//   bondHintsFor(cardId, ownedIds) → [{ name, have, need, tiers, tier, effect }]
+
+const BONDS = [
+  { id: 'dmg2dmg', name: '伤害转伤害', tiers: [2], members: ['jibian_wulizhuanmofa', 'jibian_mofazhuanwuli'], effect: '你的干员造成的所有伤害变为真实伤害，攻击力+50%。' },
+  { id: 'steady', name: '脚踏实地', tiers: [2, 3], members: ['jibian_jingzhun', 'jibian_xunjie', 'jibian_lingqiao', 'jibian_touziren', 'jibian_jianshou'], effect: '你的附属盟约层数叠加时获得的层数增加100%。（二档200%）' },
+  { id: 'glory', name: '重振荣光', tiers: [2, 3], members: ['jibian_hongsongqishituan', 'jibian_qishijingji', 'jibian_laobadao'], effect: '你的【卡西米尔】干员攻击距离+1，攻击力+100%。（二档翻倍）' },
+  { id: 'empathy', name: '共感', tiers: [2], members: ['jibian_huolibuzu', 'jibian_meiguozidan', 'jibian_chunyinzidan', 'jibian_wocongshanzhonglai'], effect: '把场上所有干员的攻击力变成整备阶段结束时场上攻击力最高干员的攻击力。' },
+  { id: 'siracusa_wrath', name: '叙拉古人的愤怒', tiers: [2], members: ['jibian_lala', 'jibian_geigei'], effect: '你立刻获得精锐的荒芜拉普兰德和缄默德克萨斯。' },
+  { id: 'freeship', name: '包邮', tiers: [2, 3], members: ['jibian_jisusongda_normal', 'jibian_jisusongda_rare', 'jibian_jisusongda_epic'], effect: '你在购买5阶干员时不再需要消耗资金。（二档增加6阶）' },
+  { id: 'roguelike_fan', name: '集成战略爱好者', tiers: [2, 4], members: ['jibian_gaoluzhipiao', 'jibian_banteng', 'jibian_zhuiji', 'jibian_wenmingdecunxu', 'jibian_shiguangzhimo', 'jibian_jinjiuzhibei'], effect: '你随机获得一个未获得过的藏品类惊变。' },
+  { id: 'cheat', name: '出老千', tiers: [2], members: ['jibian_daluandou', 'jibian_xuedingedemao', 'jibian_shenmishangdian', 'jibian_gaoluzhipiao', 'jibian_erjiguan'], effect: '你的部分惊变效果改变。' },
+  { id: 'modern_strongest', name: '现代最强', tiers: [3], members: ['jibian_liuyan', 'jibian_wuxiaxian', 'jibian_qingpaibeibu'], effect: '你的所有干员释放技能不再需要技力，攻击力+1000%，攻击速度+360，攻击距离+2。' },
+  { id: 'army_alert', name: '惊动军方', tiers: [2], members: ['jibian_yanrenhuifei', 'jibian_yanguoyouji', 'jibian_chixiaojianfa'], effect: '你立刻获得一个精锐望。' },
+  { id: 'great_seal', name: '伟大封印', tiers: [2], members: ['jibian_sanyuewuri', 'jibian_zonggongji'], effect: '当你的结城理死亡时，立刻处死场上血量最高的敌人，且你的结城理本回合无法再部署（一局一次）。' },
+  { id: 'true_investor', name: '真·投资人', tiers: [4], members: ['jibian_touziren', 'jibian_touziweilai', 'jibian_shenmishangdian', 'jibian_gaoluzhipiao', 'jibian_banteng', 'jibian_juanzeng', 'jibian_panduolamohe', 'jibian_malubian', 'jibian_jinjiuzhibei', 'jibian_rencaishichang'], effect: '返还触发前消耗的所有资金，并使每个【获得时】效果翻倍。' },
+  { id: 'toopainful', name: '因为太怕痛就全点防御力了', tiers: [2, 3], members: ['jibian_zheshe', 'jibian_jianshou', 'jibian_daoqiangburu', 'jibian_fushi'], effect: '一档：防御力和法术抗性增加70%；二档：被你干员阻挡的敌人每秒受到最大生命值10%的真实伤害。' },
+  { id: 'glorious_evo', name: '光荣进化', tiers: [2], members: ['jibian_jiarudaqun', 'jibian_chuncuideqiangda', 'jibian_moguiyu'], effect: '你的【阿戈尔】干员基础数值提升300%。' },
+  { id: 'layers_fan', name: '层数厨', tiers: [3], members: ['jibian_cengshudaluan', 'jibian_daozhuanqu', 'jibian_325799', 'jibian_diecengshou'], effect: '你的所有盟约层数叠加时获得的层数翻倍。' },
+].map((b) => Object.freeze({
+  id: b.id,
+  name: b.name,
+  tiers: b.tiers.slice().sort((a, z) => a - z),
+  members: b.members.slice(),
+  effect: b.effect,
+}));
+
+/** 全部羁绊（只读）。 */
+export function jibianBonds() {
+  return BONDS;
+}
+
+/** 这张卡属于哪些羁绊。 */
+export function bondsOfCard(cardId) {
+  const id = String(cardId || '');
+  return BONDS.filter((b) => b.members.includes(id));
+}
+
+/** 已拥有的卡 → 已激活的羁绊（只返回达到最低阈值的）。 */
+export function activeBonds(ownedIds) {
+  const owned = ownedIds instanceof Set ? ownedIds : new Set(ownedIds || []);
+  const out = [];
+  for (const def of BONDS) {
+    let have = 0;
+    for (const m of def.members) if (owned.has(m)) have++;
+    if (!have) continue;
+    let tier = 0;
+    for (const t of def.tiers) if (have >= t) tier = Math.max(tier, t);
+    if (tier > 0) out.push({ def, tier, have });
+  }
+  return out;
+}
+
+/** 卡面要显示的羁绊进度（这张卡本身不算）。 */
+export function bondHintsFor(cardId, ownedIds) {
+  const defs = bondsOfCard(cardId);
+  if (!defs.length) return [];
+  const owned = ownedIds instanceof Set ? ownedIds : new Set(ownedIds || []);
+  return defs.map((def) => {
+    let have = 0;
+    for (const m of def.members) if (owned.has(m)) have++;
+    return {
+      name: def.name,
+      have,
+      need: def.tiers[0] || 2,
+      tiers: def.tiers.slice(),
+      tier: def.tiers.filter((n) => have >= n).length,
+      effect: def.effect || '',
+    };
+  });
+}

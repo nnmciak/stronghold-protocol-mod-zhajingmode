@@ -1,0 +1,717 @@
+/* ==========================================================================================
+   screens/game-shop.css — bottom shop bar (js/ui/shopBar.js) + merge reward overlay (rewardOverlay.js).
+   Research 06 §11.2: LEVEL card, operator cards (tier chip, price hexagon, half-body art, bond & class
+   rows, icy frozen overlay), item card, funds card with ✕ 收起; 冻结 (ice) / 刷新 (amber) above.
+   ========================================================================================== */
+
+.shopbar {
+  position: absolute; right: .26rem; bottom: .2rem;
+  display: flex; flex-direction: column; align-items: flex-end; gap: .1rem;
+  animation: shop-up var(--t-slow) var(--ease-out);
+  /* ★ 设置 →「商店大小」(用户 2026-10-17：玩家反馈商店 UI 太小)。倍率由 ui/settings.js 的
+     applyShopScale 写成 `<html>` 上的 --shop-scale（0.8~1.6，默认 1）。
+     这里用 `zoom` 而不是 `transform: scale()`：transform 只缩放视觉、**命中区域仍是原尺寸**（按钮点了没反应），
+     zoom 会让布局盒、文字、点击区域一起缩放。`.shopbar` 是 `right/bottom` 定位，
+     所以放大时它会朝左上长，不会跑出屏幕右下角。 */
+  zoom: var(--shop-scale, 1);
+}
+@keyframes shop-up { from { opacity: 0; transform: translateY(.3rem); } }
+/* Official layout (research 06 §11.2 / D3): "剩余可放置角色: N" on its own line, right-aligned ABOVE [冻结] [刷新]. On one
+   line the block reached over the bench's last pads (整备区 slot 9 at 16:9 under the official shop camera). Only the
+   bar's parts take the pointer: its box spans the empty space left of the tools, which used to swallow drags and taps
+   on bench slots 5–9. */
+.gm__hud > .shopbar { pointer-events: none; }
+.shopbar__row, .shopbar__tools > button { pointer-events: auto; }
+.shopbar__tools { display: grid; grid-template-columns: auto auto; justify-content: end; align-items: center; gap: .06rem .12rem; }
+.shopbar__remain {
+  grid-column: 1 / -1; justify-self: end; pointer-events: none;
+  font-size: .16rem; color: var(--text-md); padding: .04rem .14rem; background: rgba(8, 11, 10, .78);
+  border-left: 3px solid var(--mint-500);
+}
+.shopbar__remain b { color: var(--mint-400); font-size: .2rem; margin-left: .04rem; }
+.toolbtn {
+  --tb: var(--ice);
+  display: flex; align-items: center; gap: .08rem; height: .48rem; padding: 0 .14rem 0 .08rem;
+  background: rgba(8, 11, 10, .9); border: 2px solid var(--tb); color: var(--tb); font-size: .19rem; font-weight: 700; letter-spacing: .1em;
+  box-shadow: 0 .04rem .14rem rgba(0, 0, 0, .45);
+  transition: background var(--t-fast), box-shadow var(--t-fast), transform var(--t-fast);
+}
+.toolbtn:hover:not(:disabled) { background: rgba(8, 11, 10, .9); background: color-mix(in srgb, var(--tb) 16%, rgba(8, 11, 10, .9)); box-shadow: 0 0 .18rem transparent; box-shadow: 0 0 .18rem color-mix(in srgb, var(--tb) 40%, transparent); }
+.toolbtn:active:not(:disabled) { transform: translateY(1px); }
+.toolbtn:disabled { --tb: var(--line-3); color: var(--text-dim); cursor: not-allowed; }
+.toolbtn__img { width: .34rem; height: .34rem; object-fit: contain; }
+.toolbtn .icon { width: .24rem; height: .24rem; }
+.toolbtn--amber { --tb: var(--amber); }
+.toolbtn--ice.is-on { background: var(--ice); color: #0b1822; }
+.toolbtn--ice.is-on kbd { color: #28435a; border-color: #5d88aa; }
+.toolbtn--ice.is-on:hover:not(:disabled) { background: #c2e5ff; color: #0b1822; box-shadow: 0 0 .22rem rgba(159, 212, 255, .6); }
+.toolbtn--ice.is-on kbd { background: rgba(255, 255, 255, .35) !important; }
+.toolbtn__free { font-size: .13rem; padding: .01rem .06rem; background: var(--mint-500); color: var(--text-on-mint); letter-spacing: 0; }
+.toolbtn .hex { --hex-h: .26rem; }
+
+.shopbar__row {
+  position: relative; display: flex; align-items: stretch; gap: .08rem; padding: .1rem;
+  background: linear-gradient(180deg, rgba(14, 19, 17, .94), rgba(8, 11, 10, .97));
+  border: 1px solid var(--line-2); border-top: 2px solid var(--mint-700);
+  box-shadow: 0 -.04rem .3rem rgba(0, 0, 0, .55);
+}
+.shopbar__row::before {
+  content: ''; position: absolute; left: 0; right: 0; top: -2px; height: 2px;
+  background: linear-gradient(90deg, var(--mint-400), transparent 30%, transparent 70%, var(--mint-400));
+}
+.shopbar__cards { display: flex; gap: .08rem; }
+.shopbar__item { display: flex; gap: .08rem; padding-left: .08rem; border-left: 1px dashed var(--line-2); }
+.shopbar.is-frozen .shopbar__row { border-color: rgba(159, 212, 255, .5); border-top-color: var(--ice); }
+.shopbar.is-locked .scard:not(.scard--sold) { filter: saturate(.55) brightness(.8); }
+
+/* ---- level card ---- */
+.lvcard {
+  position: relative; width: 1.24rem; height: 2.24rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .12rem;
+  padding: .2rem .1rem .1rem; background: linear-gradient(180deg, #5fe0b9, #36b690); border: 0; color: var(--text-on-mint);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - .14rem), calc(100% - .14rem) 100%, 0 100%);
+  transition: filter var(--t-fast), transform var(--t-fast);
+}
+.lvcard:hover:not(.is-disabled) { filter: brightness(1.08); }
+.lvcard:active:not(.is-disabled) { transform: translateY(1px); }
+.lvcard__price { position: absolute; top: .08rem; left: 50%; transform: translateX(-50%); }
+.lvcard__frame { position: relative; display: flex; flex-direction: column; align-items: center; padding: .04rem .16rem .02rem; border: 2px solid rgba(6, 17, 13, .75); }
+.lvcard__frame::before, .lvcard__frame::after { content: ''; position: absolute; width: .1rem; height: .1rem; border: 2px solid var(--text-on-mint); }
+.lvcard__frame::before { left: -.06rem; top: -.06rem; border-right: 0; border-bottom: 0; }
+.lvcard__frame::after { right: -.06rem; bottom: -.06rem; border-left: 0; border-top: 0; }
+.lvcard__micro { font-family: var(--font-display); font-size: .12rem; letter-spacing: .24em; font-weight: 700; }
+.lvcard__num { font-size: .66rem; line-height: .9; font-weight: 700; }
+.lvcard__label { font-size: .2rem; font-weight: 900; letter-spacing: .3em; padding-left: .3em; }
+.lvcard__key { position: absolute; right: .08rem; bottom: .06rem; color: var(--mint-900) !important; border-color: rgba(6, 17, 13, .35) !important; background: transparent !important; }
+.lvcard.is-disabled { background: linear-gradient(180deg, #3a4a44, #2a3531); color: #8fa59c; cursor: not-allowed; }
+.lvcard.is-disabled .lvcard__frame { border-color: rgba(143, 165, 156, .5); }
+.lvcard.is-disabled .lvcard__frame::before, .lvcard.is-disabled .lvcard__frame::after { border-color: #8fa59c; }
+.lvcard.is-max { background: linear-gradient(180deg, #d9b24a, #a07a1c); color: #1d1400; cursor: default; filter: none; }
+
+/* ---- operator / item card ---- */
+/* A tap anywhere on a card is the card's tap (no ⓘ corner — user playtest #6 item 10); the 确认购买 strip takes no
+   pointer. The detail opens with the first tap, a right-click / long press, or a tap while the bar is not editable. */
+.scard-wrap { display: flex; }
+.scard {
+  --tc: var(--tier-1);
+  position: relative; width: 1.56rem; height: 2.24rem; padding: 0; overflow: hidden; text-align: left;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  background: #151a18; border: 1px solid rgba(78, 216, 175, .35);
+  transition: transform var(--t-fast) var(--ease-out), border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.scard--t1 { --tc: var(--tier-1); } .scard--t2 { --tc: var(--tier-2); } .scard--t3 { --tc: var(--tier-3); }
+.scard--t4 { --tc: var(--tier-4); } .scard--t5 { --tc: var(--tier-5); } .scard--t6 { --tc: var(--tier-6); }
+.scard__bg { position: absolute; inset: 0;
+  background: linear-gradient(180deg, #1c2320, #0f1311); /* fallback: no color-mix() (Safari < 16.2) */
+  background:
+  radial-gradient(120% 70% at 80% 30%, color-mix(in srgb, var(--tc) 28%, transparent), transparent 70%),
+  linear-gradient(180deg, #1c2320, #0f1311); }
+/* ★ 2026-10-15：加 z-index —— 立绘（.scard__art）在 DOM 里排在后面、又没有 z-index，
+   于是它盖住水印；窄立绘时只有右半边被盖（所以别的干员看得出左半边），
+   但立绘一旦偏宽就整块不见。提一层之后，所有卡片的盟约水印都稳定可见。 */
+.scard__water { position: absolute; left: -.2rem; top: .34rem; width: 1.1rem; height: 1.1rem; opacity: .1; z-index: 1; }
+.scard__water .bglyph { width: 100%; height: 100%; }
+.scard__art { position: absolute; right: -.14rem; top: 0; height: 100%; width: auto; max-width: none; object-fit: cover; pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 88%); mask-image: linear-gradient(180deg, #000 55%, transparent 88%); }
+/* ---- 皮肤立绘铺满格子 (docs/SKINS.md) ----------------------------------------------------------------------
+   穿了皮肤时,立绘是【按卡片比例导出】的(0.696:1,见 tools/export-skin-portraits.mjs),所以要的是"铺满":
+     * 四边都贴住(默认的 right:-.14rem 是为窄幅立绘贴右侧留的,铺满时反而会偏出去);
+     * 去掉底部渐隐 —— 那层是为"立绘压在文字上"做的过渡,铺满时它会把画面下缘吃掉一块;
+     * 核心盟约水印也去掉,否则会压在脸上。
+   没有皮肤的卡片不带 is-skinart,样式与原来完全一致。 */
+.scard.is-skinart .scard__art { left: 0; right: 0; width: 100%; height: 100%; object-position: center; -webkit-mask-image: none; mask-image: none; }
+.scard.is-skinart .scard__water { display: none; }
+/* ---- 阿戈尔标识 (user 2026-10-10) ---------------------------------------------------------------------------
+   在商店卡片的立绘区域叠加一枚阿戈尔盟约图标 —— 只在【不改任何图片】的前提下做 UI 叠加,由 shopBar.js 在
+   `bonds.includes('egirShip')` 时渲染(来源与该卡的水印/盟约条完全一致,所以克莱门莎这类 egirShip 干员自动有)。
+   位面:左上角 tier 徽章之下(.scard__top 只有 .06rem 高起,徽章约 .34rem)、核心盟约水印之上 ——
+   水印只有 .1 不透明度,z-index 2 的小图压过去不影响观感;也不碰右下角的文字块与立绘铺满样式。 */
+.scard__aegir {
+  position: absolute; left: .07rem; top: .46rem; width: .36rem; height: .36rem; z-index: 2;
+  display: grid; place-items: center; padding: .03rem;
+  background: rgba(8, 11, 10, .82); border: 1px solid var(--line-3); box-shadow: 0 1px 3px rgba(0, 0, 0, .75);
+}
+.scard__aegir-icon { width: 100%; height: 100%; object-fit: contain; }
+.scard__top { position: absolute; left: .06rem; right: .06rem; top: .06rem; display: flex; align-items: flex-start; justify-content: space-between; z-index: 2; }
+.scard__price { position: absolute; left: 50%; top: 0; transform: translateX(-50%); filter: drop-shadow(0 1px 3px #000); }
+.scard__free { position: absolute; left: 50%; top: .02rem; transform: translateX(-50%); font-family: var(--font-num); font-weight: 700; font-size: .16rem; letter-spacing: .1em; color: var(--text-on-mint); background: var(--mint-400); padding: 0 .1rem; clip-path: polygon(.08rem 0, calc(100% - .08rem) 0, 100% 50%, calc(100% - .08rem) 100%, .08rem 100%, 0 50%); }
+.scard__pips { display: flex; gap: .03rem; padding: .03rem .04rem; background: rgba(0, 0, 0, .6); }
+.scard__pips i { width: .07rem; height: .07rem; border: 1px solid var(--gold); transform: rotate(45deg); }
+.scard__pips i.on { background: var(--gold); }
+.scard__body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: .03rem; padding: .3rem .08rem .08rem; background: linear-gradient(0deg, rgba(8, 11, 10, .98) 60%, transparent); }
+/* the loadout's skill (DESIGN §16) above the name; mint frame = not the default skill */
+.scard__skill { position: absolute; right: .07rem; top: -.02rem; width: .3rem; height: .3rem; display: grid; place-items: center;
+  background: #0a0d0c; border: 1px solid var(--line-3); box-shadow: 0 1px 3px rgba(0, 0, 0, .8); }
+.scard__skill img { width: 100%; height: 100%; object-fit: cover; }
+.scard__skill .icon { width: .18rem; height: .18rem; color: var(--gold); }
+/* a chosen skill without an icon in the asset manifest: its slot letter */
+.scard__sglyph { font-family: var(--font-display); font-size: .13rem; font-weight: 700; letter-spacing: .02em; color: var(--mint-400); }
+.scard__skill.is-custom { border-color: var(--mint-400); box-shadow: 0 0 0 1px var(--mint-500), 0 0 .08rem rgba(23, 249, 183, .5); }
+.scard__skill.is-custom::after { content: ''; position: absolute; right: -.04rem; top: -.04rem; width: .08rem; height: .08rem; background: var(--mint-400); transform: rotate(45deg); }
+.scard__mod { position: absolute; right: 100%; bottom: 0; margin-right: .03rem; display: flex; align-items: center; gap: .02rem; font-family: var(--font-display); font-size: .1rem; line-height: 1.4; padding: 0 .04rem; background: rgba(0, 0, 0, .75); color: var(--gold-2); white-space: nowrap; }
+/* the official module type icon (local-client art, DESIGN §13); the type text stays beside it */
+.scard__skill .scard__modicon { flex: none; width: .14rem; height: .14rem; object-fit: contain; }
+.scard__name { font-size: .19rem; font-weight: 900; letter-spacing: .04em; color: #fff; text-shadow: 0 1px 3px #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scard__bonds { display: flex; flex-wrap: wrap; gap: .02rem .08rem; }
+.scard__bond { display: inline-flex; align-items: center; gap: .03rem; font-size: .13rem; color: var(--mint-400); }
+.scard__bond .bglyph { width: .18rem; height: .18rem; }
+.scard__bond.is-off { color: var(--text-dim); text-decoration: line-through; text-decoration-color: rgba(255, 84, 84, .6); } /* the mode never activates it (标准) */
+.scard__class { display: flex; align-items: center; gap: .05rem; font-size: .13rem; color: var(--text-lo); }
+.scard__prof { width: .18rem; height: .18rem; object-fit: contain; opacity: .85; }
+.scard__mergetag { position: absolute; z-index: 3; right: 0; top: .38rem; font-size: .12rem; font-weight: 700; padding: .01rem .06rem; background: var(--gold); color: #1d1400; letter-spacing: .08em; }
+/* 0.2.0 补位: a chess the player does not own shows its stand-in (ui/shopBar.js ChessCard) — a small 「替补」 mark */
+.scard__standin { position: absolute; z-index: 3; left: 0; top: .38rem; max-width: calc(100% - .1rem); font-size: max(.11rem, 8px); font-weight: 700; line-height: 1.4;
+  padding: 0 .05rem; background: var(--ice); color: var(--ice-900); letter-spacing: .08em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: .9; box-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
+/* 0.2.0 自选编队: a DIY slot the player filled — the card is its operator, only in this player's shop (ui/shopBar.js) */
+.scard__diy { position: absolute; z-index: 3; left: 0; top: .38rem; font-size: .12rem; font-weight: 700; padding: .01rem .06rem;
+  background: var(--mint-500); color: var(--text-on-mint); letter-spacing: .08em; white-space: nowrap; box-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
+.scard:not(.is-disabled):not(.scard--sold):hover { transform: translateY(-.08rem); border-color: var(--mint-400); box-shadow: 0 0 0 1px var(--mint-400), 0 .1rem .24rem rgba(23, 249, 183, .22); }
+.scard:not(.is-disabled):not(.scard--sold):active { transform: translateY(-.04rem); }
+.scard.is-disabled { cursor: not-allowed; }
+.shopbar.is-locked .scard:not(.scard--sold) { cursor: help; } /* not editable: a tap opens the detail */
+.scard.is-disabled .scard__art, .scard.is-disabled .scard__itemart { filter: grayscale(.7) brightness(.6); }
+.scard.is-merge { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(255, 198, 0, .6), 0 0 .2rem rgba(255, 198, 0, .3); }
+.scard.is-frozen::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(180deg, rgba(159, 212, 255, .28), rgba(159, 212, 255, .12) 50%, rgba(159, 212, 255, .34));
+  box-shadow: inset 0 0 0 2px rgba(159, 212, 255, .8), inset 0 0 .3rem rgba(159, 212, 255, .5); }
+.scard__ice { position: absolute; left: 50%; bottom: .06rem; transform: translateX(-50%); z-index: 4; width: .3rem; height: .3rem; display: grid; place-items: center; background: #0c1a26; border: 1px solid var(--ice); color: var(--ice); }
+.scard__ice .icon { width: .2rem; height: .2rem; }
+.scard--item { --tc: var(--gold-2); }
+.scard__itemart { position: absolute; left: 50%; top: .38rem; transform: translateX(-50%); width: 1rem; height: 1rem; display: grid; place-items: center;
+  background: radial-gradient(circle, rgba(255, 198, 0, .16), transparent 70%); }
+.scard__itemart img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 .04rem .08rem #000); }
+.scard__itemart .icon { width: .6rem; height: .6rem; color: var(--gold-2); }
+.scard__idesc { font-size: .12rem; line-height: 1.45; color: var(--text-lo); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.scard--sold { background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .02) 0 .08rem, transparent .08rem .16rem), rgba(8, 11, 10, .75); border: 1px dashed var(--line-2); justify-content: center; align-items: center; }
+.scard__soldtxt { display: flex; flex-direction: column; align-items: center; gap: .02rem; font-size: .16rem; color: var(--text-dim); }
+
+/* ---- funds card ---- */
+.funds { width: 1.18rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .08rem; padding: .06rem; border-left: 1px solid var(--line); }
+.funds__hex {
+  position: relative; width: 1rem; height: .9rem; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, #2b2410, #16120a); color: var(--gold);
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+}
+.funds__hex::before { content: ''; position: absolute; inset: 2px; clip-path: inherit; border: 0; background: transparent; box-shadow: inset 0 0 0 2px var(--gold); }
+.funds__coin { width: .34rem; height: .34rem; fill: var(--gold); filter: drop-shadow(0 0 .06rem rgba(255, 198, 0, .6)); }
+.funds__num { font-size: .36rem; line-height: 1; font-weight: 700; color: #fff; }
+.funds__label { font-size: .14rem; color: var(--text-lo); letter-spacing: .1em; }
+/* 规则10: 「下回合最少获得：x（包含y利息）」 —— 资金卡里的一行小字（服务端预演，见 round.js nextIncomePreview） */
+.funds__next { font-size: .11rem; line-height: 1.35; text-align: center; color: var(--text-dim); letter-spacing: .02em; }
+.funds__collapse { display: flex; align-items: center; gap: .04rem; font-size: .15rem; background: none; border: 1px solid var(--line-2); color: var(--text-lo); padding: .02rem .1rem; }
+.funds__collapse .icon { width: .14rem; height: .14rem; }
+.funds__collapse:hover { color: var(--text-hi); border-color: var(--line-3); }
+.coin-glyph { fill: var(--gold); }
+
+/* collapsed tab */
+.shopbar-tab { position: absolute; right: .26rem; bottom: .2rem; display: flex; align-items: center; gap: .1rem; padding: .08rem; background: rgba(8, 11, 10, .92); border: 1px solid var(--line-2); border-top: 2px solid var(--mint-700); }
+.shopbar-tab__funds { display: flex; align-items: center; gap: .06rem; padding: 0 .1rem; }
+.shopbar-tab__funds .coin-glyph { width: .26rem; height: .26rem; }
+.shopbar-tab__funds b { font-size: .28rem; }
+.shopbar-tab__btn { display: flex; align-items: center; gap: .04rem; height: .44rem; padding: 0 .16rem; background: var(--mint-500); color: var(--text-on-mint); border: 0; font-size: .17rem; font-weight: 700; letter-spacing: .1em; }
+.shopbar-tab__btn .icon { width: .18rem; height: .18rem; transform: rotate(90deg); }
+
+/* (no drag-to-sell zone: selling is the underframe's 出售 +N button — research 09 §5) */
+
+/* ---- merge reward (inline: replaces the operator cards) ---- */
+.shopbar__reward { display: flex; gap: .08rem; padding: 0 .08rem 0 0; position: relative; animation: pop-in var(--t-slow) var(--ease-out); }
+.shopbar__reward::before { content: ''; position: absolute; inset: -.06rem -.04rem; border: 1px solid rgba(255, 198, 0, .55);
+  box-shadow: 0 0 .24rem rgba(255, 198, 0, .18), inset 0 0 .3rem rgba(255, 198, 0, .08); pointer-events: none; }
+.rwtag {
+  width: .92rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .06rem; padding: .08rem .04rem;
+  background: linear-gradient(180deg, rgba(255, 198, 0, .22), rgba(255, 198, 0, .06)); color: var(--gold); text-align: center;
+}
+.rwtag__icon { width: .34rem; height: .34rem; filter: drop-shadow(0 0 .08rem rgba(255, 198, 0, .6)); }
+.rwtag__title { writing-mode: vertical-rl; font-size: .22rem; font-weight: 900; letter-spacing: .2em; line-height: 1; }
+.rwtag__micro { font-family: var(--font-display); font-size: .09rem; letter-spacing: .14em; opacity: .75; }
+.rwtag__sub { font-size: .12rem; color: var(--text-md); line-height: 1.3; }
+.rwtag__more { color: var(--gold); }
+.rwtag__later { display: flex; align-items: center; gap: .02rem; margin-top: .04rem; padding: .02rem .08rem; font-size: .13rem; color: var(--text-lo);
+  background: rgba(0, 0, 0, .35); border: 1px solid var(--line-2); }
+.rwtag__later .icon { width: .12rem; height: .12rem; }
+.rwtag__later:hover { color: var(--text-hi); border-color: var(--line-3); }
+.shopbar__rwcards { display: flex; gap: .08rem; }
+.shopbar__rwcards .scard { border-color: rgba(255, 198, 0, .5); }
+.shopbar.has-reward .shopbar__row { border-top-color: var(--gold); }
+.rewardpill {
+  position: absolute; right: .26rem; bottom: 3.26rem; z-index: 6; display: flex; align-items: center; gap: .08rem; padding: .08rem .16rem;
+  background: rgba(24, 18, 4, .95); border: 1px solid var(--gold); color: var(--gold); font-size: .17rem; font-weight: 700;
+  animation: pulse-gold 1.6s ease-in-out infinite;
+}
+.rewardpill .icon { width: .2rem; height: .2rem; }
+.rewardpill__more { padding: 0 .06rem; border: 1px solid var(--gold); font-size: .13rem; line-height: 1.4; }
+@keyframes pulse-gold { 50% { box-shadow: 0 0 .24rem rgba(255, 198, 0, .5); } }
+
+/* ---- two-tap buy / upgrade (research 09 §5): the first tap lifts + enlarges the card and shows 确认购买 ---- */
+/* while a card is armed the bar sits above the detail card its first tap opened (.dpanel, z-index 9): on phones narrower
+   than 768 px the left-docked detail reaches down over the bar's first cards (bottom 87 px from the screen's bottom,
+   devices.css) and took the confirming tap on their top quarter (640×360: 108 of 144 points; user playtest #6 item 10) */
+.shopbar.has-armed { z-index: 10; }
+.scard.is-armed {
+  z-index: 3; transform: translateY(-.16rem) scale(1.08) !important; border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold), 0 .14rem .32rem rgba(0, 0, 0, .65), 0 0 .3rem rgba(255, 198, 0, .35) !important;
+}
+.scard.is-armed.is-disabled { border-color: var(--red-premium); box-shadow: 0 0 0 2px var(--red-premium), 0 .14rem .32rem rgba(0, 0, 0, .65) !important; }
+.scard__confirm {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; display: flex; flex-direction: column; align-items: center; gap: 0;
+  padding: .05rem 0 .04rem; background: linear-gradient(0deg, var(--gold), #e0a800); color: #1d1400; pointer-events: none;
+  animation: confirm-in var(--t-fast) var(--ease-out);
+}
+@keyframes confirm-in { from { transform: translateY(100%); } }
+.scard__confirm b { font-size: .18rem; font-weight: 900; letter-spacing: .22em; padding-left: .22em; }
+.scard__confirm small { font-size: .11rem; letter-spacing: .1em; opacity: .75; }
+.scard__confirm.is-no { background: linear-gradient(0deg, #54150f, #34100c); color: var(--red-premium); }
+.scard__confirm.is-no small { opacity: 1; color: #ffb0a6; max-width: 100%; padding: 0 .06rem; text-align: center; white-space: normal; }
+.shopbar.has-armed .scard:not(.is-armed):not(.scard--sold) { filter: brightness(.72); }
+.lvcard.is-armed { background: linear-gradient(180deg, #ffd65a, #e0a800); color: #1d1400; box-shadow: 0 0 0 2px #fff4c2, 0 0 .3rem rgba(255, 198, 0, .5); animation: pulse-gold 1.1s var(--ease-in-out) infinite; }
+.lvcard.is-armed .lvcard__label { letter-spacing: .12em; padding-left: .12em; }
+
+
+/* 2026-10-13 商店缩小一档：直接改实际尺寸（原 1.56rem × 2.24rem 会挡住棋盘/干员） */
+.scard { width: 1.26rem !important; height: 1.82rem !important; }
+.shopbar__row { padding: .07rem !important; gap: .06rem !important; }
+.shopbar__cards { gap: .06rem !important; }
+.shopbar__item { gap: .06rem !important; padding-left: .06rem !important; }
+.shopbar { gap: .07rem !important; bottom: .16rem !important; right: .2rem !important; }
+.shopbar__remain { font-size: .15rem !important; padding: .03rem .1rem !important; }
+.shopbar__remain b { font-size: .18rem !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-13（用户）商店 UI 优化 —— 只动两件事，其余一律不碰：
+     ① 行内空白/内边距不再吃点击：原来 `.shopbar__row { pointer-events: auto }` 让整行（含
+        卡片之间的空隙与内边距）都吞掉点击，于是商店【后面那几格】点不到、干员放不下去。
+        现在只让行内的【卡片本身】可点，行是穿透的。
+     ② 整体缩小 12%（以右下角为基点），少压棋盘最下面几行。
+   若另一会话也在改本文件：这段在文件末尾，属性互不重叠（只改 pointer-events 与 transform）✓
+   ========================================================================================== */
+.shopbar__row { pointer-events: none; }
+.shopbar__row > * { pointer-events: auto; }
+.shopbar { transform: scale(.88); transform-origin: 100% 100%; }
+@keyframes shop-up { from { opacity: 0; transform: translateY(.3rem) scale(.88); } }
+
+/* 2026-10-13 右下角 UI 尺寸优化（用户：商店/冻结刷新/资金气泡 一簇太挤，气泡被右边缘切掉）
+   目标：整体小一档、间距更顺、绝不越出屏幕右/下边缘；只覆盖尺寸，不改结构 */
+.shopbar { gap: max(.05rem, 4px); bottom: max(.14rem, 10px); right: max(.18rem, 12px); }
+
+/* 商店卡片：再小一档 */
+.scard { width: 1.16rem !important; height: 1.68rem !important; }
+
+/* 商店条本身 */
+.shopbar__row { padding: .06rem !important; gap: .05rem !important; }
+.shopbar__cards { gap: .05rem !important; }
+.shopbar__item { gap: .05rem !important; padding-left: .05rem !important; }
+
+/* 冻结 / 刷新 那两个按钮：更紧凑、别压住卡片 */
+.shopbar__tools { gap: .04rem .08rem !important; }
+.shopbar__tools > button { min-height: max(.36rem, 22px); padding: 0 max(.1rem, 8px); font-size: max(.14rem, 10px); }
+
+/* 「剩余可放置角色」提示条 */
+.shopbar__remain { font-size: max(.13rem, 9px) !important; padding: .025rem .09rem !important; }
+.shopbar__remain b { font-size: max(.16rem, 11px) !important; }
+
+/* 金色资金气泡：缩小 + 贴边不越界 + 允许换行不撑破 */
+.shopbar-tab { right: max(.18rem, 12px) !important; bottom: max(.14rem, 10px) !important;
+  max-width: min(38vw, 4.6rem); padding: .06rem !important; gap: .06rem !important; }
+.shopbar-tab__funds { padding: 0 max(.06rem, 5px) !important; gap: .04rem !important; }
+.shopbar-tab__funds .coin-glyph { width: max(.2rem, 15px) !important; height: max(.2rem, 15px) !important; }
+.shopbar-tab__funds b { font-size: max(.2rem, 15px) !important; }
+.shopbar-tab__btn { height: max(.34rem, 22px) !important; padding: 0 max(.1rem, 8px) !important; font-size: max(.14rem, 10px) !important; }
+.shopbar-tab__btn .icon { width: max(.14rem, 10px) !important; height: max(.14rem, 10px) !important; }
+
+/* 窄屏（手机/平板）再收一档 */
+@media (max-width: 960px) {
+  .scard { width: 1.02rem !important; height: 1.48rem !important; }
+  .shopbar-tab { max-width: 46vw; }
+}
+
+/* ==========================================================================================
+   ★ 2026-10-14（用户）：「右下角这个 ui 能优化下吗 看不清人了 都好小啊」
+   原因：2026-10-13 的两次缩放叠加 —— `.shopbar` 整体 scale(.88) × `.scard` 尺寸被改成
+   1.16×1.68rem（原设计 1.56×2.24）＝ 只剩 65%。这里把累计放回约 88%（比原来大约 +35%）。
+   想再调大小：只改下面这一个数字即可（1.0 = 完全不缩；1.34 ≈ 回到原设计尺寸）。
+   兼容注：本段在文件末尾，全部带 !important，覆盖上面几段而不改动它们（别的会话的改动不动）。
+   ========================================================================================== */
+:root { --sg: 1.05; }   /* ★ 2026-10-15（用户）两轮「等比例缩小一点 / 再小一点」——
+   本段只改这一个数字即可等比缩放整个商店（注释原文：1.0 = 完全不缩；1.34 ≈ 回到原设计）。
+   1.24 → 1.1 → 0.95：相对原设计共缩 29%，相对 1.24 那版缩 23%。
+   手机端不受影响：mobile-tweaks.css 在自己的媒体查询里把 --sg 压回 1，且后加载。 */
+
+.shopbar { transform: scale(.95) !important; transform-origin: 100% 100%; }
+.shopbar__row { padding: .08rem !important; gap: .06rem !important; }
+.shopbar__cards { gap: .06rem !important; }
+
+/* 干员卡：尺寸 + 卡面文字一起放大 */
+.scard { width: calc(1.16rem * var(--sg)) !important; height: calc(1.68rem * var(--sg)) !important; }
+.scard__name { font-size: calc(.19rem * var(--sg)) !important; }
+.scard__bond, .scard__class { font-size: calc(.13rem * var(--sg)) !important; }
+.scard__itemart { width: calc(1rem * var(--sg)) !important; height: calc(1rem * var(--sg)) !important; }
+.scard__skill { width: calc(.3rem * var(--sg)) !important; height: calc(.3rem * var(--sg)) !important; }
+.scard__ice { width: calc(.3rem * var(--sg)) !important; height: calc(.3rem * var(--sg)) !important; }
+
+/* 升级卡 */
+.lvcard { width: calc(1.24rem * var(--sg)) !important; height: calc(2.24rem * var(--sg)) !important; }
+.lvcard__num { font-size: calc(.66rem * var(--sg)) !important; }
+.lvcard__label { font-size: calc(.2rem * var(--sg)) !important; }
+
+/* 入场动画跟着一起放大，免得从 0.88 跳到 0.95 */
+@keyframes shop-up { from { opacity: 0; transform: translateY(.3rem) scale(.95); } }
+
+/* ★ 2026-10-14（用户）：放大后挡住了棋盘最下面两行 —— 卡片大小保留，改用透明让棋盘透出来。
+   平时 82% 不透明（能看清卡面，也能看到挡住的格子）；鼠标移到商店栏上恢复 100%。
+   想彻底不透明就把 --shop-alpha 改成 1；想更透就 0.7。 */
+:root { --shop-alpha: .82; }
+.shopbar__row { opacity: var(--shop-alpha); transition: opacity .16s var(--ease-out); }
+.shopbar:hover .shopbar__row,
+.shopbar__row:hover,
+.shopbar:focus-within .shopbar__row { opacity: 1; }
+/* 拖拽/放置时不挡视线：正在拖干员时也恢复透明 */
+body.is-dragging .shopbar__row { opacity: var(--shop-alpha); }
+
+/* ★ 2026-10-14（用户）：「能不能把左边的升级按钮也缩小」——
+   升级等级卡（.lvcard）单独一套倍率，与干员卡的 --sg 解耦：
+   --sg 只管干员卡，--lv-scale 只管升级卡。1.0 = 原始设计尺寸（1.24×2.24rem）。 */
+:root { --lv-scale: .82; }
+.lvcard { width: calc(1.24rem * var(--lv-scale)) !important; height: calc(2.24rem * var(--lv-scale)) !important; }
+.lvcard__num { font-size: calc(.66rem * var(--lv-scale)) !important; }
+.lvcard__label { font-size: calc(.2rem * var(--lv-scale)) !important; }
+.lvcard__micro { font-size: calc(.12rem * var(--lv-scale)) !important; }
+/* 升级卡里的图标/箭头等也一起缩，免得比例失衡 */
+.lvcard .icon { width: calc(.3rem * var(--lv-scale)) !important; height: calc(.3rem * var(--lv-scale)) !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 压高度（用户）：「应该往下缩点，让我能方便地操作第二排的干员」
+   上一轮把 --sg 缩到 0.95 只解决了【宽度】—— 商店条的上沿仍然盖住场上第二排干员。
+   这里只压【高度】，宽度一律不动：
+     · .scard  高 1.68rem → 1.24rem（−26%），立绘是按卡片高算的，会跟着变矮
+     · .lvcard 高 2.24rem → 1.62rem（与卡片齐）
+     · .funds  也必须一起压 —— 它是 flex column，比卡片高就会把整行撑起来
+       （手机上踩过同一个坑：卡片变矮后 funds 成了行高的决定者）
+   ========================================================================================== */
+.scard   { height: calc(1.24rem * var(--sg)) !important; }
+/* ★ 升级卡必须和卡片【一样高】—— 它原本 2.24rem，是整行最高的那一项：
+   只压 .scard 的话，行高仍由 .lvcard 决定，卡片下面照样留空。
+   里面的「LEVEL / 数字 / 升级」也要一起缩，否则内容会把卡片顶开。 */
+.lvcard  { height: calc(1.24rem * var(--sg)) !important;
+           padding: .12rem .06rem .04rem !important; }
+.lvcard__num   { font-size: calc(.42rem * var(--sg)) !important; }
+.lvcard__label { font-size: calc(.15rem * var(--sg)) !important; letter-spacing: .14em !important; padding-left: .14em !important; }
+.lvcard__micro { font-size: calc(.1rem  * var(--sg)) !important; letter-spacing: .14em !important; }
+.lvcard__frame { padding: .02rem .08rem .01rem !important; }
+.funds   { gap: .03rem !important; }
+.funds__hex   { height: calc(.64rem * var(--sg)) !important; width: calc(.82rem * var(--sg)) !important; }
+/* ↑ .72rem 时资金栏总高 ≈123px 仍比卡片 118px 高 5px ⇒ 它就成了行高的决定者。
+   压到 .64rem 后总高 ≈114px ≤ 118px，三项齐平。 */
+.funds__num   { font-size: calc(.3rem  * var(--sg)) !important; }
+.funds__label { font-size: calc(.12rem * var(--sg)) !important; }
+.funds__next  { font-size: calc(.1rem  * var(--sg)) !important; line-height: 1.2 !important;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden !important; }
+.funds__collapse { font-size: calc(.13rem * var(--sg)) !important; }
+/* 行内各项顶部对齐，卡片固定高度不被 stretch 拉高 */
+.shopbar__row { align-items: flex-start !important; }
+.scard, .lvcard { align-self: flex-start !important; }
+/* ★ 2026-10-15（用户）：「下方的空白是怎么回事」——
+   上面那条 flex-start 让资金栏也顶对齐，但它自己【没有背景】，
+   内容又比行高矮 2px 以上，于是行背景从它下面露出来，看着就是一块空白。
+   资金栏改成【拉满行高 + 内容居中】：背景/边框跟着行高走，不再露底；
+   卡片仍然 flex-start（保持矮，不动它的高度）。 */
+.funds { align-self: stretch !important; justify-content: center !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 卡面文字独立缩放（用户）：「把字号缩小，立绘都看不到了」
+   为什么需要它：--sg 同时管【卡片尺寸】和【卡面字号】，两者同比例缩，
+   于是卡片矮了、文字块却没变矮（占的比例反而更大），立绘可见区从 ≈75px 掉到 ≈45px。
+   这里给文字一个【独立系数 --st】：卡片尺寸仍用 --sg，卡面文字用 --sg × --st。
+   调法：--st 越小 → 文字越小 → 立绘露得越多（不动卡片大小）。
+   ========================================================================================== */
+:root { --st: 0.74; }
+
+.scard__name  { font-size: calc(.19rem * var(--sg) * var(--st)) !important; }
+.scard__bond, .scard__class { font-size: calc(.13rem * var(--sg) * var(--st)) !important; }
+.scard__idesc { font-size: calc(.12rem * var(--sg) * var(--st)) !important; }
+.scard__soldtxt { font-size: calc(.16rem * var(--sg) * var(--st)) !important; }
+.scard__mergetag, .scard__diy { font-size: calc(.12rem * var(--sg) * var(--st)) !important; }
+/* 文字块的上下内边距也收一点 —— 上面那 .3rem 是给 tier / 价格徽章留的空档，
+   徽章自己也跟着缩了，所以留 .22rem 就够，省下的高度全给立绘。 */
+.scard__body { padding: .22rem .06rem .05rem !important; gap: .02rem !important; }
+/* 盟约 / 职业的图标跟着字号缩，否则行高下不来 */
+.scard__bond .bglyph { width: calc(.18rem * var(--st)) !important; height: calc(.18rem * var(--st)) !important; }
+.scard__prof { width: calc(.18rem * var(--st)) !important; height: calc(.18rem * var(--st)) !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 卡面浮层图标缩小（用户）：「技能图标也缩小点或者删掉吧」
+   技能图标 .scard__skill 只跟着 --sg 缩，而字号我单独用 --st 缩过 ⇒ 相对显得更大，
+   而且它的位置（right .07rem / top -.02rem）正好压在立绘的脸附近。
+   这里让它也乘 --st（默认连到字号那一档），并把位置往角上收，尽量不挡脸。
+   要【完全删掉】的话：把下面 .scard__skill 两条规则改成 display: none !important 即可。
+   ========================================================================================== */
+.scard__skill {
+  width:  calc(.3rem * var(--sg) * var(--st)) !important;
+  height: calc(.3rem * var(--sg) * var(--st)) !important;
+  right: .035rem !important; top: .03rem !important;
+}
+.scard__skill .icon { width: calc(.18rem * var(--sg) * var(--st)) !important;
+                      height: calc(.18rem * var(--sg) * var(--st)) !important; }
+.scard__skill .scard__modicon { width: calc(.14rem * var(--sg) * var(--st)) !important;
+                                height: calc(.14rem * var(--sg) * var(--st)) !important; }
+.scard__sglyph { font-size: calc(.13rem * var(--sg) * var(--st)) !important; }
+/* 阿戈尔盟约标识：同样往左上角收 */
+.scard__aegir {
+  width:  calc(.36rem * var(--sg) * var(--st)) !important;
+  height: calc(.36rem * var(--sg) * var(--st)) !important;
+  left: .035rem !important; top: .34rem !important;
+}
+/* 冻结（雪花）与「可晋升」标记也跟着缩，免得卡片矮了之后它们太抢眼 */
+.scard__ice  { width: calc(.3rem * var(--sg) * var(--st)) !important;
+               height: calc(.3rem * var(--sg) * var(--st)) !important; }
+.scard__ice .icon { width: calc(.2rem * var(--sg) * var(--st)) !important;
+                    height: calc(.2rem * var(--sg) * var(--st)) !important; }
+.scard__mergetag { font-size: calc(.12rem * var(--sg) * var(--st)) !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 隐藏卡面技能图标（用户）：「删掉吧，挡住脸了」
+   shopBar.js:137 在商店卡上渲染 <SkillBadge>（class .scard__skill），
+   位置是 absolute / right .07rem / top -.02rem —— 正好落在立绘头脸的位置上。
+   技能信息没丢：点开卡片详情面板（悬停或点击）里仍然写着配的是哪个技能。
+   想恢复：删掉下面这一条即可。
+   想改成「鼠标悬停才显示」：把 display 换成 none，再加
+     .scard:hover .scard__skill, .scard:focus-visible .scard__skill { display: grid !important; }
+   ========================================================================================== */
+.scard__skill { display: none !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 三块同高 + 道具图缩小（用户：「下方我画出的空白区域你可以操作一下，
+     还有装备的图标也优化下」）
+
+   ① 空白的根因：行高 = max(.scard, .lvcard, .funds)。
+      .lvcard 有两个来源 —— :343 用 --sg、:365 用另一个会话加的 --lv-scale，
+      只要它（或资金栏）算出来比卡片高，卡片下面就空出一条。
+      治本做法：三块都用【同一个固定高度】（border-box，含 padding），行高就定死了。
+      .funds 也跟着固定高度，不再靠 align-self: stretch。
+
+   ② 道具图：.scard__itemart 原本 1rem（≈105px），而卡片才 130px 高 —— 占 80% 且
+      从 top .38rem 开始，正好压在名字上。缩到 .58rem 并上移，给文字让出位置。
+   ========================================================================================== */
+.scard, .lvcard, .funds {
+  height: calc(1.24rem * var(--sg)) !important;
+  align-self: flex-start !important;
+}
+/* 升级卡与资金栏的宽度仍各自保留，只统一高度 */
+.lvcard { width: calc(1.24rem * var(--sg)) !important; }
+
+/* 道具图（装备 / 盟约之币这类卡）—— 图标在上、文字在下，各占一半
+   ★ 第一版把 body 的 padding-top 设成 .86rem(=90px) 想给图标让位，
+   结果 body 从底部往上长、连人带图一起顶出卡片 ⇒ 图标几乎看不见（用户现场）。
+   现在按 130px 的卡片重新分配：
+     图标 62px，从 8px 到 70px；文字块 ≈45px，从 78px 到 123px；
+     所以 body 的 padding-top 取 .70rem ≈ 74px 就够，不要再大。 */
+.scard__itemart {
+  width:  calc(.6rem * var(--sg)) !important;
+  height: calc(.6rem * var(--sg)) !important;
+  /* ★ 文字顶是【恒定】的：body 贴底 ⇒ 文字顶 = 卡片高 − 文字高 = 130 − 33 = 97px，
+     改 padding 推不动它。所以这里把【图标往下移】贴合文字：
+     图标 63px 高、底沿想落在 ≈93px ⇒ top = 93 − 63 = 30px = .3rem × --sg。 */
+  top: calc(.3rem * var(--sg)) !important;
+}
+.scard__itemart .icon { width: calc(.4rem * var(--sg)) !important;
+                        height: calc(.4rem * var(--sg)) !important; }
+/* ★ 2026-10-15（用户）：「这个装备的黑色部分会不会太多了」——
+   .scard__body 是【贴底】的：它的总高 = padding-top + 文字高，然后从卡片底部往上长。
+   原来 padding-top = .7rem×1.05 = 73.5px、文字 ≈35px ⇒ body 高 108.5px ⇒ 顶端在 21.5px，
+   文字落在 21.5+73.5 = 95px；而图标是 8px 起 63px 高、71px 止 ⇒ **中间空出 24px 黑块**。
+   要让文字顶正好贴在图标下沿（71px），padding-top 该取：
+     卡片高 130 − 图标底 71 − 文字高 35 = **24px** = .23rem × --sg。
+   body 有 z-index:2、但背景透明，所以即使贴到 71px 也不会盖住图标。 */
+.scard--item .scard__body { padding: calc(.1rem * var(--sg)) .05rem .04rem !important; gap: .01rem !important; }
+/* ↑ padding-top 只影响 body 自身高度；文字位置由「贴底 + 文字高」决定，改它推不动文字。
+   所以这里取一个小值即可，真正的间距交给上面的图标 top。 */
+.scard--item .scard__name { font-size: calc(.19rem * var(--sg) * var(--st)) !important; line-height: 1.1 !important; }
+.scard--item .scard__idesc { font-size: calc(.12rem * var(--sg) * var(--st)) !important; line-height: 1.12 !important;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 桌面文字让位（用户：「还是有遮挡」）
+   立绘 .scard__art 是 absolute / right -.14rem / height 100% / width auto：
+   180×360 的头像立绘 ⇒ 宽 = 卡片高 × 0.5。桌面卡片 130px 高 ⇒ 立绘 ≈65px，
+   贴右再偏出 .14rem（≈15px）⇒ 实际占右侧约 50px，而卡片宽 122px ⇒ **立绘占 41%**。
+   文字块（.scard__body）默认横跨整卡，右半边就压在立绘上（名字被盖住）。
+   手机上早先加过 padding-right，桌面这一份漏了 —— 这里补上。
+   42% ⇒ 文字区 ≈71px ⇒ 15px 的名字可放 4 个字（「乌尔比安」刚好）。
+   ========================================================================================== */
+.scard__body { padding-right: 42% !important; }
+/* 名字一旦放不下就省略，不再硬挤到立绘上 */
+.scard__name { overflow: hidden !important; text-overflow: ellipsis !important; }
+/* 盟约在窄文字区里靠 flex-wrap 自然换行（桌面原本就是一行排的） */
+.scard__bonds { min-width: 0 !important; }
+.scard__class { min-width: 0 !important; }
+.scard__class > span { overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 顶部徽章缩小 + 名字允许两行（用户：「你要不把装备的售价单独缩小」）
+
+   ① 价格 / 阶数徽章：它们用的是 components.css 的 .hex，默认 --hex-h: .34rem，
+      而这一整段【从来没有覆盖过它】—— 卡片跟着 --sg × --st 缩了 23%，徽章纹丝不动，
+      于是相对显得特别大，而且它就在卡片顶部正中，正好压在立绘的头上。
+      这里让它也乘 --sg × --st：.34rem × 1.05 × 0.74 ≈ .264rem ⇒ 从 34px 降到 26px。
+
+   ② 名字：文字区被 padding-right 收到 58% 后，「百炼嘉维尔」这种 6 字名会被省略号截掉。
+      允许两行即可完整显示（核算：文字块 82px ≤ 卡片 130px，余量 48px）。
+   ========================================================================================== */
+.scard__top .hex, .scard__price .hex {
+  --hex-h: calc(.34rem * var(--sg) * var(--st)) !important;
+  --hex-slope: calc(.1rem * var(--sg) * var(--st)) !important;
+}
+/* 徽章小了，文字块顶部留给它的空档也能收一点 */
+.scard__body { padding-top: calc(.17rem * var(--sg)) !important; }
+
+/* 名字允许两行（6 个字的干员名完整显示） */
+.scard__name {
+  white-space: normal !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  line-height: 1.08 !important;
+}
+
+/* ==========================================================================================
+   ★ 2026-10-15 道具卡提亮（用户：「其实装备差不多，但是太暗了」）
+   为什么道具卡比干员卡暗：
+     · .scard 本体底色是 #151a18（很暗）；
+     · 干员卡有一张铺满的立绘把卡片照亮，道具卡【没有立绘】，只有一个小图标；
+     · .scard--item 只把 --tc 换成金色，而 --tc 在 .scard__bg 里只用来做
+       rgba(255,198,0,.16) 的淡光晕 —— 16% 的透明度基本看不出来；
+     · 买不起时 .scard.is-disabled 还会给图标 grayscale(.7) brightness(.6)。
+   所以这里：底色提亮一档、金色光晕加强、图标加亮，文字用更亮的色阶。
+   「买不起」的提示保留 —— 只是从"看不清"降到"能看清但明显灰一点"。
+   ========================================================================================== */
+/* ① 道具卡的底色提亮一档（原来跟干员卡共用 #151a18） */
+.scard--item { background: #1e241f !important; border-color: rgba(255, 198, 0, .42) !important; }
+
+/* ② 金色光晕加强（原来只有 16% 透明度） */
+.scard--item .scard__bg {
+  background:
+    radial-gradient(120% 70% at 50% 34%, rgba(255, 198, 0, .22), transparent 72%),
+    linear-gradient(180deg, #262d26, #171c17) !important;
+}
+
+/* ③ 道具图标加亮，并把底下的光晕也提亮 */
+.scard__itemart { background: radial-gradient(circle, rgba(255, 198, 0, .3), transparent 72%) !important; }
+.scard__itemart img { filter: brightness(1.22) drop-shadow(0 .04rem .08rem #000) !important; }
+.scard__itemart .icon { color: #ffd45e !important; }
+
+/* ④ 文字用更亮的色阶（.scard__idesc 默认是 --text-lo，在暗底上很难读） */
+.scard--item .scard__name  { color: #fff !important; text-shadow: 0 1px 3px #000, 0 0 .1rem rgba(255, 198, 0, .35) !important; }
+.scard--item .scard__idesc { color: #cfd8d2 !important; }
+
+/* ⑤ 买不起时：只做轻微弱化，不再灰到看不清 */
+.scard.is-disabled .scard__itemart { filter: grayscale(.35) brightness(.86) !important; }
+.scard.is-disabled .scard__itemart img { filter: brightness(.9) drop-shadow(0 .04rem .08rem #000) !important; }
+.scard.is-disabled.scard--item { background: #1b201b !important; }
+.scard.is-disabled.scard--item .scard__name  { color: #d8ded9 !important; }
+.scard.is-disabled.scard--item .scard__idesc { color: #9fada5 !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 卡片不被压缩 + disabled 状态再提亮（用户：截图里「坚守盾牌」又窄又暗）
+
+   ① 窄：.shopbar__cards 是 display:flex，卡片默认 flex-shrink:1 —— 内容一宽就被压。
+      道具卡的文字区有 padding-right: 42%，加上图标，内容容易超出 ⇒ 卡片被挤窄
+      （截图里干员卡约 104px、道具卡只有约 90px）。这里禁止收缩。
+
+   ② 暗：disabled（买不起 / 已拥有等）会让整张卡弱化。上一轮已从 grayscale(.7)
+      brightness(.6) 提到 .35/.86，但底色和文字还是偏灰。这里再提一档，
+      同时保留「比正常卡略暗」这个提示 —— 弱化看得见，但名字要读得清。
+   ========================================================================================== */
+.scard, .lvcard { flex: 0 0 auto !important; }
+.shopbar__cards { flex-wrap: nowrap !important; }
+
+/* disabled 再提亮一档（弱化仍在，但不影响阅读） */
+.scard.is-disabled.scard--item { background: #1f251f !important; border-color: rgba(255, 198, 0, .3) !important; }
+.scard.is-disabled.scard--item .scard__name  { color: #eaeff0 !important; text-shadow: 0 1px 3px #000 !important; }
+.scard.is-disabled.scard--item .scard__idesc { color: #b8c4bd !important; }
+.scard.is-disabled .scard__itemart { filter: grayscale(.25) brightness(.92) !important; }
+.scard.is-disabled .scard__itemart img { filter: brightness(.98) drop-shadow(0 .04rem .08rem #000) !important; }
+
+/* 干员卡 disabled 时也别把名字压得太暗 */
+.scard.is-disabled .scard__name { color: #e6ece8 !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 宽幅立绘适配 + disabled 背景提亮
+
+   ① .scard.is-wideart —— 给 char_1052_kalts2（凯尔希·思衡托）用。
+      它的默认立绘是 skin_portrait_shop 的 720×960（高/宽=1.33），而卡片按 1:2 布局，
+      原来的 height:100% + width:auto 会让图片比卡片宽约 50%，两侧被裁成一条。
+      改成【按卡片宽适配、顶对齐】：图完整覆盖横向，人脸在上方，底部多余的部分被卡片裁掉。
+
+   ② disabled 卡的 .scard__bg 之前没被提亮 —— 卡片底色改亮了，但背景层还是原来的暗渐变，
+      于是看得出「上半暗、下半亮」的分层。这里把 disabled 的背景层也换成提亮版。
+   ========================================================================================== */
+
+/* ★ 2026-10-15：原先这里有一条 `.scard.is-wideart .scard__body { padding-right: 42% }`
+   —— 那是 char_1052_kalts2（凯尔希·思衡托）立绘换成 180×360 之前的补偿。
+   数据层修好后卡片已与其余 405 位干员完全一致，这条规则连同 shopBar.js 的 wideArt 一并删除。 */
+
+/* disabled 的背景层也提亮（和正常卡只差一点点） */
+.scard.is-disabled .scard__bg {
+  background:
+    radial-gradient(120% 70% at 50% 30%, rgba(255, 198, 0, .16), transparent 72%),
+    linear-gradient(180deg, #242a24, #1a1f1a) !important;
+}
+.scard.is-disabled.scard--item .scard__bg {
+  background:
+    radial-gradient(120% 70% at 50% 34%, rgba(255, 198, 0, .19), transparent 72%),
+    linear-gradient(180deg, #242b24, #1a201a) !important;
+}
+
+/* ==========================================================================================
+   ★ 2026-10-15 卡面文字阴影
+   立绘铺满整卡之后，左侧的文字压在图上（文字区 58%）。名字本来就有 text-shadow，
+   但盟约（薄荷绿）和职业（灰）没有 —— 压到浅色立绘上会读不清。这里统一补一层。
+   ========================================================================================== */
+.scard__bond  { text-shadow: 0 1px 2px #000, 0 0 .06rem rgba(0, 0, 0, .9) !important; }
+.scard__class { text-shadow: 0 1px 2px #000, 0 0 .06rem rgba(0, 0, 0, .9) !important; }
+.scard__prof  { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .9)) !important; }
+.scard__bond .bglyph { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .9)) !important; }
+/* 名字的阴影加强一点，压在亮色立绘上也清楚 */
+.scard__name { text-shadow: 0 1px 3px #000, 0 0 .1rem rgba(0, 0, 0, .95) !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 文字半透明底板（桌面 · 用户选 Ⓒ）
+   诉求：干员卡左侧那块近黑的底色「遮挡太多」。做法不是把整卡涂黑或把立绘缩掉，而是——
+     ① 立绘【铺满整卡】（不然左侧没东西可透）；
+     ② 文字块只占左侧 58%，并且给它一块【半透明底板】：立绘从底下透出来（约 38% 可见度），
+        底板上缘用 mask 渐隐，所以不会有一条硬边；
+     ③ 文字仍走原有的 text-shadow，压在 62% 的黑底上足够清楚。
+   要调「透多少」：改 .scard__body 的 rgba(8,11,10,.62) —— 数字越小越透。
+   ========================================================================================== */
+/* ★ 立绘已【还原】到默认几何（game-shop.css:104 的 right:-.14rem / height:100% / width:auto
+   + 底部渐隐），不再铺满 —— 用户 2026-10-15「把立绘还原」。
+   只保留文字块的半透明底板 + 上缘渐隐：底板现在压在卡片底色上，
+   效果是「上缘柔和的暗块」而不是原来那种硬边黑矩形。 */
+/* 文字块：左侧 58% 宽 + 半透明底板 + 上缘渐隐 */
+.scard__body {
+  width: 58% !important;
+  margin-right: auto !important;
+  padding: calc(.17rem * var(--sg)) .05rem .04rem !important;
+  background: rgba(8, 11, 10, .62) !important;
+  -webkit-backdrop-filter: blur(2px) !important; backdrop-filter: blur(2px) !important;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16%) !important;
+  mask-image: linear-gradient(180deg, transparent 0, #000 16%) !important;
+}
+/* 道具卡的文字块也走同一套（它本来就没有立绘，底板直接当底色用） */
+.scard--item .scard__body { width: 100% !important; background: rgba(8, 11, 10, .5) !important; }
+.scard--item .scard__art { display: none !important; }
+
+/* ==========================================================================================
+   ★ 2026-10-15 宽幅立绘兜底（纯 CSS）—— 现在已是【兜底】，不再有卡片命中它
+
+   【最终解法走的是数据】：data/assets.json 里 char_1052_kalts2 的 portrait 原本指向
+   skin_portrait_shop/char_1052_kalts2_1.png（720×960，高/宽 1.33），而卡片按 180×360（1:2）
+   布局 ⇒ height:100% + width:auto 让图片比卡片宽、文字被挤成一列。
+   素材库里【本来就有一张】char/portrait/char_1052_kalts2_1.png（180×360，和其余 405 位干员
+   完全一致），所以直接把 assets.json 的两个字段指过去即可，无需任何特殊样式。
+
+   这段 :has() 规则保留作【通用兜底】：哪天再出现非 1:2 的立绘，它会按卡片宽适配。
+   要启用给别的干员：把 [src*=...] 里那串换成对应立绘的路径片段。
+   ========================================================================================== */
+
+/* 它的文字区也收窄一点，避免压在脸上（宽幅图铺满后左右都是画面） */
+

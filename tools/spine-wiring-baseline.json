@@ -1,0 +1,340 @@
+{
+  "note": "tools/verify-spine-wiring.mjs 的已复核台账。Gaps: 本次变更未触及条目里的既有普通角色声明缺陷；Timing: 下潜替换的客户端计时差异。任何不在此台账内的新缺项/新计时差异都会让验证失败；台账只允许缩小。",
+  "generatedFrom": "data/assets.json + 各条目自身 .skel（渲染器口径：dur = entry.animations ?? skel，hit = entry.hits[0] ?? dur*0.5）",
+  "preexistingRoleClipGaps": {
+    "reason": "既有缺陷（非本次引入）：应用脚本按「仅加法」规则跳过、未改写的条目，其普通角色声明指向该皮肤 .skel 里不存在的剪辑。渲染器 has() 守卫会回落到备用剪辑，故无运行时影响。",
+    "count": 99,
+    "items": [
+      "skin:char_010_chen@sale#10/front|skills.1.loop=Skill_2",
+      "skin:char_010_chen@sale#10/front|skills.2.loop=Skill_3",
+      "skin:char_1035_wisdel@sale#14/front|skills.1.end=Skill_2_End",
+      "skin:char_112_siege@striker#2/front|skill.loop=Skill",
+      "skin:char_112_siege@striker#2/front|skills.0.loop=Skill",
+      "skin:char_112_siege@striker#2/front|skills.1.loop=Skill",
+      "skin:char_112_siege@striker#2/front|skills.2.loop=Skill",
+      "skin:char_112_siege@wild#2/front|skill.loop=Skill",
+      "skin:char_112_siege@wild#2/front|skills.0.loop=Skill",
+      "skin:char_112_siege@wild#2/front|skills.1.loop=Skill",
+      "skin:char_112_siege@wild#2/front|skills.2.loop=Skill",
+      "skin:char_128_plosis@yun#4/back|skill.begin=Skill_Start",
+      "skin:char_128_plosis@yun#4/back|skill.end=Skill_End",
+      "skin:char_128_plosis@yun#4/back|skill.loop=Skill_Loop",
+      "skin:char_128_plosis@yun#4/back|skills.0.begin=Skill_Start",
+      "skin:char_128_plosis@yun#4/back|skills.0.end=Skill_End",
+      "skin:char_128_plosis@yun#4/back|skills.0.loop=Skill_Loop",
+      "skin:char_128_plosis@yun#4/back|skills.1.begin=Skill_Start",
+      "skin:char_128_plosis@yun#4/back|skills.1.end=Skill_End",
+      "skin:char_128_plosis@yun#4/back|skills.1.loop=Skill_Loop",
+      "skin:char_128_plosis@yun#4/front|skill.begin=Skill_Start",
+      "skin:char_128_plosis@yun#4/front|skill.end=Skill_End",
+      "skin:char_128_plosis@yun#4/front|skill.loop=Skill_Loop",
+      "skin:char_128_plosis@yun#4/front|skills.0.begin=Skill_Start",
+      "skin:char_128_plosis@yun#4/front|skills.0.end=Skill_End",
+      "skin:char_128_plosis@yun#4/front|skills.0.loop=Skill_Loop",
+      "skin:char_128_plosis@yun#4/front|skills.1.begin=Skill_Start",
+      "skin:char_128_plosis@yun#4/front|skills.1.end=Skill_End",
+      "skin:char_128_plosis@yun#4/front|skills.1.loop=Skill_Loop",
+      "skin:char_150_snakek@wild#1/front|skill.begin=Skill_Begin",
+      "skin:char_150_snakek@wild#1/front|skills.0.begin=Skill_Begin",
+      "skin:char_150_snakek@wild#1/front|skills.1.begin=Skill_Begin",
+      "skin:char_150_snakek@yun#7/front|skill.begin=Skill_Begin",
+      "skin:char_150_snakek@yun#7/front|skills.0.begin=Skill_Begin",
+      "skin:char_150_snakek@yun#7/front|skills.1.begin=Skill_Begin",
+      "skin:char_179_cgbird@sightseer#1/front|skill.loop=Attack",
+      "skin:char_179_cgbird@sightseer#1/front|skills.0.loop=Attack",
+      "skin:char_179_cgbird@sightseer#1/front|skills.1.loop=Attack",
+      "skin:char_179_cgbird@sightseer#1/front|skills.2.loop=Attack",
+      "skin:char_180_amgoat@sanrio#2/front|skill.begin=Skill_Start",
+      "skin:char_180_amgoat@sanrio#2/front|skill.end=Skill_End",
+      "skin:char_180_amgoat@sanrio#2/front|skill.loop=Skill_Loop",
+      "skin:char_180_amgoat@sanrio#2/front|skills.0.begin=Skill_Start",
+      "skin:char_180_amgoat@sanrio#2/front|skills.0.end=Skill_End",
+      "skin:char_180_amgoat@sanrio#2/front|skills.0.loop=Skill_Loop",
+      "skin:char_180_amgoat@sanrio#2/front|skills.1.begin=Skill_Start",
+      "skin:char_180_amgoat@sanrio#2/front|skills.1.end=Skill_End",
+      "skin:char_180_amgoat@sanrio#2/front|skills.1.loop=Skill_Loop",
+      "skin:char_180_amgoat@sanrio#2/front|skills.2.begin=Skill_Start",
+      "skin:char_180_amgoat@sanrio#2/front|skills.2.end=Skill_End",
+      "skin:char_180_amgoat@sanrio#2/front|skills.2.loop=Skill_Loop",
+      "skin:char_183_skgoat@epoque#30/back|skill.loop=Skill_Loop",
+      "skin:char_183_skgoat@epoque#30/back|skills.0.loop=Skill_Loop",
+      "skin:char_183_skgoat@epoque#30/back|skills.1.loop=Skill_Loop",
+      "skin:char_183_skgoat@epoque#30/front|skill.loop=Skill_Loop",
+      "skin:char_183_skgoat@epoque#30/front|skills.0.loop=Skill_Loop",
+      "skin:char_183_skgoat@epoque#30/front|skills.1.loop=Skill_Loop",
+      "skin:char_2014_nian@nian#4/front|skill.begin=Skill_1_Begin",
+      "skin:char_2014_nian@nian#4/front|skill.end=Skill_1_End",
+      "skin:char_2014_nian@nian#4/front|skill.loop=Skill_1_Loop",
+      "skin:char_2014_nian@nian#4/front|skills.0.begin=Skill_1_Begin",
+      "skin:char_2014_nian@nian#4/front|skills.0.end=Skill_1_End",
+      "skin:char_2014_nian@nian#4/front|skills.0.loop=Skill_1_Loop",
+      "skin:char_248_mgllan@kitchen#1/front|skill.loop=Skill",
+      "skin:char_248_mgllan@kitchen#1/front|skills.0.loop=Skill",
+      "skin:char_248_mgllan@kitchen#1/front|skills.1.loop=Skill",
+      "skin:char_248_mgllan@kitchen#1/front|skills.2.loop=Skill",
+      "skin:char_293_thorns@boc#8/front|skills.1.loop=Skill2_1",
+      "skin:char_293_thorns@it#1/front|skills.1.loop=Skill2_1",
+      "skin:char_322_lmlee@sanrio#1/front|skills.1.loop=Skill_2_Attack",
+      "skin:char_322_lmlee@whirlwind#10/front|skills.1.loop=Skill_2_Attack",
+      "skin:char_322_lmlee@witch#3/front|skills.1.loop=Skill_2_Attack",
+      "skin:char_377_gdglow@sanrio#1/front|skills.2.begin=Skill3_Start",
+      "skin:char_377_gdglow@sanrio#1/front|skills.2.end=Skill3_End",
+      "skin:char_377_gdglow@sanrio#1/front|skills.2.loop=Skill3_Loop",
+      "skin:char_377_gdglow@snow#5/front|skills.2.begin=Skill3_Start",
+      "skin:char_377_gdglow@snow#5/front|skills.2.end=Skill3_End",
+      "skin:char_377_gdglow@snow#5/front|skills.2.loop=Skill3_Loop",
+      "skin:char_4065_judge@epoque#33/front|skills.1.begin=Skill_2_Begin",
+      "skin:char_4065_judge@epoque#33/front|skills.1.end=Skill_2_End",
+      "skin:char_4065_judge@epoque#33/front|skills.1.loop=Skill_2_Loop",
+      "skin:char_4065_judge@snow#6/front|skills.1.begin=Skill_2_Begin",
+      "skin:char_4065_judge@snow#6/front|skills.1.end=Skill_2_End",
+      "skin:char_4065_judge@snow#6/front|skills.1.loop=Skill_2_Loop",
+      "skin:char_416_zumama@boc#3/front|skills.1.begin=Skill_2_Begin",
+      "skin:char_416_zumama@boc#3/front|skills.1.end=Skill_2_End",
+      "skin:char_416_zumama@boc#3/front|skills.1.idle=Skill_2_Idle",
+      "skin:char_416_zumama@boc#3/front|skills.1.loop=Skill_2_Loop",
+      "skin:char_4179_monstr@boc#11/front|skills.2.end=Skill_3_End",
+      "skin:char_4179_monstr@boc#11/front|skills.2.idle=Skill_3_Idle",
+      "skin:char_4179_monstr@boc#11/front|skills.2.loop=Skill_3_Loop",
+      "skin:char_426_billro@snow#3/back|skill.begin=Skill_2_Begin",
+      "skin:char_426_billro@snow#3/back|skills.0.begin=Skill_Begin",
+      "skin:char_426_billro@snow#3/back|skills.1.begin=Skill_2_Begin",
+      "skin:char_426_billro@snow#3/back|skills.2.begin=Skill_Begin",
+      "skin:char_426_billro@snow#3/front|skill.begin=Skill_2_Begin",
+      "skin:char_426_billro@snow#3/front|skills.0.begin=Skill_Begin",
+      "skin:char_426_billro@snow#3/front|skills.1.begin=Skill_2_Begin",
+      "skin:char_426_billro@snow#3/front|skills.2.begin=Skill_Begin"
+    ]
+  },
+  "reviewedTimingExceptions": {
+    "reason": "客户端计时差异，逐条复核后保留：不改写客户端抽取的 OnAttack 数据。",
+    "count": 15,
+    "items": [
+      {
+        "entry": "char_134_ifrit/front",
+        "phase": "skills.1.begin",
+        "downClip": "Skill_Down_2_Begin",
+        "plainClip": "Skill_2_Begin",
+        "down": {
+          "dur": 0.7,
+          "hit": 0.333
+        },
+        "plain": {
+          "dur": 0.7,
+          "hit": 0.4
+        },
+        "why": "下潜剪辑自带的客户端 OnAttack 与它替换的剪辑不同（接线的目的即复活该剪辑）；数值逐条记录，打击帧随剪辑自身走"
+      },
+      {
+        "entry": "char_134_ifrit/front",
+        "phase": "skills.1.end",
+        "downClip": "Skill_Down_2_End",
+        "plainClip": "Skill_2_End",
+        "down": {
+          "dur": 0.5,
+          "hit": 0
+        },
+        "plain": {
+          "dur": 0.5,
+          "hit": 0.25
+        },
+        "why": "下潜剪辑自带的客户端 OnAttack 与它替换的剪辑不同（接线的目的即复活该剪辑）；数值逐条记录，打击帧随剪辑自身走"
+      },
+      {
+        "entry": "char_134_ifrit/front",
+        "phase": "skills.1.loop",
+        "downClip": "Skill_Down_2_Loop",
+        "plainClip": "Skill_2_Loop",
+        "down": {
+          "dur": 0.4,
+          "hit": 0
+        },
+        "plain": {
+          "dur": 0.4,
+          "hit": 0.2
+        },
+        "why": "下潜剪辑自带的客户端 OnAttack 与它替换的剪辑不同（接线的目的即复活该剪辑）；数值逐条记录，打击帧随剪辑自身走"
+      },
+      {
+        "entry": "char_172_svrash/front",
+        "phase": "attackDown.loop",
+        "downClip": "Combat_Down",
+        "plainClip": "Attack",
+        "down": {
+          "dur": 1.333,
+          "hit": 0.733
+        },
+        "plain": {
+          "dur": 1.333,
+          "hit": 0.5
+        },
+        "why": "attackDown 是既有声明、本次才被渲染器消费；下潜攻击剪辑自带客户端 OnAttack，本就与普通 Attack 不同"
+      },
+      {
+        "entry": "char_294_ayer/front",
+        "phase": "attackDown.loop",
+        "downClip": "Combat_Down",
+        "plainClip": "Attack",
+        "down": {
+          "dur": 1.333,
+          "hit": 0.5
+        },
+        "plain": {
+          "dur": 1.333,
+          "hit": 0.667
+        },
+        "why": "attackDown 是既有声明、本次才被渲染器消费；下潜攻击剪辑自带客户端 OnAttack，本就与普通 Attack 不同"
+      },
+      {
+        "entry": "char_431_ashlok/front",
+        "phase": "skill.loop",
+        "downClip": "Skill_Loop_Down",
+        "plainClip": "Skill_Loop",
+        "down": {
+          "dur": 1.133,
+          "hit": 0.5
+        },
+        "plain": {
+          "dur": 1.133,
+          "hit": 0.533
+        },
+        "why": "下潜剪辑自带的客户端 OnAttack 与它替换的剪辑不同（接线的目的即复活该剪辑）；数值逐条记录，打击帧随剪辑自身走"
+      },
+      {
+        "entry": "char_431_ashlok/front",
+        "phase": "skills.0.loop",
+        "downClip": "Skill_Loop_Down",
+        "plainClip": "Skill_Loop",
+        "down": {
+          "dur": 1.133,
+          "hit": 0.5
+        },
+        "plain": {
+          "dur": 1.133,
+          "hit": 0.533
+        },
+        "why": "下潜剪辑自带的客户端 OnAttack 与它替换的剪辑不同（接线的目的即复活该剪辑）；数值逐条记录，打击帧随剪辑自身走"
+      },
+      {
+        "entry": "char_431_ashlok/front",
+        "phase": "skills.1.loop",
+        "downClip": "Skill_Loop_Down",
+        "plainClip": "Skill_Loop",
+        "down": {
+          "dur": 1.133,
+          "hit": 0.5
+        },
+        "plain": {
+          "dur": 1.133,
+          "hit": 0.533
+        },
+        "why": "下潜剪辑自带的客户端 OnAttack 与它替换的剪辑不同（接线的目的即复活该剪辑）；数值逐条记录，打击帧随剪辑自身走"
+      },
+      {
+        "entry": "skin:char_172_svrash@ambienceSynesthesia#4/front",
+        "phase": "attackDown.loop",
+        "downClip": "Combat_Down",
+        "plainClip": "Attack",
+        "down": {
+          "dur": 1.333,
+          "hit": 0.733
+        },
+        "plain": {
+          "dur": 1.333,
+          "hit": 0.5
+        },
+        "why": "attackDown 是既有声明、本次才被渲染器消费；下潜攻击剪辑自带客户端 OnAttack，本就与普通 Attack 不同"
+      },
+      {
+        "entry": "skin:char_172_svrash@snow#1/front",
+        "phase": "attackDown.loop",
+        "downClip": "Combat_Down",
+        "plainClip": "Attack",
+        "down": {
+          "dur": 1.333,
+          "hit": 0.733
+        },
+        "plain": {
+          "dur": 1.333,
+          "hit": 0.5
+        },
+        "why": "attackDown 是既有声明、本次才被渲染器消费；下潜攻击剪辑自带客户端 OnAttack，本就与普通 Attack 不同"
+      },
+      {
+        "entry": "skin:char_172_svrash@summer#4/front",
+        "phase": "attackDown.loop",
+        "downClip": "Combat_Down",
+        "plainClip": "Attack",
+        "down": {
+          "dur": 1.333,
+          "hit": 0.733
+        },
+        "plain": {
+          "dur": 1.333,
+          "hit": 0.5
+        },
+        "why": "attackDown 是既有声明、本次才被渲染器消费；下潜攻击剪辑自带客户端 OnAttack，本就与普通 Attack 不同"
+      },
+      {
+        "entry": "skin:char_294_ayer@boc#3/front",
+        "phase": "attackDown.loop",
+        "downClip": "Combat_Down",
+        "plainClip": "Attack",
+        "down": {
+          "dur": 1.333,
+          "hit": 0.5
+        },
+        "plain": {
+          "dur": 1.333,
+          "hit": 0.667
+        },
+        "why": "attackDown 是既有声明、本次才被渲染器消费；下潜攻击剪辑自带客户端 OnAttack，本就与普通 Attack 不同"
+      },
+      {
+        "entry": "skin:char_431_ashlok@epoque#28/front",
+        "phase": "skill.loop",
+        "downClip": "Skill_Loop_Down",
+        "plainClip": "Skill_Loop",
+        "down": {
+          "dur": 1.133,
+          "hit": 0.5
+        },
+        "plain": {
+          "dur": 1.133,
+          "hit": 0.533
+        },
+        "why": "下潜剪辑自带的客户端 OnAttack 与它替换的剪辑不同（接线的目的即复活该剪辑）；数值逐条记录，打击帧随剪辑自身走"
+      },
+      {
+        "entry": "skin:char_431_ashlok@epoque#28/front",
+        "phase": "skills.0.loop",
+        "downClip": "Skill_Loop_Down",
+        "plainClip": "Skill_Loop",
+        "down": {
+          "dur": 1.133,
+          "hit": 0.5
+        },
+        "plain": {
+          "dur": 1.133,
+          "hit": 0.533
+        },
+        "why": "下潜剪辑自带的客户端 OnAttack 与它替换的剪辑不同（接线的目的即复活该剪辑）；数值逐条记录，打击帧随剪辑自身走"
+      },
+      {
+        "entry": "skin:char_431_ashlok@epoque#28/front",
+        "phase": "skills.1.loop",
+        "downClip": "Skill_Loop_Down",
+        "plainClip": "Skill_Loop",
+        "down": {
+          "dur": 1.133,
+          "hit": 0.5
+        },
+        "plain": {
+          "dur": 1.133,
+          "hit": 0.533
+        },
+        "why": "下潜剪辑自带的客户端 OnAttack 与它替换的剪辑不同（接线的目的即复活该剪辑）；数值逐条记录，打击帧随剪辑自身走"
+      }
+    ]
+  }
+}

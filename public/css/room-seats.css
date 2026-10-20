@@ -1,0 +1,94 @@
+/* 2026-10-13 房间座位区专用样式（独立文件，避免被其它 CSS 的括号错误/特异性吞掉）
+   内容：座位网格 + 每格（头像/名字/#编号）+ 机器人按钮 + 红×踢人 + 动态头像 */
+main.rs-seats, .rs-seats {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(max(1.5rem, 88px), 1fr)) !important;
+  grid-auto-rows: min-content !important;
+  align-content: start !important; align-items: start !important;
+  justify-items: stretch !important; justify-content: stretch !important;
+  gap: max(.1rem, 8px) !important;
+  width: 100% !important; max-width: min(100%, 19.2rem) !important;
+  margin-left: auto !important; margin-right: auto !important;
+  padding-left: max(.28rem, 22px) !important; padding-right: max(.28rem, 22px) !important;
+  box-sizing: border-box !important;
+  max-height: calc(100vh - 3.4rem) !important;
+  overflow-y: auto !important; overscroll-behavior: contain;
+}
+/* 每一格：竖排 = 头像 → 名字 → #编号 */
+.rseat, .rseat--empty {
+  position: relative; min-width: 0 !important; width: auto !important;
+  height: auto !important; min-height: 0 !important; padding: max(.06rem, 5px) !important;
+  display: flex !important; flex-direction: column !important; align-items: center !important;
+  gap: max(.04rem, 3px) !important; border-radius: 6px; overflow: visible !important;
+}
+.rseat__clip, .rseat__noinfo, .rseat__doc, .rseat__state, .rseat__me, .rseat__host, .rseat__lost,
+.rseat__invite, .rseat__pick { display: none !important; }
+/* 头像方框 */
+.rseat__art {
+  position: relative !important; order: 1 !important;
+  width: max(.78rem, 46px) !important; height: max(.78rem, 46px) !important;
+  max-width: 100% !important; min-height: 0 !important; border-radius: 6px !important;
+  overflow: hidden; flex: 0 0 auto; border: 1px solid rgba(255,255,255,.18);
+}
+.rseat__art img, .rseat__art svg, .rseat__art canvas { width: 100% !important; height: 100% !important; object-fit: cover; }
+.rseat__glyph { display: grid; place-items: center; width: 100%; height: 100%; color: #7fe7c4; }
+.rseat__glyph .icon, .rseat__glyph svg { width: 62% !important; height: 62% !important; }
+/* 名字（头像正下方） */
+.rseat__plate {
+  order: 2 !important; position: static !important; inset: auto !important; transform: none !important;
+  display: flex !important; flex-direction: column !important; align-items: center !important;
+  width: 100% !important; min-width: 0 !important; height: auto !important; min-height: 0 !important;
+  border: 0 !important; background: none !important; padding: 0 !important; overflow: visible !important;
+}
+.rseat__plate > .avatar { display: none !important; }
+.rseat__who, .rseat__name {
+  display: block !important; width: 100% !important; min-width: 0 !important; text-align: center !important;
+  color: #f2f5f4 !important; font-size: max(.17rem, 11px) !important; line-height: 1.25 !important;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* 编号 #n（名字下方） */
+.rseat__strip {
+  order: 3 !important; display: flex !important; justify-content: center !important; align-items: center;
+  width: 100% !important; background: transparent !important; border: 0 !important; padding: 0 !important; min-height: 0 !important;
+}
+.rseat__strip i { display: none !important; }
+.rseat__strip .num { font-size: max(.15rem, 10px) !important; opacity: .62 !important; }
+/* 机器人（头像右下）/ 红×（头像右上） */
+.rseat__bot, .rseat__kick {
+  position: absolute !important; width: max(.34rem, 20px) !important; height: max(.34rem, 20px) !important;
+  display: grid !important; place-items: center; padding: 0 !important; border-radius: 4px; cursor: pointer; z-index: 3;
+}
+.rseat__bot { right: 1px !important; bottom: 1px !important; top: auto !important; left: auto !important;
+  background: rgba(78,216,175,.16); border: 1px solid rgba(78,216,175,.55); color: #7fe7c4; }
+.rseat__kick { right: 1px !important; top: 1px !important; bottom: auto !important; left: auto !important;
+  background: rgba(255,90,90,.18); border: 1px solid rgba(255,90,90,.6); color: #ff8a8a; }
+.rseat__bot .icon, .rseat__bot svg, .rseat__kick .icon, .rseat__kick svg { width: 70% !important; height: 70% !important; }
+/* 动态头像铺满方格 */
+.rseat__art.is-dyn img { visibility: hidden !important; }
+.rseat__art > * { position: absolute; inset: 0; }
+
+/* 2026-10-13 编号 #n 显示不出来 → 提高特异性压过 room.css 里的 .rseat__strip{display:none!important} */
+html body .rseat__strip {
+  display: flex !important;
+  order: 3 !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+html body .rseat__strip i { display: none !important; }
+html body .rseat__strip .num {
+  display: inline !important;
+  visibility: visible !important;
+  opacity: .72 !important;
+  color: #cfe8df !important;
+  font-size: max(.16rem, 11px) !important;
+  line-height: 1.2 !important;
+}
+/* 名字与编号之间的间距 */
+html body .rseat__plate { margin-bottom: 1px !important; }

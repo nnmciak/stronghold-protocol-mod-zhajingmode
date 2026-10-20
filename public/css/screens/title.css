@@ -1,0 +1,760 @@
+/* ==========================================================================================
+   screens/title.css — title screen: radar + ridgeline backdrop, dot-matrix emblem, big title,
+   nickname console. Pure CSS/SVG art; an optional backdrop image fades in underneath.
+   ========================================================================================== */
+
+.title-screen { align-items: center; justify-content: center; }
+
+/* ---- backdrop ----------------------------------------------------------------------------------- */
+.title-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.title-bg__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  object-position: center 30%;
+  filter: saturate(.8) brightness(.9);
+  transition: opacity 600ms ease;
+}
+.title-bg.has-art .title-bg__art { opacity: .8; }
+/* The real backdrop already carries a radar + target point; keep only the sweep over it. */
+.title-bg.has-art .title-bg__target { display: none; }
+.title-bg.has-art .title-bg__radar { opacity: .35; }
+.title-bg__ridge-art {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -.1rem;
+  height: 3.3rem;
+  background-repeat: repeat-x;
+  background-position: center bottom;
+  background-size: auto 100%;
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+.title-bg.has-ridges .title-bg__ridge-art { opacity: 1; }
+.title-bg__ridges { animation: fade-in 600ms ease backwards; }
+@keyframes fade-in { from { opacity: 0; } }
+.title-bg__glow {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: 0;
+  height: 6rem;
+  background:
+    radial-gradient(48% 42% at 50% 78%, rgba(23, 249, 183, .40), rgba(23, 249, 183, .08) 62%, transparent 76%),
+    radial-gradient(26% 26% at 50% 80%, rgba(120, 255, 215, .30), transparent 70%);
+  filter: blur(6px);
+  animation: glow-breathe 7s ease-in-out infinite;
+}
+@keyframes glow-breathe { 50% { opacity: .78; } }
+
+.title-bg__radar {
+  position: absolute;
+  left: 17%;
+  top: 40%;
+  width: 5.6rem;
+  height: 5.6rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 0 .05rem, rgba(78, 216, 175, .5) .05rem .065rem, transparent .065rem),
+    repeating-radial-gradient(circle, transparent 0 .69rem, rgba(78, 216, 175, .16) .69rem .7rem),
+    linear-gradient(rgba(78, 216, 175, .12), rgba(78, 216, 175, .12)) center / 100% 1px no-repeat,
+    linear-gradient(rgba(78, 216, 175, .12), rgba(78, 216, 175, .12)) center / 1px 100% no-repeat;
+  -webkit-mask-image: radial-gradient(circle, #000 55%, transparent 71%);
+  mask-image: radial-gradient(circle, #000 55%, transparent 71%);
+  opacity: .8;
+}
+.title-bg__sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  /* The bright edge must LEAD and the glow must trail BEHIND it. A conic gradient's angle grows
+     clockwise from 0deg (12 o'clock), and radar-sweep rotates clockwise too — so the bright end has
+     to sit at 100% (== 0deg) and fade counter-clockwise from there. Written the other way round
+     (bright at 0% fading to 22%) the glow fans out AHEAD of the beam and the sweep reads backwards. */
+  background: conic-gradient(from 0deg, transparent 0 78%, rgba(23, 249, 183, .28) 100%);
+  animation: radar-sweep 6s linear infinite;
+}
+@keyframes radar-sweep { to { transform: rotate(360deg); } }
+
+.title-bg__target {
+  position: absolute;
+  right: 12%;
+  top: 22%;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(246, 163, 41, .9) 0 .06rem, transparent .065rem),
+    radial-gradient(circle, transparent 0 .2rem, rgba(246, 163, 41, .5) .2rem .215rem, transparent .215rem),
+    radial-gradient(circle, transparent 0 .5rem, rgba(246, 163, 41, .22) .5rem .51rem, transparent .51rem),
+    radial-gradient(circle, rgba(246, 163, 41, .18), transparent 70%);
+  animation: target-pulse 3.2s ease-in-out infinite;
+}
+.title-bg__target::after {
+  content: 'TARGET POINT';
+  position: absolute;
+  left: 110%;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: .02rem .08rem;
+  border: 1px solid rgba(246, 163, 41, .35);
+  font-family: var(--font-display);
+  font-size: .1rem;
+  letter-spacing: .2em;
+  color: rgba(246, 163, 41, .7);
+  white-space: nowrap;
+}
+@keyframes target-pulse { 50% { transform: scale(1.06); opacity: .75; } }
+
+.title-bg__ridges { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 40%; }
+.title-bg__ridges .ridge { stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.title-bg__ridges .ridge--far { opacity: .95; }
+.title-bg__haze {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(12, 15, 14, .6) 0%, transparent 25%, transparent 70%, rgba(6, 8, 7, .7) 100%),
+    radial-gradient(46% 42% at 50% 44%, rgba(10, 13, 12, .82), rgba(10, 13, 12, .4) 60%, transparent 80%);
+}
+
+/* ---- corners ------------------------------------------------------------------------------------- */
+.title-corner { position: absolute; z-index: 2; display: flex; align-items: flex-start; gap: .12rem; line-height: 1.7; }
+.title-corner--tl { left: .44rem; top: .38rem; }
+.title-corner--tr { right: .44rem; top: .38rem; text-align: right; }
+.title-corner__mark {
+  width: .32rem;
+  height: .32rem;
+  margin-top: .02rem;
+  border: 1px solid var(--mint-700);
+  background:
+    linear-gradient(var(--mint-500), var(--mint-500)) center / 40% 2px no-repeat,
+    linear-gradient(var(--mint-500), var(--mint-500)) center / 2px 40% no-repeat;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+}
+
+/* ---- centre column ------------------------------------------------------------------------------- */
+.title-main {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -.3rem;
+}
+
+.emblem { position: relative; display: flex; align-items: center; gap: .26rem; margin-bottom: .26rem; animation: rise-in 600ms var(--ease-out) backwards; }
+.emblem__svg { width: 1.3rem; height: 1.4rem; overflow: visible; filter: drop-shadow(0 0 .12rem rgba(210, 255, 240, .25)); }
+.emblem__svg circle { fill: #dfe6e2; animation: dot-twinkle 4.8s ease-in-out infinite; }
+.emblem__svg circle.d1 { animation-delay: -.7s; }
+.emblem__svg circle.d2 { animation-delay: -1.4s; }
+.emblem__svg circle.d3 { animation-delay: -2.1s; }
+.emblem__svg circle.d4 { animation-delay: -2.8s; }
+.emblem__svg circle.d5 { animation-delay: -3.5s; }
+.emblem__svg circle.d6 { animation-delay: -4.2s; }
+.emblem__svg circle.is-accent { fill: var(--mint-glow); filter: drop-shadow(0 0 .04rem var(--mint-glow)); animation: none; }
+@keyframes dot-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+.emblem__bracket { width: .16rem; height: 1.7rem; border: 2px solid rgba(223, 230, 226, .45); }
+.emblem__bracket--l { border-right: 0; }
+.emblem__bracket--r { border-left: 0; }
+
+.title-en {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .02rem;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 1;
+  animation: rise-in 600ms 80ms var(--ease-out) backwards;
+}
+.title-en__a { font-size: .34rem; font-weight: 500; letter-spacing: .3em; padding-left: .3em; color: #cdd6d1; }
+.title-en__b {
+  font-size: .38rem;
+  font-weight: 700;
+  letter-spacing: .34em;
+  padding-left: .34em;
+  color: var(--mint-500);
+  text-shadow: 0 0 .18rem rgba(23, 249, 183, .45);
+}
+.title-cn {
+  margin-top: .14rem;
+  font-size: 1.02rem;
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: .06em;
+  color: #f4f6f5;
+  text-shadow: 0 .04rem .2rem rgba(0, 0, 0, .7);
+  animation: rise-in 600ms 140ms var(--ease-out) backwards;
+}
+.title-cn__colon { color: #f4f6f5; }
+/* a title in an alphabetic script (English …; screens/title.js): the display face, smaller so "Stronghold Protocol: Alliance" fits one line */
+.title-cn--latin { font-family: var(--font-display); font-size: .6rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
+.title-cn em { font-style: normal; color: var(--mint-500); text-shadow: 0 0 .26rem rgba(23, 249, 183, .45); }
+.title-tag {
+  margin-top: .12rem;
+  font-size: calc(.19 * var(--t));
+  color: var(--text-lo);
+  letter-spacing: .1em;
+  animation: rise-in 600ms 200ms var(--ease-out) backwards;
+}
+@keyframes rise-in { from { opacity: 0; transform: translateY(.14rem); } }
+
+.title-login {
+  --bk-c: var(--mint-500);
+  position: relative;
+  width: 4.9rem;
+  margin-top: .3rem;   /* 原 .42rem：主列里多了一行水印（用户 2026-10-13 挪水印），这里收回一点高度 */
+  display: flex;
+  flex-direction: column;
+  gap: .16rem;
+  padding: .24rem .28rem .2rem;
+  background: linear-gradient(180deg, rgba(20, 25, 23, .82), rgba(10, 13, 12, .88));
+  border: 1px solid var(--line-2);
+  box-shadow: 0 .2rem .5rem rgba(0, 0, 0, .5), 0 0 .5rem rgba(23, 249, 183, .06);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  animation: rise-in 600ms 260ms var(--ease-out) backwards;
+}
+.title-login::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  top: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--mint-500), transparent 60%);
+}
+.title-login .btn--xl { letter-spacing: .6em; padding-left: calc(.48rem + .3em); }
+.title-invite {
+  display: flex;
+  align-items: center;
+  gap: .08rem;
+  padding: .08rem .12rem;
+  background: rgba(246, 163, 41, .08);
+  border: 1px solid rgba(246, 163, 41, .35);
+  color: var(--amber);
+  font-size: calc(.16 * var(--t));
+}
+.title-invite .icon { width: .2rem; height: .2rem; }
+.title-invite b { font-size: calc(.2 * var(--t)); letter-spacing: .2em; color: #ffd08a; }
+.title-conn { display: flex; align-items: center; justify-content: center; gap: .1rem; min-height: .32rem; font-size: calc(.14 * var(--t)); color: var(--text-lo); }
+/* language menu (中文 | English | …, ui/lang.js) in the top-right corner; more than four languages make it a list */
+.title-lang { display: inline-flex; margin-bottom: .1rem; }
+.title-lang button { min-width: .74rem; height: max(.3rem, 1.4em); font-size: calc(.14 * var(--t)); cursor: pointer; }
+.lang-select select { height: max(.38rem, 1.4em); min-width: 1.6rem; padding: 0 .12rem; background: #0a0d0c; border: 0; color: var(--text-hi); font-size: calc(.16 * var(--t)); cursor: pointer; }
+.title-lang.lang-select select { height: max(.3rem, 1.4em); font-size: calc(.14 * var(--t)); }
+html[data-script="alphabetic"] .title-login .btn--xl { letter-spacing: .3em; }
+.title-conn .ping { height: max(.26rem, 1.6em); font-size: calc(.15 * var(--t)); }
+
+.title-foot {
+  position: absolute;
+  z-index: 2;
+  left: .44rem;
+  right: .44rem;
+  bottom: .3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: calc(.13 * var(--t));
+  color: var(--text-dim);
+}
+/* a development build (shared/constants.js DEV_BUILD): an unmissable tag in the footer */
+.title-dev {
+  padding: .03rem .1rem;
+  border: 1px solid #ff9f43;
+  border-radius: .04rem;
+  color: #ffb066;
+  background: rgba(255, 159, 67, .14);
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+/* ---- 下载完整素材 / 导入素材包（右下角）-------------------------------------------------------------
+   ★ 2026-10-16（owner 两次反馈，最终定案「移到右边空处」）：
+     第一版它是 `.title-screen`（flex 容器）的直接子项却没有任何 CSS → 宽度失控，手机横屏被裁；
+     第二版放进主列（登录框下方）→ 仍被挡住，因为登录框那一列在手机横屏下本身就超出视口底部。
+     所以现在**绝对定位到右下角**：那一带是空的（房间列表在左下、公告/设置图标在登录框内部、
+     版本号只占右下角一小行），不再依赖任何列的尺寸，也不会被任何东西顶出屏幕。
+   竖排两个按钮：右下角横向空间不如纵向宽裕，竖排还能让两段提示文字都读得完。
+   窄屏整体收窄并抬高，给底部的版本号/页脚留出位置。 */
+.title-assets {
+  position: absolute;
+  z-index: 3;
+  right: .44rem;
+  bottom: 1.02rem;            /* 与 .roomlist 同一条基线，视觉上成对 */
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  width: 2.5rem;
+  max-width: 46vw;
+  pointer-events: auto;       /* 标题页其余装饰层是 pointer-events: none */
+}
+.title-assets__item { display: flex; flex-direction: column; gap: .04rem; min-width: 0; }
+.title-assets__item .btn { width: 100%; }
+.title-assets__item small { font-size: calc(.11 * var(--t)); line-height: 1.3; color: var(--text-dim); }
+
+/* 窄屏（手机横屏）：收窄 + 抬高，别压到底部页脚 */
+@media (max-width: 899.98px) {
+  .title-assets { width: 2.1rem; right: .3rem; bottom: .92rem; gap: .08rem; }
+}
+/* 很窄时版本号会跟按钮撞在一起 —— 版本号只是装饰，让位 */
+@media (max-width: 700px) {
+  .title-foot .title-ver, .title-foot > span:last-child { display: none; }
+}
+/* 极矮的横屏手机：垂直空间最紧张，提示文字让位给按钮本身 */
+@media (max-height: 520px) {
+  .title-assets__item small { display: none; }
+  .title-assets { gap: .08rem; bottom: .8rem; }
+}
+
+/* ---- 100 人版水印（封面）-------------------------------------------------------------------------------
+   交流群 + 商用禁止。用户 2026-10-13「把我的 mod 水印调整到我标红的这个区域」：从"绝对定位钉在页脚上方、
+   主列之外"改成主列里的普通一行 —— 跟在副标题 .title-tag 下面，和标题一起居中。 */
+.title-watermark {
+  position: relative;
+  z-index: 2;
+  margin-top: .1rem;
+  display: flex;
+  align-items: center;
+  gap: .12rem;
+  padding: .05rem .16rem;
+  border: 1px solid var(--mint-a35);
+  border-radius: .05rem;
+  background: linear-gradient(180deg, rgba(13, 44, 36, .82), rgba(8, 11, 10, .82));
+  box-shadow: 0 .06rem .2rem rgba(0, 0, 0, .45);
+  font-size: calc(.15 * var(--t));
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: rise-in 600ms 220ms var(--ease-out) backwards;
+}
+.title-watermark__row { display: flex; align-items: center; gap: .1rem; }
+.title-watermark__k { color: var(--text-md); letter-spacing: .04em; }
+.title-watermark__q {
+  color: var(--mint-400);
+  font-size: calc(.19 * var(--t));
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-shadow: 0 0 .12rem rgba(23, 249, 183, .35);
+}
+.title-watermark__ban {
+  padding: .03rem .1rem;
+  border-left: 1px solid var(--mint-a35);
+  padding-left: .14rem;
+  color: var(--gold);
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+/* 窄屏（手机横屏）把水印收窄（现在它是主列里的一行，不再需要躲页脚） */
+@media (max-width: 699.98px) {
+  .title-watermark { font-size: calc(.13 * var(--t)); padding: .04rem .12rem; gap: .08rem; }
+  .title-watermark__q { font-size: calc(.16 * var(--t)); }
+}
+
+/* ---- 在线人数（右上角）-----------------------------------------------------------------------------------
+   放在 TARGET POINT 那一栏下方。只有一个总数：这是主界面，不是一个状态面板。 */
+.title-online {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .08rem;
+  margin-top: .08rem;
+  font-size: .15rem;
+  color: var(--text-md);
+}
+.title-online b { font-size: .19rem; color: var(--mint-400); margin: 0 .04rem; }
+
+/* ---- 公开房间列表（左下角）-----------------------------------------------------------------------------
+   放在左下角，避开中间的主标题块与右下角的版本号。整块 pointer-events: auto —— 标题页其余装饰层都是
+   pointer-events: none，不加就点不动。 */
+.roomlist {
+  position: absolute;
+  z-index: 3;
+  left: .44rem;
+  bottom: 1.02rem;
+  width: 5.6rem;
+  max-height: 3.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  padding: .16rem .18rem .14rem;
+  background: linear-gradient(180deg, rgba(20, 25, 23, .8), rgba(10, 13, 12, .86));
+  border: 1px solid var(--line-2);
+  box-shadow: 0 .16rem .4rem rgba(0, 0, 0, .5);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  pointer-events: auto;
+}
+.roomlist__head { display: flex; align-items: center; justify-content: space-between; }
+.roomlist__n { font-size: .2rem; font-weight: 700; color: var(--mint-400); }
+.roomlist__empty { margin: 0; padding: .1rem 0 .06rem; font-size: .15rem; color: var(--text-lo); }
+.roomlist__ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .06rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(78, 216, 175, .45) transparent;
+}
+.roomrow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: .14rem;
+  padding: .07rem .1rem;
+  background: rgba(255, 255, 255, .02);
+  border: 1px solid var(--line-2);
+  color: var(--text-md);
+  font-size: .15rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+}
+.roomrow:hover:not(:disabled) { background: var(--mint-a10); border-color: var(--mint-a35); transform: translateX(.03rem); }
+.roomrow:disabled { opacity: .5; cursor: not-allowed; }
+.roomrow__code { font-size: .19rem; font-weight: 700; letter-spacing: .1em; color: var(--mint-400); }
+.roomrow__diff { font-size: .13rem; font-weight: 700; padding: .01rem .06rem; border: 1px solid currentColor; }
+.roomrow__diff.is-funny { color: var(--gold); }
+.roomrow__diff.is-normal { color: var(--orange-hi); }
+.roomrow__diff.is-hard { color: var(--red-premium); }
+.roomrow__diff.is-abyss { color: var(--red-abyss); }
+.roomrow__seats { margin-left: auto; font-size: .17rem; font-weight: 700; color: #fff; }
+.roomrow__seats i { font-style: normal; font-size: .13rem; color: var(--text-lo); }
+.roomrow__tag {
+  font-size: .12rem;
+  padding: .01rem .06rem;
+  border: 1px solid var(--line-3);
+  color: var(--text-lo);
+}
+.roomrow__tag.is-match { border-color: rgba(246, 163, 41, .5); color: var(--amber); }
+.roomrow__age { font-size: .12rem; color: var(--text-dim); }
+
+/* ---- 联通（2026-10-17）：大厅同时列出对端服务器的房间 ------------------------------------------------
+   对端房间带 `peer`（见 screens/lobbyFeed.js），点它是【跳到那台服】而不是在本服开房 —— 所以行首挂一个
+   来源标签，并用一条冷色边把「本服 / 对端」分开，避免玩家把对端房号填进本服的加入框。 */
+.roomlist__headr { display: flex; align-items: center; gap: .08rem; }
+.roomlist__fed {
+  font-size: .11rem;
+  letter-spacing: .04em;
+  padding: .01rem .06rem;
+  border: 1px solid var(--mint-a35);
+  color: var(--mint-400);
+}
+.roomrow__peer {
+  font-size: .11rem;
+  letter-spacing: .02em;
+  padding: .01rem .05rem;
+  border: 1px solid var(--line-3);
+  color: var(--text-lo);
+  max-width: 1.6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.roomrow.is-peer { border-left: 2px solid var(--mint-a35); }
+
+/* 窄屏（手机横屏）没有空间并排：收窄而不是隐藏，列表本身是可用的 */
+@media (max-width: 899.98px) {
+  .roomlist { width: 4.4rem; max-height: 2.4rem; left: .3rem; bottom: .92rem; padding: .12rem .14rem .1rem; }
+  .roomrow { gap: .1rem; font-size: .13rem; }
+  .roomrow__age { display: none; }
+}
+
+/* ---- 更新公告(AnnouncementsButton + ui/announcements.js)-----------------------------------------------------
+   入口是「选择模拟协议」界面右上角的一个独立图标按钮(`.fsbtn` 提供方框底与悬浮态),点开是标着 PATCH NOTES 的
+   Modal。版面参照《明日方舟》的公告栏,而不是自己发明一套:
+     · 琥珀色信息带做面板头(官方公告的标题条);
+     · 正文按分节组织,每个分节一个方块图标 + 小标题,条目编号;
+     · 条目正文用次级灰、分节标题用琥珀 —— 官方公告里「◆系统优化：」与「-独立模拟：…」就是这层对比;
+     · 开头一句「感谢各位博士…」与结尾落款也是照官方写法留的位置。
+   未读状态存 localStorage(`sp100.announcements.seen` = 上次读过的日期),所以同一份公告不会一直被当成新的。 */
+.anbtn { position: relative; }
+.anbtn.is-fresh { color: var(--gold-2); border-color: var(--amber); }
+.anbtn__dot { position: absolute; top: .02rem; right: .02rem; width: .1rem; height: .1rem; border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 .1rem rgba(255, 198, 0, .8); }
+/* 面板宽度:受视口约束。曾把 width 传成 `min(46rem, 92vw)` —— `46rem` 在 1600px 下约 3832px,盖过 `92vw`,
+   弹窗横向溢出且居中后滚不到右侧,表现为「打不开也关不掉」。(Modal 的 class 落在这个 modal__box 上。) */
+.modal__box.anmodal { width: min(11rem, 96vw); }
+
+/* 面板头:官方公告那条琥珀色信息带。Modal 自带 .modal__head / .modal__stripe,这里只换配色与厚度。 */
+.modal__box.anmodal .modal__stripe { height: .06rem; background: var(--amber); }
+.modal__box.anmodal .modal__head { background: linear-gradient(180deg, rgba(246, 163, 41, .16), transparent);
+  border-bottom: 1px solid rgba(246, 163, 41, .28); padding-bottom: .12rem; }
+.modal__box.anmodal .modal__title { color: var(--gold-2); letter-spacing: .1em; }
+.modal__box.anmodal .modal__body { padding: .18rem .26rem .24rem; }
+
+/* ---- 左右分栏:左＝历次公告列表(日期方块 + 标题 + NEW),右＝选中那条的正文 ------------------------------
+   和游戏内公告板同构。左栏固定宽、自身滚动;右栏占满剩余宽度并独立滚动,所以长公告不会把列表顶下去。 */
+.anboard { display: flex; gap: .22rem; height: min(13rem, 74vh); align-items: stretch; }
+.anboard__list { flex: none; width: 3.5rem; display: flex; flex-direction: column; gap: .08rem;
+  overflow-y: auto; padding-right: .06rem; }
+.anboard__body { flex: 1 1 auto; min-width: 0; overflow-y: auto; padding-right: .06rem; }
+
+/* 列表行:左边一个日期方块(日 / 月),右边标题 */
+.anrow { position: relative; display: flex; align-items: center; gap: .12rem; width: 100%; text-align: left;
+  padding: .1rem .12rem; background: var(--bg-1); border: 1px solid var(--line); color: var(--text-md);
+  cursor: pointer; transition: background var(--t-fast), border-color var(--t-fast); }
+.anrow:hover { background: var(--bg-2); border-color: var(--line-3); }
+.anrow.is-on { background: var(--bg-3); border-color: var(--amber); color: var(--text-hi); }
+/* 选中态左侧一道琥珀竖条 —— 官方列表用色块标当前项 */
+.anrow.is-on::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: .04rem; background: var(--amber); }
+.anrow__d { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: .62rem; padding: .04rem 0; background: rgba(0, 0, 0, .45); border: 1px solid var(--line-2); }
+.anrow__d b { font-size: .22rem; line-height: 1.05; color: var(--text-hi); }
+.anrow__d i { font-size: .11rem; font-style: normal; color: var(--text-lo); }
+.anrow.is-on .anrow__d { border-color: var(--amber); }
+.anrow.is-on .anrow__d b { color: var(--gold-2); }
+.anrow__t { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: .03rem; }
+.anrow__title { font-size: .15rem; font-weight: 700; line-height: 1.35; }
+.anrow__tag { align-self: flex-start; font-size: .11rem; font-weight: 700; letter-spacing: .06em;
+  padding: 0 .06rem; background: var(--amber); color: #1a1204; }
+/* NEW 角标:官方列表右上角那种红色小标 */
+.anrow__new { position: absolute; top: -.01rem; right: -.01rem; font-size: .1rem; font-weight: 700;
+  letter-spacing: .04em; padding: .01rem .06rem; background: var(--red); color: #fff; }
+/* 置顶角标:红色,放右下角 —— NEW 占着右上角,两个角标会叠在一起 */
+.anrow__pin { position: absolute; bottom: -.01rem; right: -.01rem; font-size: .1rem; font-weight: 700;
+  letter-spacing: .04em; padding: .01rem .06rem; background: var(--red); color: #fff; }
+/* 重要角标:蓝色,放【右上角】—— 和置顶(红,右下)分工;NEW 也是右上角,所以有它时把 NEW 左移避让 */
+.anrow__mark { position: absolute; top: -.01rem; right: -.01rem; font-size: .1rem; font-weight: 700;
+  letter-spacing: .04em; padding: .01rem .06rem; background: #2f8fff; color: #fff; }
+.anrow.has-mark .anrow__new { right: .48rem; }
+
+/* 右栏正文 */
+.andetail { display: flex; flex-direction: column; gap: .1rem; }
+.andetail__head { display: flex; flex-direction: column; gap: .06rem;
+  padding-bottom: .12rem; border-bottom: 1px solid var(--line-2); }
+.andetail__title { margin: 0; font-size: .26rem; font-weight: 700; letter-spacing: .03em; color: var(--text-hi); }
+.andetail__meta { display: flex; align-items: center; gap: .12rem; flex-wrap: wrap; }
+.andetail__date { font-size: .15rem; letter-spacing: .06em; color: var(--gold-2); }
+
+.anitem__head { display: flex; align-items: baseline; gap: .12rem; flex-wrap: wrap; }
+.anitem__tag { flex: none; font-size: .13rem; font-weight: 700; letter-spacing: .08em; padding: .02rem .1rem;
+  background: var(--amber); color: #1a1204; }
+.anitem__title { margin: 0; font-size: .24rem; font-weight: 700; letter-spacing: .03em; color: var(--text-hi); }
+.anitem__meta { display: flex; align-items: center; gap: .12rem; }
+/* 日期:官方公告那种右对齐的浅金数字 */
+.anitem__date { font-size: .15rem; letter-spacing: .1em; color: var(--gold-2); }
+.anitem__new { font-size: .12rem; font-weight: 700; letter-spacing: .08em; padding: .01rem .08rem;
+  border: 1px solid var(--orange-hi); color: var(--orange-hi); }
+.anitem__build { font-size: .12rem; color: var(--text-dim); }
+
+.anitem__intro, .anitem__outro { margin: 0; font-size: .17rem; line-height: 1.65; color: var(--text-lo); }
+.anitem__outro { padding-top: .1rem; border-top: 1px dashed var(--line); }
+/* 落款右对齐 —— 官方公告结尾是「【明日方舟】运营组 / 日期」 */
+.anitem__outro { text-align: right; }
+
+/* 窄屏没有并排的空间:列表收到正文上方,横向铺开 */
+@media (max-width: 899.98px) {
+  .anboard { flex-direction: column; height: min(13rem, 70vh); gap: .14rem; }
+  .anboard__list { width: 100%; max-height: 3.2rem; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
+  .anrow { flex: none; width: 2.8rem; }
+}
+
+/* 结尾的社群条:一条独立的分隔线 + 居中的群号,读起来像游戏内公告末尾的「加入官方社群」 */
+.anitem__footer { display: flex; align-items: center; justify-content: center; gap: .12rem; margin: .08rem 0 0;
+  padding-top: .16rem; border-top: 1px solid var(--line-2);
+  font-size: .16rem; letter-spacing: .02em; color: var(--gold-2); }
+.anitem__footer .icon { width: .18rem; height: .18rem; flex: none; color: var(--amber); }
+
+/* 分节:方块图标 + 小标题 + 编号条目 */
+.ansect { display: flex; flex-direction: column; gap: .08rem; }
+.ansect__label { display: flex; align-items: center; gap: .1rem; margin: .06rem 0 0;
+  font-size: .18rem; font-weight: 700; letter-spacing: .04em; color: var(--gold-2); }
+.ansect__icon { width: .15rem; height: .15rem; flex: none; color: var(--amber); }
+.ansect__items { margin: 0; padding: 0 0 0 .42rem; display: flex; flex-direction: column; gap: .07rem;
+  font-size: .17rem; line-height: 1.6; color: var(--text-md); list-style: decimal; }
+.ansect__items > li { padding-left: .06rem; }
+.ansect__items > li::marker { color: var(--amber); font-size: .15rem; }
+/* 不加编号的变体(通知类公告):段落式排版,左缩进与小标题对齐,用于「讲一件事」而不是「列举改动」 */
+.ansect__items--plain { list-style: none; padding-left: .28rem; gap: .12rem; }
+.ansect__items--plain > li { padding-left: 0; }
+
+/* 行内链接(公告里的出处):蓝色,和游戏内「可点击」的惯例一致 */
+.anlink { color: var(--ice); text-decoration: underline; text-underline-offset: .02rem; word-break: break-all; }
+.anlink:hover { color: #cfe9ff; }
+/* @某人:蓝色、不加下划线 —— 它指向的是人不是链接,不假装可点 */
+.anmention { color: var(--ice); }
+/* [red]…[/red]:红色预警短语(「仅本服务器生效」这类限定条件)。用亮红而不是深红,暗底上要读得清 */
+.anred { color: var(--red-premium); font-weight: 700; }
+
+/* 「一些大饼」:roadmap 性质的预告。压暗 + 斜体 + 缩进,让它的分量明显低于上面的补丁内容 ——
+   那是已实装的改动,这是还没做的东西,不能读起来一样重。 */
+.anitem__teaser { margin: .12rem 0 0; padding: .1rem 0 0 .16rem; border-top: 1px dashed var(--line);
+  border-left: 2px solid var(--line-2); font-size: .15rem; font-style: italic; line-height: 1.6;
+  color: var(--text-dim); }
+
+/* 插图。公告里的图多半是浅底截图(表格 / 截图),直接贴在暗面板上会突兀,所以垫一张浅色「文档卡」:
+   它读起来像夹在公告里的一页纸,而不是一块没对齐的色块。不反色 —— 反色会让这种表格失真。 */
+.anfigs { display: flex; flex-direction: column; gap: .14rem; margin: .14rem 0 0; }
+.anfig { margin: 0; display: flex; flex-direction: column; gap: .06rem; }
+.anfig__img { display: block; width: 100%; height: auto; background: #fff;
+  padding: .12rem; border: 1px solid var(--line-3); }
+.anfig__cap { font-size: .13rem; line-height: 1.5; color: var(--text-dim); }
+
+/* 2026-10-13 从旧备份 CSS 照搬：头像选择器浮层 */
+.avpick { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; }
+.avpick__scrim { position: absolute; inset: 0; background: rgba(4, 7, 6, .74); backdrop-filter: blur(2px); }
+.avpick__panel {
+  position: relative; width: min(94vw, 62rem); height: min(88vh, 44rem); display: flex; flex-direction: column;
+  background: linear-gradient(160deg, rgba(14, 20, 18, .99), rgba(9, 13, 12, .99));
+  border: 1px solid var(--line-2); border-radius: .4rem; box-shadow: 0 24px 60px rgba(0, 0, 0, .6); overflow: hidden;
+}
+.avpick__head { display: flex; align-items: center; gap: .6rem; padding: .7rem .9rem .5rem; border-bottom: 1px solid var(--line); }
+.avpick__head h3 { margin: 0; font-size: calc(.26 * var(--t)); letter-spacing: .06em; }
+.avpick__x { margin-left: auto; background: none; border: 0; color: var(--text-lo); cursor: pointer; padding: .25rem; }
+.avpick__x:hover { color: var(--text-hi); }
+.avpick__tabs { display: flex; gap: .3rem; padding: .5rem .9rem 0; flex-wrap: wrap; }
+.avpick__tab {
+  display: inline-flex; align-items: center; gap: .3rem; padding: .3rem .6rem; cursor: pointer;
+  background: rgba(255, 255, 255, .03); border: 1px solid var(--line); border-radius: .25rem;
+  color: var(--text-md); font-size: calc(.13 * var(--t));
+}
+.avpick__tab:hover { color: var(--text-hi); }
+.avpick__tab.is-on { color: var(--text-hi); border-color: var(--mint-500); background: rgba(23, 249, 183, .1); }
+.avpick__bar { display: flex; align-items: center; gap: .5rem; padding: .5rem .9rem; }
+.avpick__bar .tf { width: 14rem; flex: 0 0 auto; }
+.avpick__subs { display: flex; gap: .25rem; flex: 0 0 auto; }
+.avpick__sub { padding: .06rem .18rem; font-size: calc(.12 * var(--t)); cursor: pointer; color: var(--text-md); background: none; border: 1px solid var(--line); border-radius: 2rem; }
+.avpick__sub.is-on { color: var(--text-hi); border-color: var(--mint-500); background: rgba(23, 249, 183, .12); }
+.avpick__count { margin-left: auto; color: var(--text-lo); font-size: calc(.11 * var(--t)); }
+.avpick__list {
+  flex: 1 1 auto; overflow-y: auto; padding: .3rem .9rem .8rem;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(5.1rem, 1fr)); gap: .45rem; align-content: start;
+}
+.avpick__empty, .avpick__more { grid-column: 1 / -1; text-align: center; color: var(--text-lo); font-size: calc(.12 * var(--t)); padding: .2rem 0; }
+.avpick__foot { display: flex; align-items: center; gap: .6rem; padding: .6rem .9rem; border-top: 1px solid var(--line); }
+.avpick__cur { display: flex; align-items: center; gap: .5rem; margin-right: auto; }
+.avpick__curimg { width: 2.6rem; height: 2.6rem; border-radius: .25rem; overflow: hidden; background: rgba(0, 0, 0, .4); display: flex; align-items: center; justify-content: center; }
+.avpick__curimg img { width: 100%; height: 100%; object-fit: cover; }
+.avpick__cur b { display: block; font-size: calc(.14 * var(--t)); }
+.avpick__panel { width: min(92vw, 13rem); height: min(86vh, 10rem); border-radius: .2rem; }
+.avpick__head { padding: .18rem .3rem .14rem; gap: .2rem; }
+.avpick__head h3 { font-size: calc(.16 * var(--t)); }
+.avpick__head .micro { font-size: calc(.1 * var(--t)); letter-spacing: .1em; }
+.avpick__x { width: .5rem; height: .5rem; }
+.avpick__tabs { padding: .16rem .3rem 0; gap: .1rem; }
+.avpick__tab { font-size: calc(.13 * var(--t)); padding: .1rem .22rem; gap: .1rem; border-radius: .15rem; }
+.avpick__tab svg, .avpick__tab .icon { width: .18rem; height: .18rem; }
+.avpick__subs { padding: 0 .3rem; gap: .08rem; }
+.avpick__sub { font-size: calc(.12 * var(--t)); padding: .06rem .18rem; border-radius: 1rem; }
+.avpick__bar { padding: .14rem .3rem; gap: .2rem; }
+.avpick__count, .avpick__cur { font-size: calc(.11 * var(--t)); }
+.avpick__curimg { width: .7rem; height: .7rem; border-radius: .1rem; }
+.avpick__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(.85rem, 1fr));
+  gap: .12rem; padding: .18rem .3rem .3rem; overflow-y: auto; align-content: start; flex: 1 1 auto; }
+.avpick__foot { padding: .1rem .3rem; }
+.avpick__more { font-size: calc(.11 * var(--t)); padding: .08rem .3rem; }
+.avpick__more { display: block; width: 100%; margin: .12rem 0 0; padding: .12rem 0; cursor: pointer; text-align: center;
+  background: rgba(255, 255, 255, .04); border: 1px dashed rgba(255, 255, 255, .2); border-radius: .12rem; color: var(--text-md); }
+.avpick__more:hover { border-color: var(--mint-500); color: var(--text-hi); }
+.avpick__list {
+  grid-template-columns: repeat(auto-fill, minmax(1.05rem, 1fr));
+  overflow-y: scroll; scrollbar-gutter: stable;
+  scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .28) rgba(255, 255, 255, .05);
+}
+.avpick__list::-webkit-scrollbar { width: .18rem; }
+.avpick__list::-webkit-scrollbar-track { background: rgba(255, 255, 255, .05); }
+.avpick__list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .28); border-radius: .1rem; }
+.avpick__list::-webkit-scrollbar-thumb:hover { background: var(--mint-500); }
+.avpick__list { --avc: 2.2rem; grid-template-columns: repeat(auto-fill, minmax(var(--avc), 1fr)); }
+.avpick__list { --avc: .58rem; grid-template-columns: repeat(auto-fill, minmax(.68rem, 1fr)); gap: .1rem; }
+.avpick__panel { width: min(92vw, 11rem); }
+.avpick__head { padding: .16rem .5rem .12rem; }
+.avpick__tabs { padding: .12rem .5rem 0; gap: .08rem; }
+.avpick__bar { padding: .12rem .5rem; gap: .16rem; }
+.avpick__list { padding: .16rem .5rem .3rem; gap: .1rem; }
+.avpick__foot { padding: .24rem .5rem; gap: .24rem; }
+.avpick__cur { gap: .16rem; }
+.avpick__cur b { font-size: .18rem; }
+.avpick__curimg { width: .5rem; height: .5rem; border-radius: .06rem; }
+.avpick__list {
+  --avc: .52rem;                                  /* 每格图片边长；想整体放大/缩小只改这一个值 */
+  grid-template-columns: repeat(auto-fill, minmax(.6rem, 1fr));
+  gap: .08rem; padding: .16rem .5rem .3rem; overflow-y: auto; align-content: start;
+}
+.avpick__list {
+  --avc: 1rem;                                    /* 每格边长；想整体放大/缩小只改这一个值 */
+  grid-template-columns: repeat(auto-fill, minmax(1rem, 1fr));
+  /* ★ 行高必须钉死：靠内容算行高时，图片加载前后会算出不一样的高度（实测 21px / 131px 两种），
+     而 .avcell 有 overflow: hidden + min-height: 0，一旦算小就把头像裁成一条且不会自己恢复。 */
+  grid-auto-rows: var(--avc);
+  gap: .08rem; padding: .16rem .4rem .3rem; align-content: start; overflow-y: auto;
+}
+
+
+/* 2026-10-13 头像选择器（在房间里用时）：强制浮层 + 等比缩小 + 底部栏吸底 */
+.avpick {
+  position: fixed !important; inset: 0 !important; z-index: 1500 !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+}
+.avpick__panel {
+  width: min(88vw, 40rem) !important; height: min(76vh, 30rem) !important;
+  max-width: 88vw !important; max-height: 76vh !important; margin: auto !important;
+}
+.avpick__list { overflow-y: auto !important; min-height: 0 !important; }
+.avpick__foot { position: sticky !important; bottom: 0 !important; background: inherit; z-index: 2; }
+.avpick__head, .avpick__bar, .avpick__tabs, .avpick__subs { flex: 0 0 auto !important; }
+
+/* ---- 2026-10-18 节点选择（南方 HK / 北方 北京）--------------------------------------------
+   放在登录框上方。两台是独立服务器，切换=整页跳转，所以做成"两张卡 + 一句说明"，
+   当前所在的那张高亮；进游戏后仍可在同盟大厅加入另一节点的房间（外服房间行会跳转）。 */
+.nodeswitch {
+  margin: .12rem 0 .06rem;
+  padding: .1rem .12rem .08rem;
+  border: 1px solid var(--line-2);
+  background: rgba(255, 255, 255, .02);
+  width: 100%;
+  max-width: 15.5rem;
+}
+.nodeswitch__head { display: flex; align-items: baseline; justify-content: space-between; gap: .1rem; }
+.nodeswitch__now { font-size: .11rem; color: var(--text-lo); letter-spacing: .02em; }
+.nodeswitch__row { display: flex; gap: .08rem; margin-top: .07rem; }
+.nodeswitch__btn {
+  flex: 1 1 0; min-width: 0;
+  display: grid; grid-template-columns: auto 1fr; align-items: center;
+  gap: 0 .07rem;
+  padding: .07rem .08rem;
+  border: 1px solid var(--line-2);
+  background: rgba(0, 0, 0, .18);
+  color: var(--text-md);
+  text-align: left; cursor: pointer;
+  transition: border-color var(--t-fast), background var(--t-fast), transform var(--t-fast);
+}
+.nodeswitch__btn:hover:not(.is-on) { transform: translateY(-1px); border-color: var(--mint-a35); }
+.nodeswitch__btn.is-on { cursor: default; background: var(--mint-a10); }
+.nodeswitch__btn.is-mint.is-on { border-color: var(--mint-400); }
+.nodeswitch__btn.is-amber.is-on { border-color: var(--amber); background: rgba(246, 163, 41, .12); }
+.nodeswitch__tag {
+  grid-row: 1 / span 2;
+  font-size: .17rem; font-weight: 700; letter-spacing: .06em;
+  color: var(--mint-400);
+}
+.nodeswitch__btn.is-amber .nodeswitch__tag { color: var(--amber); }
+.nodeswitch__label { font-size: .13rem; color: #fff; letter-spacing: .02em; }
+.nodeswitch__note { font-size: .1rem; color: var(--text-dim); }
+.nodeswitch__last {
+  grid-column: 2; justify-self: start;
+  margin-top: .02rem;
+  font-size: .09rem; padding: 0 .04rem;
+  border: 1px solid var(--line-3); color: var(--text-lo);
+}
+.nodeswitch__hint {
+  margin: .06rem 0 0;
+  font-size: .1rem; line-height: 1.5; color: var(--text-dim);
+}
+html[data-script="alphabetic"] .nodeswitch__label { letter-spacing: 0; }
+@media (max-width: 899.98px) {
+  .nodeswitch { max-width: none; padding: .07rem .08rem .06rem; }
+  .nodeswitch__btn { padding: .05rem .06rem; }
+  .nodeswitch__note { display: none; }
+  .nodeswitch__hint { font-size: .09rem; }
+}
