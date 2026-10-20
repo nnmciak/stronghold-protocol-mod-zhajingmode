@@ -5,7 +5,9 @@
 > 以及大量规则修正（见 [CHANGES-mod.md](CHANGES-mod.md)）。
 >
 > **不含任何游戏素材**：美术、音频、Spine 模型、字体等均不在本仓库内（版权归原权利人，不适用 GPL）。
-> 首次运行请执行 `npm install && npm run setup` 自行下载素材；整合包请另行获取。
+> `npm install && npm run setup` 能自动下载官方素材；但**炸惊自研特效 / 地图 / 场景 / 自制皮肤约 500 MB
+> 不在公共镜像里**，缺失时画面会自动降级（2D 棋盘、占位立绘、无特效）。细节见 **[ASSETS-NOTE.md](ASSETS-NOTE.md)**。
+> 想要完整体验请使用整合包（见 Releases 或发布页）。
 >
 > 代码沿用上游的 **GPL-3.0-or-later**，素材不在许可范围内，仅供学习交流与个人非商业使用。
 
