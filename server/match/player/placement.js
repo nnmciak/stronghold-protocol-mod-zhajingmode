@@ -350,6 +350,17 @@ export class PlayerPlacement {
         this.removeTokensOf(piece.uid);
         this.hand[idx] = piece;
       } else if (occ.kind === 'chess') {
+        // ★ 2026-10-21 修（玩家反馈「虎狼丸无限部署」）：这是「把场上的干员拖到整备区、和里面的干员换人」——
+        //   净额**不是 0**：被换下场的虎狼丸不计入部署数（no_deploy_slot），换上来的普通干员计入，
+        //   于是每换一次就多占一个位置。配合「虎狼丸不占位可以直接再放上场」，反复循环就能把整块场地铺满。
+        //   与 hand/temp→board 的替换（2026-10-17 那次修）对称地查一次上限：
+        //   projected = 当前部署数 − 下场者是否计数 + 上场者是否计数。
+        {
+          const pieceCounted = !noDeploySlot(this.gd, piece);
+          const occCounted = !noDeploySlot(this.gd, occ);
+          const projected = this.deployCount - (pieceCounted ? 1 : 0) + (occCounted ? 1 : 0);
+          if (projected > this.deployCap) return fail(ERR.BOARD_FULL);
+        }
         const [sr, sc] = parseKey(loc.key);
         if (!this._legal(occ, sr, sc)) return fail(ERR.BAD_TILE);
         // the bench card takes the withdrawn piece's tile with that tile's facing

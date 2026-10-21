@@ -617,7 +617,7 @@ const BOND_GRANTS = Object.freeze({
  * @param {any} ps
  * @param {Set<string>} before 抽卡前已激活的羁绊 id
  */
-function jibianGrantForBond(ps, before) {
+function jibianGrantForBond(m, ps, before) {
   try {
     const now = jibianBondsActive(ownedJibianIds(ps));
     for (const a of now) {
@@ -626,6 +626,18 @@ function jibianGrantForBond(ps, before) {
       if (!ids) continue;
       for (const id of ids) {
         try { ps.acquireChess(id, { source: 'bond', fromPool: false }); } catch { /* 池子/手牌满：跳过 */ }
+      }
+      // ★ 2026-10-21（owner）：真·投资人 —— 「返还触发前消耗的所有资金」。
+      //   凑齐羁绊的那一刻，把本局已经花掉的钱一次性退回（stats.gold 就是「挥金如土」统计的累计支出）。
+      //   羁绊只会激活一次（before/after 差集），所以天然不会重复返还。
+      if (a.def.id === 'true_investor') {
+        try {
+          const refund = Math.max(0, Math.floor(Number(ps.stats && ps.stats.gold) || 0));
+          if (refund > 0) {
+            ps.addFunds(refund, { reason: 'jibian:true_investor' });
+            try { m.toast(ps, 'info', `“真·投资人”：返还本局消耗的 ${refund} 资金`); } catch { /* toast 失败不影响 */ }
+          }
+        } catch { /* 返还失败不影响抽卡 */ }
       }
       // 集成战略爱好者：随机发未获得过的「藏品类」惊变（成员即藏品）
       if (a.def.id === 'roguelike_fan') {
@@ -659,7 +671,7 @@ export function applyCard(m, ps, card) {
     // every other source observes the pick (the card's own key already ran above)
     m.dispatch(p, 'onChoicePick', ev, { skipKey: `choice:${card.id}` });
     p.recompute();
-    jibianGrantForBond(p, bondBefore);   // ★ 羁绊刚凑齐 → 发精锐卡
+    jibianGrantForBond(m, p, bondBefore);   // ★ 羁绊刚凑齐 → 发精锐卡
   }
 }
 

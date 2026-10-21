@@ -138,7 +138,7 @@
 // applied by the match/wave layer (server/match/*), never by a player EffectRef: nothing here reads `ejibian_*`.
 
 import { directMods, passiveBuff, playerOps, isMember, gainLayers } from './support/index.js';
-import { activeBonds } from './jibianBonds.js';
+import { activeBonds, ownedJibianIdsOf } from './jibianBonds.js';
 import { periodicDamage } from '../damage.js';
 import { weaknessRetype, addShieldLayer } from './items/battle.js';
 import { GEO } from '../../../shared/constants.js';
@@ -289,18 +289,27 @@ const BOND_ATTR = (battle, unit, key, mods) => {
 };
 
 /** 把 14 个羁绊里「战斗侧」的部分装上。@param {any} battle @param {Set<string>} owned 已拥有的惊变 effectId */
-export function installJibianBonds(battle, owned) {
+export function installJibianBonds(battle, owned, playerId = null) {
   let act = [];
   try { act = activeBonds(owned); } catch { act = []; }
   if (!act.length) return;
   const has = (id) => act.some((a) => a.def.id === id);
   const tierOf = (id) => { const a = act.find((x) => x.def.id === id); return a ? a.tier : 0; };
-  const allies = () => { try { return battle.allies(); } catch { return []; } };
+  // ★ 2026-10-21（owner）：战场侧的惊变羁绊**只看自己的卡、只作用于自己的单位**。
+  //   之前把全队 picks 并成一个集合调用本函数 —— 队友的卡能替你把羁绊凑齐，加成还发给全场。
+  //   现在按玩家分别调用（playerId 非空），allies() 与每个 apply() 都按 ownerId 过滤。
+  const mine = (u) => !!u && u.side === 'ally' && (playerId == null || u.ownerId === playerId);
+  const allies = () => {
+    try {
+      const list = battle.allies();
+      return playerId == null ? list : list.filter((u) => mine(u));
+    } catch { return []; }
+  };
 
   // 现代最强：技能不需要技力、攻击力 +1000%、攻速 +360、攻击距离 +2
   if (has('modern_strongest')) {
     const apply = (u) => {
-      if (!u || u.side !== 'ally') return;
+      if (!mine(u)) return;
       if (u.skill && !u.skill.noSkill) u.skill.spCostMul = 0;
       BOND_ATTR(battle, u, 'modern', { atkPct: 10, attackSpeed: 360, range: 2 });
     };
@@ -313,7 +322,7 @@ export function installJibianBonds(battle, owned) {
   if (gloryTier > 0) {
     const mul = gloryTier >= 3 ? 2 : 1;
     const apply = (u) => {
-      if (!u || u.side !== 'ally') return;
+      if (!mine(u)) return;
       const bonds = (u.def && u.def.bonds) || [];
       if (!bonds.includes('kazimierzShip')) return;
       BOND_ATTR(battle, u, 'glory', { atkPct: mul, range: 1 });
@@ -340,7 +349,7 @@ export function installJibianBonds(battle, owned) {
   // 光荣进化：【阿戈尔】干员基础数值 +300%
   if (has('glorious_evo')) {
     const apply = (u) => {
-      if (!u || u.side !== 'ally') return;
+      if (!mine(u)) return;
       const bonds = (u.def && u.def.bonds) || [];
       if (!bonds.includes('egirShip')) return;
       BOND_ATTR(battle, u, 'evo', { hpMul: 4, atkMul: 4, defMul: 4 });
@@ -352,7 +361,7 @@ export function installJibianBonds(battle, owned) {
   // 伤害转伤害：所有伤害变真实伤害（近似：无视目标防御与法术抗性）+ 攻击力 +50%
   if (has('dmg2dmg')) {
     const apply = (u) => {
-      if (!u || u.side !== 'ally') return;
+      if (!mine(u)) return;
       BOND_ATTR(battle, u, 'truedmg', { defIgnore: 100000, resIgnore: 100000, atkPct: 0.5 });
     };
     battle.on('battleStart', () => { for (const u of allies()) apply(u); }, { priority: 20 });
@@ -360,23 +369,25 @@ export function installJibianBonds(battle, owned) {
   }
 
   // 因为太怕痛就全点防御力了（owner 2026-10-19）
+  // ★ 2026-10-21 修：tierOf() 返回的是**阈值**（tiers [2,3] → 2 或 3），不是档位序号。
+  //   原来二档写的是 `>= 2`，于是刚凑够 2 个成员（一档）就把「阻挡的敌人每秒 10% 真实伤害」也放出去了。
   const painTier = tierOf('toopainful');
   if (painTier >= 1) {
     const apply = (u) => {
-      if (!u || u.side !== 'ally') return;
+      if (!mine(u)) return;
       BOND_ATTR(battle, u, 'toopainful', { defMul: 1.7, resMul: 1.7 });
     };
     battle.on('battleStart', () => { for (const u of allies()) apply(u); }, { priority: 20 });
     battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
   }
-  if (painTier >= 2) {
+  if (painTier >= 3) {
     let acc = 0;
     battle.on('tick', (c) => {
       acc += Number(c && c.dt) || 0;
       if (acc < 1) return;
       acc -= 1;
       for (const u of allies()) {
-        if (!u || u.side !== 'ally' || !Array.isArray(u.blocking)) continue;
+        if (!mine(u) || !Array.isArray(u.blocking)) continue;
         for (const e of u.blocking) {
           if (!e || !e.alive || !e.s) continue;
           const hp = Number(e.s.maxHp) || 0;
@@ -446,7 +457,10 @@ export function install(battle) {
   }
 
   // 惊变羁绊（战斗侧）：把已激活羁绊的效果装上
-  try { installJibianBonds(battle, new Set(picksOf(battle).size ? [...picks.keys()].flatMap((pid) => [...(picks.get(pid)?.keys() || [])]) : [])); } catch { /* 不能因为羁绊把对局搞崩 */ }
+  try {
+    // 每个玩家各自一份（自己的卡 → 自己的单位），不再并成全队一份
+    for (const [pid, ids] of picks) installJibianBonds(battle, new Set(ids.keys()), pid);
+  } catch { /* 不能因为羁绊把对局搞崩 */ }
 
   // 火力不足恐惧症：我方干员开技能 → 子弹数翻倍（见 doubleAmmoForJibian 的注释）
   if (has('jibian_huolibuzu')) {
@@ -681,6 +695,10 @@ export function install(battle) {
           const lucky = cheatPicks(battle) ? true : battle.rng() < 0.5;
           u.mem.catLucky = lucky;
           if (!lucky) {
+            // ★ 2026-10-21 修（玩家反馈：抽到「立刻被击倒，并且无法再部署」的干员，计时转完照样复活）：
+            //   dealDamage 走的是正常击倒流程，_remove 会排 respawnAt、_checkRedeploys 到点就把它放回来。
+            //   这里用引擎已有的 redeployLocked 锁（_checkRedeploys 会跳过；砾的「每回合最多再部署 20 次」同一把锁）。
+            u.redeployLocked = true;
             try {
               battle.dealDamage(null, u, { amount: 1e9, type: 'true', canDodge: false, sourceless: true, tags: ['cat'] });
             } catch { /* 已倒地/不可选中：跳过 */ }
@@ -695,6 +713,35 @@ export function install(battle) {
       ctx.prevented = true;
       if (u.hp < 1) u.hp = 1;
     }, { priority: -999 });
+  }
+
+  // ---- 1e-2. 加入大群 / 叠层手（owner 2026-10-21 修）
+  //   两张卡的 prep 侧 handler 挂在 onLayers 上、按 reason 判「是不是卫戍特质加的层」，但**永远收不到**：
+  //   特质加层发生在 sim 里（support.gainLayers → battle.addLayers，reason='garrison'），
+  //   结算时 match/settle 只拿到按盟约聚合后的 layerGains，并以 reason='battle' 重新派发 onLayers。
+  //   所以在加层发生的那一刻处理 —— battle 的 layerGain 钩子（魔王 +1 用的同一条）。
+  //   需要的两个事实（是否拥有浊心斯卡蒂、叠层手是否还在生效期）由匹配赛写进 battleInput.jibianFlags。
+  {
+    const jiaru = has('jibian_jiarudaqun');
+    const diec = has('jibian_diecengshou');
+    if (jiaru || diec) {
+      battle.on('layerGain', (ctx) => {
+        const pid = ctx && ctx.playerId;
+        if (!pid || !(ctx.n > 0)) return;
+        if (!/^garrison(:|$)/.test(String(ctx.reason || ''))) return;
+        const ps = (battle.players || []).find((p) => p && p.playerId === pid);
+        // battle 的 player 对象只挑字段复制（sim/battle/players.js），jibianFlags 留在原始 input 上
+        const flags = (ps && (ps.jibianFlags || (ps.input && ps.input.jibianFlags))) || {};
+        const extra = jibianGarrisonExtra(ctx.n, {
+          bondId: ctx.bondId,
+          jiaru: jiaru && count(pid, 'jibian_jiarudaqun') > 0,
+          skadi: !!flags.skadi,
+          diecengshou: diec && count(pid, 'jibian_diecengshou') > 0,
+          doubler: !!flags.doubler,
+        });
+        if (extra > 0) ctx.n += extra;
+      });
+    }
   }
 
   // ---- 1f. 赤霄剑法（owner 2026-10-16）: 你的所有干员造成的伤害改为弱点伤害
@@ -1085,7 +1132,24 @@ const PINUS_GRANT = Object.freeze([
 ]);
 
 /** 浊心斯卡蒂 (加入大群: "当你获得了浊心斯卡蒂时此惊变效果翻倍"): 本体/精锐 + 炸惊变体. */
-const SKADI_CORRUPTED = ['chess_char_6_04_a', 'chess_char_6_04_b', 'chess_zj_81_a', 'chess_zj_81_b'];
+export const SKADI_CORRUPTED = ['chess_char_6_04_a', 'chess_char_6_04_b', 'chess_zj_81_a', 'chess_zj_81_b'];
+
+/**
+ * 「加入大群」/「叠层手」对**卫戍特质**（reason = garrison）加层的额外层数；0 = 不加。
+ *   加入大群（仅【阿戈尔】egirShip）：+100%；拥有浊心斯卡蒂时效果翻倍 → 合计 ×3（额外 +2 份）。
+ *   叠层手（所有盟约，仅生效期内）：再补一份 → ×2。
+ * 两张卡各自再加自己那一份（与原来两个 handler 的加法口径一致，不是互相乘）。
+ * @param {number} n 这次特质加的层数
+ * @param {{bondId?: string, jiaru?: boolean, skadi?: boolean, diecengshou?: boolean, doubler?: boolean}} o
+ */
+export function jibianGarrisonExtra(n, o = {}) {
+  const base = Number(n) || 0;
+  if (!(base > 0)) return 0;
+  let extra = 0;
+  if (o.jiaru && o.bondId === 'egirShip') extra += base * (o.skadi ? 2 : 1);
+  if (o.diecengshou && o.doubler) extra += base;
+  return extra;
+}
 
 /** ctx.counter 的键 (玩家级、跨回合持久). 全部带 `jibian:` 前缀, 不和别的内容撞. */
 const K = {
@@ -1233,12 +1297,7 @@ function chequeAdd(w, key, delta) {
 function cheatOn(ctx) {
   try {
     const ps = ctx && (ctx.ps || ctx.player);
-    const owned = new Set();
-    for (const ref of (ps && ps.playerEffects) || []) {
-      const k = ref && ref.key;
-      if (typeof k === 'string' && k.startsWith('jibian:')) owned.add(k.slice(7));
-    }
-    return activeBonds(owned).some((a) => a.def.id === 'cheat');
+    return activeBonds(ownedJibianIdsOf(ps)).some((a) => a.def.id === 'cheat');
   } catch { return false; }
 }
 

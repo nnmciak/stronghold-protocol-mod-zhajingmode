@@ -41,6 +41,27 @@ export function bondsOfCard(cardId) {
   return BONDS.filter((b) => b.members.includes(id));
 }
 
+/**
+ * 玩家状态 → 已拥有的惊变 effectId 集合。
+ *
+ * ★ 2026-10-21：匹配赛阶段的效果存在 **`effects`**（choices.js applyDefault 写的 EffectRef），
+ *   战斗快照里的玩家才用 **`playerEffects`**（round.js 生成）。两种都要认 —— 之前有多处只读
+ *   playerEffects，导致对应的羁绊静默失效（包邮 / 真·投资人 / 出老千）。
+ * @param {any} ps
+ * @returns {Set<string>}
+ */
+export function ownedJibianIdsOf(ps) {
+  const out = new Set();
+  const refs = Array.isArray(ps && ps.effects) && ps.effects.length
+    ? ps.effects
+    : (Array.isArray(ps && ps.playerEffects) ? ps.playerEffects : []);
+  for (const ref of refs) {
+    const k = ref && ref.key;
+    if (typeof k === 'string' && k.startsWith('jibian:')) out.add(k.slice('jibian:'.length));
+  }
+  return out;
+}
+
 /** 已拥有的卡 → 已激活的羁绊（只返回达到最低阈值的）。 */
 export function activeBonds(ownedIds) {
   const owned = ownedIds instanceof Set ? ownedIds : new Set(ownedIds || []);

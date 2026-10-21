@@ -178,7 +178,7 @@ export function createPreloader({ onUpdate, log = () => {} } = {}) {
   const listeners = new Set();
 
   const stored = readState();
-  let auto = !!(stored && stored.auto);
+  let auto = false;   // 2026-10-21：关闭自动续传（每次开页重下几十 MB）
 
   const totalBytes = () => (manifest ? manifest.bytes || 0 : 0);
   const totalFiles = () => (manifest ? manifest.files || 0 : 0);
@@ -391,8 +391,8 @@ export function createPreloader({ onUpdate, log = () => {} } = {}) {
       setPhase('checking');
       await ensureReady(signal);
       // Started once → keep resuming on later page loads without asking again (the panel's 自动续传 switch).
-      writeState({ version: manifest.version, cache: cacheName, auto: true });
-      auto = true;
+      writeState({ version: manifest.version, cache: cacheName, auto: false });
+      auto = false;
       if (signal.aborted) { setPhase('paused'); return; }
 
       setPhase('downloading');

@@ -869,6 +869,27 @@ function layerAllowanceOf(p, gd) {
     }
   }
   if (extra) for (const b of out.keys()) out.set(b, Infinity);
+  // ★ 2026-10-21：「加入大群」/「叠层手」在战斗里会把卫戍特质加的层放大（sim 的 layerGain 钩子），
+  //   这里把校验上限同步放大，否则客户端战斗模式下这些层会被判成 `layer bound` 而让整份结果作废。
+  try {
+    const owned = new Set();
+    for (const ref of Array.isArray(p && p.playerEffects) ? p.playerEffects : []) {
+      const k = ref && ref.key;
+      if (typeof k === 'string' && k.startsWith('jibian:')) owned.add(k.slice('jibian:'.length));
+    }
+    const flags = (p && p.jibianFlags) || {};
+    const jiaru = owned.has('jibian_jiarudaqun');
+    const diec = owned.has('jibian_diecengshou') && flags.doubler === true;
+    if (jiaru || diec) {
+      for (const [b, v] of out) {
+        if (!Number.isFinite(v)) continue;
+        let mul = 1;
+        if (jiaru && b === 'egirShip') mul += (flags.skadi === true ? 2 : 1);
+        if (diec) mul += 1;
+        if (mul > 1) out.set(b, v * mul);
+      }
+    }
+  } catch { /* 放宽失败就按原值校验 */ }
   return out;
 }
 

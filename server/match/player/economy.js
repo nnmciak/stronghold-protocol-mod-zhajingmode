@@ -10,7 +10,7 @@ import { freeSlot } from '../board.js';
 import { OK, fail } from './common.js';
 // 作弊模式 (SP_CHEAT=1,本地测试用): 无限资金 + 商店只出外援。关闭时下面的代码路径与原本完全一致。
 import { cheatEnabled, cheatRollOpts, cheatDiyEntries, cheatFunds } from './cheat.js';
-import { activeBonds as jbActiveBonds, bondsOfCard } from '../../sim/content/jibianBonds.js';
+import { activeBonds as jbActiveBonds, bondsOfCard, ownedJibianIdsOf } from '../../sim/content/jibianBonds.js';
 
 export class PlayerEconomy {
   addFunds(n, { reason = '' } = {}) {
@@ -112,14 +112,18 @@ export class PlayerEconomy {
     return to - before;
   }
 
-  /** 本局已拥有的惊变 effectId 集合（playerEffects 里 key = `jibian:<id>`）。 */
+  /**
+   * 本局已拥有的惊变 effectId 集合（EffectRef.key = `jibian:<id>`）。
+   *
+   * ★ 2026-10-21 修（用户反馈：凑齐「包邮」后买 5 阶仍照常扣钱）：
+   *   匹配赛阶段的效果存在 **`this.effects`**（choices.js applyDefault 写的 EffectRef 列表），
+   *   而 `this.playerEffects` 只有战斗用的 player spec 才有（round.js 生成）。
+   *   原实现只读 playerEffects ⇒ 永远空集合 ⇒ `jibianBondTier()` 恒为 0，
+   *   「包邮」「层数厨」「脚踏实地」三张羁绊全部静默失效。
+   *   这里优先读 effects，保留 playerEffects 兜底（战斗侧仍可能有）。
+   */
   jibianOwned() {
-    const out = new Set();
-    for (const ref of this.playerEffects || []) {
-      const k = ref && ref.key;
-      if (typeof k === 'string' && k.startsWith('jibian:')) out.add(k.slice('jibian:'.length));
-    }
-    return out;
+    return ownedJibianIdsOf(this);
   }
 
   /** 某个惊变羁绊已达成的档位（0 = 没激活）。 */

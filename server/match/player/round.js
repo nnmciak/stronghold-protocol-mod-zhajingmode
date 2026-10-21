@@ -10,6 +10,7 @@ import { boardOrder, pieceDir } from '../board.js';
 import { computeBonds, bondSnapshot, activatedLayers, bondsWithGains } from '../bondsMeta.js';
 import { msg, wireMessage } from '../../../shared/i18n.js';
 import { forgeBattleMods } from '../../../shared/forgeData.js';
+import { SKADI_CORRUPTED } from '../../sim/content/jibian.js';
 
 export class PlayerRound {
   startRound(r) {
@@ -303,6 +304,13 @@ export class PlayerRound {
         id: e.id, key: e.key ?? null, source: e.iconKind ?? null, params: e.params ?? null, counter: e.counter ?? null, data: e.data ?? null,
       })),
       deviceOverrides: { ...this.deviceOverrides },
+      // ★ 2026-10-21：加入大群 / 叠层手在战斗侧要用到、但只有匹配赛这边知道的两个事实
+      //   （浊心斯卡蒂可能在整备区；叠层手的生效回合记在 counters 上）。
+      jibianFlags: {
+        skadi: [...this.board.values(), ...this.hand, ...this.temp]
+          .some((p) => p && p.kind === 'chess' && (SKADI_CORRUPTED.includes(p.id) || SKADI_CORRUPTED.includes(p.baseId))),
+        doubler: Number(this.counters && this.counters['jibian:diecengshou:until']) >= Number(this.m && this.m.round),
+      },
     };
   }
 }

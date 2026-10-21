@@ -209,11 +209,11 @@ const DIE_FADE_TAIL = 0.55;
 export const DIE_CLIP_MAX = 8;
 
 /** b.snap `down` entry states (server/sim/constants.js DOWN_STATE). */
-export const DOWN_STATE = Object.freeze({ COUNTING: 0, WAIT_DP: 1, WAIT_TILE: 2 });
+export const DOWN_STATE = Object.freeze({ COUNTING: 0, WAIT_DP: 1, WAIT_TILE: 2, NO_REDEPLOY: 3 });
 /** Knocked-down look: model tint and alpha; redeploy ring colours per state; ring size (tiles) and height. */
 export const DOWN_LOOK = Object.freeze({
   tint: 0xb4b4b4, alpha: 0.92,
-  ring: Object.freeze({ [DOWN_STATE.COUNTING]: 0x4ed8af, [DOWN_STATE.WAIT_DP]: 0xffc600, [DOWN_STATE.WAIT_TILE]: 0xff4b3e }),
+  ring: Object.freeze({ [DOWN_STATE.COUNTING]: 0x4ed8af, [DOWN_STATE.WAIT_DP]: 0xffc600, [DOWN_STATE.WAIT_TILE]: 0xff4b3e, [DOWN_STATE.NO_REDEPLOY]: 0x6b7280 }),
   size: 0.42, height: 1.02,
 });
 /**
@@ -1680,7 +1680,7 @@ export class UnitView {
    */
   _updateElementBar(show, x0, bw, top, h, s, t = 0) {
     let r = this._elBar;
-    if (!show) { if (r) r.root.visible = false; return; }
+    if (!show || (this.down && this.down.state === DOWN_STATE.NO_REDEPLOY)) { if (r) r.root.visible = false; return; }
     const tex = hudRings();
     if (!r) {
       const P = this.P;

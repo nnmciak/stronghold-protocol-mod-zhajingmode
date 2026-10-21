@@ -1,18 +1,19 @@
-// ui/nodeSwitch.js — 登录界面上的「南方节点 / 北方节点」选择。
+// ui/nodeSwitch.js — 登录界面上的「南方节点 / 北方节点 / 福建节点」选择。
 //
-// 两个入口是**两台独立服务器**（各自的大厅与对局），所以切换 = 整页跳到另一个入口：
+// 三个入口是**三台独立服务器**（各自的大厅与对局），所以切换 = 整页跳到另一个入口：
 //   · 南方节点：https://thousandaki.top（香港，域名 + HTTPS，默认）
 //   · 北方节点：http://124.70.189.186（北京，延迟低，但没有域名/HTTPS）
+//   · 福建节点：http://fj.thousandaki.top:3000（厦门家宽，只跑对局逻辑、素材本机直发；非标端口）
 //
 // 为什么是跳转而不是"连另一个服的 WS"：HTTPS 页面不允许开明文 ws:// 连接（混合内容），
-// 而北方那台没有证书。跳转是唯一两边都成立的方案；页面里会明确写出这一点。
+// 而北方/福建那两台没有证书。跳转是唯一三边都成立的方案；页面里会明确写出这一点。
 //
-// 选择只决定**你从哪个入口进**；进入之后，同盟大厅里仍然能看到另一节点的房间，
+// 选择只决定**你从哪个入口进**；进入之后，同盟大厅里仍然能看到其他节点的房间，
 // 点一下会跳到那台服（screens/lobbyFeed.js 的 openPeer）。
 
 import { html, MicroLabel } from './components.js';
 
-/** 两个节点。`id` 同时是 localStorage 里记的值。 */
+/** 三个节点。`id` 同时是 localStorage 里记的值。 */
 export const NODES = [
   {
     id: 'hk',
@@ -31,6 +32,15 @@ export const NODES = [
     host: '124.70.189.186',
     url: 'http://124.70.189.186',
     note: '北京 · 延迟更低',
+  },
+  {
+    id: 'fj',
+    tone: 'mint',
+    label: '福建节点',
+    tag: 'FJ',
+    host: 'fj.thousandaki.top:3000',
+    url: 'http://fj.thousandaki.top:3000',
+    note: '厦门 · 南方直连',
   },
 ];
 
@@ -89,7 +99,7 @@ export function NodeSwitch({ compact = false } = {}) {
       })}
     </div>
     <p class="nodeswitch__hint">
-      切换会重新载入页面。选完之后，在同盟大厅里照样能看到另一节点的房间，点一下会自动跳过去。
+      切换会重新载入页面。选完之后，在同盟大厅里照样能看到其他节点的房间，点一下会自动跳过去。
     </p>
   </div>`;
 }

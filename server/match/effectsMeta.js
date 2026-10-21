@@ -44,7 +44,7 @@ import { pieceBonds as bondsOfPiece } from './bondsMeta.js';
 import { registerAllMeta } from '../sim/content/index.js';
 import { registerBuiltins } from './builtinMeta.js';
 import { msg, dn } from '../../shared/i18n.js';
-import { activeBonds as jibianActiveBonds } from '../sim/content/jibianBonds.js';
+import { activeBonds as jibianActiveBonds, ownedJibianIdsOf } from '../sim/content/jibianBonds.js';
 // ★ 2026-10-18 深夜：这些是排查期的调试输出，生产环境每秒几百次写入（stdout 重定向到文件时是**同步写**），
 //   是事件循环出现 1~2 秒停顿的嫌疑之一。默认关闭，SP_DBG_ACQ=1 才打开。
 const dbg = process.env.SP_DBG_ACQ ? (...a) => console.log(...a) : () => {};
@@ -198,12 +198,8 @@ export class EffectDispatcher {
     const v = this._investRepeatBase(ps);
     // ★ 惊变羁绊「真·投资人」：把一次触发直接翻倍（无投资人 1→2；有投资人 2→4）
     try {
-      const owned = new Set();
-      for (const ref of (ps && ps.playerEffects) || []) {
-        const k = ref && ref.key;
-        if (typeof k === 'string' && k.startsWith('jibian:')) owned.add(k.slice(7));
-      }
-      if (jibianActiveBonds(owned).some((a) => a.def.id === 'true_investor')) return Math.max(1, v) * 2;
+      // ★ 2026-10-21：读 effects（匹配赛阶段）而不是 playerEffects（只有战斗快照才有）
+      if (jibianActiveBonds(ownedJibianIdsOf(ps)).some((a) => a.def.id === 'true_investor')) return Math.max(1, v) * 2;
     } catch { /* 羁绊出错就用原值 */ }
     return v;
   }
@@ -217,12 +213,7 @@ export class EffectDispatcher {
     //   有投资人卡时 2→4（owner 口径：把一次触发改成 2 次 / 有投资人就 4 次）。
     const trueInv = (() => {
       try {
-        const owned = new Set();
-        for (const ref of (ps && ps.playerEffects) || []) {
-          const k = ref && ref.key;
-          if (typeof k === 'string' && k.startsWith('jibian:')) owned.add(k.slice(7));
-        }
-        return jibianActiveBonds(owned).some((a) => a.def.id === 'true_investor');
+        return jibianActiveBonds(ownedJibianIdsOf(ps)).some((a) => a.def.id === 'true_investor');
       } catch { return false; }
     })();
     const b = ps.bonds && ps.bonds.investShip;
@@ -267,12 +258,7 @@ export class EffectDispatcher {
    */
   jibianBondActive(ps, bondId) {
     try {
-      const owned = new Set();
-      for (const ref of (ps && ps.playerEffects) || []) {
-        const k = ref && ref.key;
-        if (typeof k === 'string' && k.startsWith('jibian:')) owned.add(k.slice(7));
-      }
-      return jibianActiveBonds(owned).some((a) => a.def.id === bondId);
+      return jibianActiveBonds(ownedJibianIdsOf(ps)).some((a) => a.def.id === bondId);
     } catch { return false; }
   }
 

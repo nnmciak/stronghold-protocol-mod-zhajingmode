@@ -203,6 +203,8 @@ export class BattleTiles {
    * WAIT_TILE is a safeguard only.
    */
   _downState(u) {
+    // ★ 2026-10-21：被钉死再部署的干员（薛定谔的猫的「无法再部署」）不显示倒计时 —— 客户端不画环。
+    if (u && u.redeployLocked) return DOWN_STATE.NO_REDEPLOY;
     if (this.time + 1e-9 < u.respawnAt) return DOWN_STATE.COUNTING;
     const [r, c] = this.restTile(u);
     const occ = this._occ[r * COLS + c];

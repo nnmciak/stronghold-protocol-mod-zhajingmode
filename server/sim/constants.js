@@ -193,7 +193,7 @@ export const AUTO_OP_COOLDOWN = 1;   // 本服调整：官方 3 s → 1 s（owne
  * its respawn timer runs (COUNTING), then it waits for the player's DP to reach its cost (WAIT_DP) or for its tile to be
  * free (WAIT_TILE — a safeguard: no ally deploys on a body's tile, Battle.downOn). render/units.js mirrors these codes.
  */
-export const DOWN_STATE = Object.freeze({ COUNTING: 0, WAIT_DP: 1, WAIT_TILE: 2 });
+export const DOWN_STATE = Object.freeze({ COUNTING: 0, WAIT_DP: 1, WAIT_TILE: 2, NO_REDEPLOY: 3 });
 /**
  * Removal reason of an operator that enters a battle already knocked out: a 联防 helper's operator down at the end of
  * its own combat (PlayerBattleInput `carryState.down`; PRTS 卫戍协议/帮助 §联防阶段 "上一阶段为退场状态的干员强制退场").
