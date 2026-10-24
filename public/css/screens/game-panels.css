@@ -866,6 +866,16 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
 .spcard__rerollbtn:disabled { opacity: .4; cursor: default; }
 .spcard__rerollbtn:disabled .icon { animation: none; }
 @media (prefers-reduced-motion: reduce) { .spcard__rerollbtn .icon { animation: none; } }
+/* ★ 2026-10-24（手机端反馈「惊变刷新按钮有点小」）：这个键用的是 rem 尺寸 —— 手机根字号只有 ~20px，
+   .18rem 的图标实际只有 3.6px，几乎点不到。触摸设备 / 窄屏统一给到 44px 的可点尺寸（图标 22px），
+   桌面维持原样（桌面 rem≈100px，图标本来就是 18px）。 */
+@media (pointer: coarse), (max-width: 900px) {
+  .spcardwrap { gap: 8px; }
+  .spcard__rerollbtn { min-width: 44px; min-height: 44px; padding: 0 10px; border-radius: 10px; }
+  .spcard__rerollbtn .icon { width: 22px; height: 22px; }
+  .spov__reroll { min-width: 44px; min-height: 44px; }
+  .spov__reroll .icon { width: max(.2rem, 20px); height: max(.2rem, 20px); }
+}
 
 .spov__rerollhint { font-size: .15rem; color: var(--text-dim); align-self: center; }
 
