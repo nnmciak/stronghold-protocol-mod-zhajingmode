@@ -1,4 +1,4 @@
-// ui/enemyJibianOverlay.js — 炸惊模拟 规则14: the 敌方惊变 reveal. ONE card is drawn by the server before round 1 starts
+﻿// ui/enemyJibianOverlay.js — 炸惊模拟 规则14: the 敌方惊变 reveal. ONE card is drawn by the server before round 1 starts
 // (a match-long global enemy buff, the same card for the whole room) and this overlay performs the draw in front of the
 // players: `flickerMs` (3 s) of cards rolling past at a flicker cadence, then `resultMs` (3 s) with the drawn card
 // zoomed in and held. Full-screen and blocking — the phase's own deadline advances the match, so the overlay never
@@ -62,7 +62,7 @@ export function EnemyJibianOverlay({ ej }) {
   const total = flickerMs + resultMs;
   const pct = total > 0 ? Math.min(100, (elapsed / total) * 100) : 100;
 
-  const renderCard = (c, extra = '') => html`<div class=${cx('ejb__card', extra)}>
+  const renderCard = (c, extra = '') => html`<div class=${cx('ejb__card', extra)} data-rarity=${c?.rarity || 'normal'}>
       ${c?.rarity ? html`<span class="ejb__rarity">${t(RARITY_NAMES[c.rarity] || c.rarity)}</span>` : null}
       <div class="ejb__name">${c?.name || t('惊变')}</div>
       ${c?.desc ? html`<div class="ejb__desc"><${RichText} text=${c.desc} /></div>` : null}

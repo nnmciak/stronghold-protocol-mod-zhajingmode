@@ -745,16 +745,16 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
 .ejb__desc { font-size: calc(.16 * var(--t)); line-height: 1.6; color: var(--text-md); max-height: calc(3.1 * var(--t)); overflow: hidden; }
 /* 敌方惊变 card flavour: the grey line at the card's bottom (same string as the 友方 card's .jbc__flavor) */
 .ejb__flavor { font-size: calc(.15 * var(--t)); line-height: 1.5; color: var(--text-dim); font-style: italic; white-space: pre-line; }
-.ejb[data-rarity="normal"] .ejb__card { border-color: var(--line-3); }
-.ejb[data-rarity="normal"] .ejb__rarity { color: var(--text-md); }
-.ejb[data-rarity="rare"] .ejb__card { border-color: #5b8cff; box-shadow: 0 0 calc(.5 * var(--t)) rgba(91, 140, 255, .28), inset 0 0 calc(.4 * var(--t)) rgba(91, 140, 255, .08); }
-.ejb[data-rarity="rare"] .ejb__rarity { color: #5b8cff; }
-.ejb[data-rarity="epic"] .ejb__card { border-color: var(--gold); box-shadow: 0 0 calc(.5 * var(--t)) var(--gold-a20), inset 0 0 calc(.4 * var(--t)) rgba(255, 198, 0, .08); }
-.ejb[data-rarity="epic"] .ejb__rarity { color: var(--gold); }
-.ejb[data-rarity="legend"] .ejb__card { border-color: var(--red-premium); box-shadow: 0 0 calc(.6 * var(--t)) rgba(255, 84, 84, .28), inset 0 0 calc(.5 * var(--t)) rgba(255, 84, 84, .12); }
-.ejb[data-rarity="legend"] .ejb__rarity { color: var(--red-premium); }
-.ejb[data-rarity="hidden"] .ejb__card { border-color: #22e0d0; box-shadow: 0 0 calc(.6 * var(--t)) rgba(255, 77, 109, .38), inset 0 0 calc(.4 * var(--t)) rgba(34, 224, 208, .12); }
-.ejb[data-rarity="hidden"] .ejb__rarity { color: #ff4d6d; }
+.ejb__card[data-rarity="normal"] { border-color: var(--line-3); }
+.ejb__card[data-rarity="normal"] .ejb__rarity { color: var(--text-md); }
+.ejb__card[data-rarity="rare"] { border-color: #5b8cff; box-shadow: 0 0 calc(.5 * var(--t)) rgba(91, 140, 255, .28), inset 0 0 calc(.4 * var(--t)) rgba(91, 140, 255, .08); }
+.ejb__card[data-rarity="rare"] .ejb__rarity { color: #5b8cff; }
+.ejb__card[data-rarity="epic"] { border-color: var(--gold); box-shadow: 0 0 calc(.5 * var(--t)) var(--gold-a20), inset 0 0 calc(.4 * var(--t)) rgba(255, 198, 0, .08); }
+.ejb__card[data-rarity="epic"] .ejb__rarity { color: var(--gold); }
+.ejb__card[data-rarity="legend"] { border-color: var(--red-premium); box-shadow: 0 0 calc(.6 * var(--t)) rgba(255, 84, 84, .28), inset 0 0 calc(.5 * var(--t)) rgba(255, 84, 84, .12); }
+.ejb__card[data-rarity="legend"] .ejb__rarity { color: var(--red-premium); }
+.ejb__card[data-rarity="hidden"] { border-color: #22e0d0; box-shadow: 0 0 calc(.6 * var(--t)) rgba(255, 77, 109, .38), inset 0 0 calc(.4 * var(--t)) rgba(34, 224, 208, .12); }
+.ejb__card[data-rarity="hidden"] .ejb__rarity { color: #ff4d6d; }
 .ejb__stage.is-multi { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: calc(.12 * var(--t)); }
 .ejb__stage.is-multi .ejb__card { flex: 1 1 calc(33% - calc(.12 * var(--t))); min-width: 0; }
 /* 阶段一 闪烁：卡片在两种亮度间跳变，名字带一点动态模糊 */
