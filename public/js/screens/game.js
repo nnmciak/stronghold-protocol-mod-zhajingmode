@@ -1569,6 +1569,9 @@ const sp = phase === PHASE.SP_DRAFT ? normalizeSp(priv?.sp, players) : null;
       onPick=${async (i) => { setSpBusy(i); await actions.choice(i); setSpBusy(null); }}
       onReroll=${(i) => actions.spReroll(i)} />` : null}
 
+    ${phase === PHASE.HIDDEN_JIBIAN && pub?.hiddenJibian
+      ? html`<${EnemyJibianOverlay} key=${`hjb:${(pub.hiddenJibian.cards || []).map((c) => c?.id || c?.name).join('|')}`} ej=${pub.hiddenJibian} />` : null}
+
     ${phase === PHASE.ENEMY_JIBIAN && pub?.enemyJibian
       ? html`<${EnemyJibianOverlay} key=${`ejb:${pub.enemyJibian.card?.id || pub.enemyJibian.card?.name || ''}`} ej=${pub.enemyJibian} />` : null}
 

@@ -82,7 +82,7 @@
 //   ✎ jibian_zonggongji        总攻击              获得虎狼丸 / 岳羽由加莉 / 埃癸斯（史诗，S.E.E.S 图标）
 //   ✱ 羁绊·伟大封印           三月五日 + 总攻击    结城理死亡 → 处决血量最高敌人（一局一次）
 //   ✱ jibian_jiaxiangdi        假想敌              额外目标格铺满全场（可打范围外的敌人），范围外的伤害 ×0.3
-//   ✱ jibian_zibaokache        自爆卡车            干员被击倒时对半径 1.5 格的敌人造成 400% 攻击力的法术伤害
+//   ✱ jibian_zibaokache        自爆卡车            干员被击倒时对半径 1.5 格的敌人造成 4000% 攻击力的法术伤害
 //   ✱ jibian_mofazhuanwuli     魔法转物理          法术伤害 → 物理，且该伤害 +30%
 //   ✱ jibian_wulizhuanmofa     物理转魔法          物理伤害 → 法术（拿了魔法转物理时它不生效，见下）
 //   （用户 2026-10-12：两张同时在手**不互抵** —— 一律输出增强后的物理伤害、保留 +30%，魔法转物理优先）
@@ -138,6 +138,8 @@
 // applied by the match/wave layer (server/match/*), never by a player EffectRef: nothing here reads `ejibian_*`.
 
 import { directMods, passiveBuff, playerOps, isMember, gainLayers } from './support/index.js';
+import { bondLayers, activeBondIds } from './support/index.js';
+import { spawnYanyou } from './tokens.js';
 import { activeBonds, ownedJibianIdsOf } from './jibianBonds.js';
 import { periodicDamage } from '../damage.js';
 import { weaknessRetype, addShieldLayer } from './items/battle.js';
@@ -276,6 +278,13 @@ const SEES_TRIO = Object.freeze([
   ['chess_zj_60_2_b', 'chess_zj_60_2_a'],   // 虎狼丸
   ['chess_zj_60_4_b', 'chess_zj_60_4_a'],   // 岳羽由加莉
   ['chess_zj_60_3_b', 'chess_zj_60_3_a'],   // 埃癸斯
+]);
+
+/** 「银河战舰」发的三名颂乐人偶干员：[精锐, 本体]（取第一个存在的）。 */
+const GALAXY_TRIO = Object.freeze([
+  ['chess_zj_tmoris_b', 'chess_zj_tmoris_a'],   // 八幡海铃
+  ['chess_zj_amoris_b', 'chess_zj_amoris_a'],   // 祐天寺若麦
+  ['chess_zj_dolris_b', 'chess_zj_dolris_a'],   // 三角初华
 ]);
 
 
@@ -437,6 +446,29 @@ export function install(battle) {
    *     攻击回复 / 受击回复（'attack' / 'hurt'）不受影响 —— 牌面只写「自动回复」。
    *   · 攻击力 +1000%：`atkPct` 是**比例**（units.js 里 `1 + atkPct`），所以 10 = ×11。
    */
+  // 龙的传人（传说，owner 2026-10-24）：「炎」盟约不再生成炎佑（bonds/core.js 里已跳过），
+  //   改为每 1000 层任意盟约召唤一只炎佑 —— 攻击力 / 生命值 = 场上该玩家所有干员总和的 30%，上限 9 只。
+  const LONGDE = 'jibian_longdechuanren';
+  if (has(LONGDE)) {
+    battle.on('battleStart', () => {
+      for (const ps of battle.players || []) {
+        const pid = ps.playerId;
+        if (!count(pid, LONGDE)) continue;
+        let layers = 0;
+        for (const id of activeBondIds(battle, pid) || []) layers += bondLayers(battle, pid, id);
+        const n = Math.min(9, Math.floor(layers / 1000));
+        if (n <= 0) continue;
+        const ops = (battle.allyUnits || []).filter((u) => u && u.alive && u.side === 'ally' && u.kind === 'op' && u.ownerId === pid);
+        if (!ops.length) continue;
+        let atk = 0, hp = 0;
+        for (const u of ops) { atk += Number(u.s && u.s.atk) || 0; hp += Number(u.s && u.s.maxHp) || 0; }
+        if (!(atk > 0) || !(hp > 0)) continue;
+        const share = 0.3;
+        const out = spawnYanyou(battle, pid, { atk: atk * share, hp: hp * share, count: n, atkMul: 1, dmgTakenMul: 1, limit: 9 });
+        for (const y of out) y.mem.bondYan = true;
+      }
+    }, { priority: 6 });
+  }
   if (has('jibian_jibengong')) {
     const KEY = 'jibian:jibengong';
     const apply = (u) => {
@@ -713,6 +745,33 @@ export function install(battle) {
       ctx.prevented = true;
       if (u.hp < 1) u.hp = 1;
     }, { priority: -999 });
+  }
+
+  // ---- 黑闪（jibian_heishan，传说，现代最强）：暴击率 +50 个百分点；每次暴击回 3 技力 ----
+  //   ★ 2026-10-22（owner）。暴击本身由炸惊的「锻造器」(content/forge.js) 实现：它在 hit 钩子里读
+  //   `s.critRate` 掷骰，命中时 `dmg.crit = true`。这里只做两件事：
+  //     ① 给该玩家的干员挂常驻 `critRate +0.5`（和锻造器的 5% 基础是加算）；
+  //        召唤物默认不吃（"不包括"），但**本来就能暴击的**单位（s.critRate > 0）照样给。
+  //     ② 注册一个 priority -10 的 hit 钩子（排在 forge 之后），看到 `dmg.crit` 就给出手者 +3 技力，
+  //        每次暴击都回、没有上限。
+  for (const [pid, ids] of picks) {
+    if (!(ids.get('jibian_heishan') ?? 0)) continue;
+    const HEISHAN_CRIT = P + 'heishan:crit';
+    const applyOne = (u) => {
+      if (!u || u.side !== 'ally' || u.removed || u.ownerId !== pid) return;
+      const canCrit = u.kind === 'op' || Number(u.s && u.s.critRate) > 0;
+      if (!canCrit) return;
+      if (typeof u.findBuff === 'function' && u.findBuff(HEISHAN_CRIT)) return;
+      battle.addBuff(u, { key: HEISHAN_CRIT, mods: { critRate: 0.5 }, persist: true });
+    };
+    for (const u of battle.allyUnits) applyOne(u);
+    battle.on('deploy', (ctx) => applyOne(ctx && ctx.unit));
+    battle.on('hit', (ctx) => {
+      const dmg = ctx && ctx.dmg;
+      const s = ctx && (ctx.credit ?? ctx.source);
+      if (!dmg || !dmg.crit || !s || s.side !== 'ally' || s.ownerId !== pid) return;
+      if (s.skill && typeof s.skill.gainSp === 'function') s.skill.gainSp(3, 'jibian');
+    }, { priority: -10 });
   }
 
   // ---- 1e-2. 加入大群 / 叠层手（owner 2026-10-21 修）
@@ -1007,6 +1066,23 @@ export function install(battle) {
     battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
   }
 
+  // 鲁莽（普通）：全队攻击力 +200%、攻速 +60；每次攻击 30% 概率打空（本次伤害归零）
+  if (has('jibian_lumang')) {
+    const LUMANG_KEY = P + 'lumang';
+    const applyLumang = (u) => {
+      if (!u || u.side !== 'ally') return;
+      passiveBuff(battle, u, `${LUMANG_KEY}:${u.uid ?? ''}`, directMods({ atk: 2 }, { aspd: 60 }));
+    };
+    battle.on('battleStart', () => { for (const u of battle.allies()) applyLumang(u); }, { priority: 10 });
+    battle.on('deploy', (ctx) => applyLumang(ctx && ctx.unit));
+    battle.on('hit', (ctx) => {
+      const dmg = ctx && ctx.dmg;
+      const src = ctx && (ctx.credit ?? ctx.source);
+      if (!dmg || !src || src.side !== 'ally' || !dmg.isAttack) return;
+      if (battle.rng() < 0.3) dmg.mul = 0;
+    }, { priority: -50 });
+  }
+
   // ⑰ 伟大封印（传说羁绊：三月五日 + 总攻击）—— 结城理死亡时处决血量最高的敌人，一局一次
   if (has('jibian_sanyuewuri') && has('jibian_zonggongji')) {
     battle.on('death', (ctx) => {
@@ -1041,7 +1117,7 @@ export function install(battle) {
     }, { priority: 20 });
   }
 
-  // ⑯ 自爆卡车 —— 干员被击倒时对周围的敌人造成 400% 攻击力的法术伤害
+  // ⑯ 自爆卡车 —— 干员被击倒时对周围的敌人造成 4000% 攻击力的法术伤害
   if (has('jibian_zibaokache')) {
     battle.on('death', (ctx) => {
       const u = ctx && ctx.unit;
@@ -1051,7 +1127,7 @@ export function install(battle) {
       const foes = battle.foesInRadius(u.x ?? 0, u.y ?? 0, 1.5, true);
       for (const e of foes) {
         for (let i = 0; i < n; i++) {
-          battle.dealDamage(u, e, battle.makeDamage({ amount: (u.s.atk || 0) * 4, type: 'arts', tags: ['jibian'] }));
+          battle.dealDamage(u, e, battle.makeDamage({ amount: (u.s.atk || 0) * 40, type: 'arts', tags: ['jibian'] }));
         }
       }
     });
@@ -1172,6 +1248,7 @@ const K = {
   chequeValue: P + 'gaoluzhipiao:value',  // 本次提现金额（商店栏「提现」键位显示的金额，0 = 这次什么都没抽到）
   // ---- 第四批（用户 2026-10-14）----
   touziPending: P + 'touziweilai:pending',  // 投资未来：下个惊变阶段的牌库只出史诗/传说（生成时消费并清零）
+  jizhongyidian: P + 'jizhongyidian:until', // 集中一点：到这个回合数之前，所有叠层只给层数最高的已激活盟约
   pinusNoSell: P + 'hongsongqishituan:nosell',  // ★ 红松骑士团：本回合不能出售干员（值 = 禁用发生在第几回合）
   // ---- 炎国游记（owner 2026-10-18 改版）----
   yanguoLast: P + 'yanguoyouji:last',   // 上一次发【炎】干员的回合号
@@ -1459,6 +1536,21 @@ function addCardRef(ctx, card) {
  * —— 魔盒开出来的卡必须和正常抽到一样立刻结算, 而那些 ref 是魔盒自己加的, 不会再走一遍 choices.js 的 dispatch.
  */
 const ON_PICK = {
+  /** 银河战舰 — 三名颂乐人偶干员（**精锐优先**，取不到退回本体），走正常获得流程，不消耗商店池。 */
+  jibian_yinhezhanjian: (ctx) => {
+    for (const [elite, base] of GALAXY_TRIO) {
+      const id = [elite, base].find((x) => ctx.chessRecord(x));
+      if (id) ctx.grantChess(id, { requirePool: false, fromPool: false });
+    }
+  },
+  /** 遗忘女神 — 指定精锐祥子；其余处理与普通的干员奖励一致。 */
+  jibian_yiwangnvshen: (ctx) => {
+    if (ctx.chessRecord('chess_zj_oblvns_b')) ctx.grantChess('chess_zj_oblvns_b', { requirePool: false, fromPool: false });
+  },
+  /** 多首野兽 — 发一名精锐若叶睦；特质替换与【调和】盟约由 mujicaBond.js / 数据侧处理。 */
+  jibian_duoshouyeshou: (ctx) => {
+    if (ctx.chessRecord('chess_zj_mortis_b')) ctx.grantChess('chess_zj_mortis_b', { requirePool: false, fromPool: false });
+  },
   ...Object.fromEntries(Object.entries(FUNDS).map(([id, n]) => [id, (ctx) => ctx.addFunds(n, 'jibian')])),
 
   /** 这杯我请 — 计数器归零; 真正的免费在 onPrice/onBuy 里. */
@@ -1528,6 +1620,11 @@ const ON_PICK = {
 
   /** 无下限术式（传说）——「你的所有干员获得99.9%的闪避」。同样只登记 key，效果在战斗侧。 */
   jibian_wuxiaxian: () => {},
+
+  /** 龙的传人（传说，owner 2026-10-24）：抽到时无事 —— 效果全在战斗侧 install()。 */
+  jibian_longdechuanren: () => {},
+
+  /** 龙的传人（传说，owner 2026-10-24）：抽到时无事 —— 效果全在战斗侧 install()。 */
 
   /**
    * 三月五日（传说）——「你获得一个精锐结城理」。
@@ -1633,6 +1730,9 @@ const ON_PICK = {
    * 消费在 MatchPhases.spDraft 的 perPlayer 分支（choices.js 的 jibianDraftCards 过滤池子）。
    */
   jibian_touziweilai: (ctx) => ctx.setCounter(K.touziPending, 1),
+
+  /** 集中一点（稀有，层数厨，owner 2026-10-23）：接下来三个回合，所有叠层只给层数最高的已激活盟约。 */
+  jibian_jizhongyidian: (ctx) => ctx.setCounter(K.jizhongyidian, ctx.round + 3),
 
   /** “维多利亚的秘密” — 抽到时先给本回合的 1 次特殊刷新（真正执行走客户端按钮 g.specialRefresh → onRefresh）. */
   jibian_weiduoliyademimi: (ctx) => ctx.setCounter(K.vicCharge, 1),

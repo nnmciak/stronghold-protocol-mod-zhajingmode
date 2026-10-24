@@ -515,11 +515,14 @@ const duckGlobal = {
     if (!ev || !DUCK_KINDS.has(ev.kind) || !Array.isArray(ev.spawns)) return;
     const p = duckParams();
     if (!p || ctx.round < int(p.round, 1)) return;
-    const held = ctx.bandId() === DUCK_BAND || ctx.teammates().some((t) => t.bandId() === DUCK_BAND);
-    if (!held) return;
-    // 炸惊模拟 规则14 敌方惊变「谁选的鸭爵？？」(ejibian_yajue)：第 7/8 回合把替换概率拉满（content/ejibian.js
-    // jibianDuckParams）。ctx.enemyJibian 只在 Match 的 meta ctx 上有，缺了就当没这张牌。
     const cards = typeof ctx.enemyJibian === 'function' ? ctx.enemyJibian() : null;
+    const yajue = (Array.isArray(cards) ? cards : cards ? [cards] : []).includes('ejibian_yajue');
+    const held = ctx.bandId() === DUCK_BAND || ctx.teammates().some((t) => t.bandId() === DUCK_BAND);
+    // ★ 2026-10-23（owner）：删掉「必须有人选鸭爵」这个前置条件 —— 只要敌方惊变
+    //   「谁选的鸭爵？？」在场，7/8 回合**没人选鸭爵也会替换**（否则那张牌在没人选鸭爵时完全无效）。
+    if (!held && !(yajue && [7, 8].includes(ctx.round))) return;
+    // 炸惊模拟 规则14 敌方惊变「谁选的鸭爵？？」(ejibian_yajue)：第 7/8 回合把替换概率拉满（content/ejibian.js
+    // jibianDuckParams）。
     duckReplace(ctx, ev.spawns, jibianDuckParams(p, { round: ctx.round, cards }), ctx.playerId, { routes: ev.routes, side: ev.side });
   },
 };

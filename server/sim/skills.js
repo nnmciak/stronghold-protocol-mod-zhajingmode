@@ -381,7 +381,7 @@ export class SkillRuntime {
     if (this.active && this.kind !== 'passive') {
       if (this.spec.onTick) this._call('onTick', { dt });
       if (this.kind === 'duration' || (this.kind === 'ammo' && Number.isFinite(this.timeLeft))) {
-        this.timeLeft -= dt;
+        if (!u.mem?.mujicaFeverPaused) this.timeLeft -= dt;
         if (this.timeLeft <= 1e-9) { this.end('duration'); }
       }
     } else if (this.active && this.kind === 'passive' && this.spec.onTick) {
@@ -533,6 +533,11 @@ export class SkillRuntime {
     if (this.active && this.isTimed) return false;
     const u = this.unit;
     if (!u.alive || !u.deployed) return false;
+    if (this.battle._hooks.beforeSkillStart) {
+      const ctx = { unit: u, skill: this, reason, free };
+      this.battle.emit('beforeSkillStart', ctx);
+      free = !!ctx.free;
+    }
     if (!free) {
       const wasFull = this.charges >= this.maxCharges;
       this.charges--;

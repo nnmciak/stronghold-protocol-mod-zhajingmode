@@ -488,7 +488,7 @@ export function OpCard({ m, chess, golden, entries, ops = {}, selected = false, 
         </span>
       </button>
       <span class="lo-op__meta"><${PotPips} n=${cv.potential} /><span class="lo-op__name">${chess.name}</span></span>
-      <span class="lo-op__bonds">${(chess.bonds || []).map((b) => html`<${Img} key=${b} src=${bondIconUrl(m, b)} class="lo-op__bond" title=${data.lookup('bonds', b)?.name || b} alt="" loading="lazy" draggable=${false} />`)}</span>
+      <span class="lo-op__bonds">${(chess.bonds || []).map((b) => html`<span key=${b} class="lo-op__bond" title=${data.lookup('bonds', b)?.name || b}><${Img} src=${bondIconUrl(m, b)} alt=${data.lookup('bonds', b)?.name || b} /></span>`)}</span>
       ${/* ★ 2026-10-15（用户：「我的想法不是新加一条，而是在原卫戍特质上改动」）：
             原来这里用的是 `garrisonOf(chess)` = `garrisonIds[0]`，**只画第一条**特质 ——
             野鬃的「获得时+4」和「开启技能时+5」分属两条记录（前者服务端、后者战斗侧，

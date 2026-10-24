@@ -1,0 +1,586 @@
+{
+  "source": "Official Android client CDN",
+  "client": "26-04-13-12-31-42_e9b560",
+  "counts": {
+    "units": 0,
+    "skills": 0,
+    "projectiles": 0,
+    "skins": 0,
+    "prefabs": 92
+  },
+  "copied": 467,
+  "backup": "D:\\卫戍协议\\备份-颂乐人偶素材",
+  "skinMaps": {
+    "char_4182_oblvns@avemujica#1": {
+      "charId": "char_4182_oblvns",
+      "replacements": {
+        "oblvns_attack_01_hit": "oblvns_attack_01_hit_avemujica#1",
+        "oblvns_attack_01_start": "oblvns_attack_01_start_avemujica#1",
+        "oblvns_skill_01_hit": "oblvns_skill_01_hit_avemujica#1",
+        "oblvns_skill_01_start": "oblvns_skill_01_start_avemujica#1",
+        "oblvns_skill_01_trail_02": "oblvns_skill_01_trail_02_avemujica#1",
+        "oblvns_skill_01_trail_03": "oblvns_skill_01_trail_03_avemujica#1",
+        "oblvns_skill_01_trail_04": "oblvns_skill_01_trail_04_avemujica#1",
+        "oblvns_skill_01_trail_05": "oblvns_skill_01_trail_05_avemujica#1",
+        "oblvns_skill_01_trail_06": "oblvns_skill_01_trail_06_avemujica#1",
+        "oblvns_skill_01_trail_07": "oblvns_skill_01_trail_07_avemujica#1",
+        "oblvns_skill_01_trail_08": "oblvns_skill_01_trail_08_avemujica#1",
+        "oblvns_skill_01_trail": "oblvns_skill_01_trail_avemujica#1",
+        "oblvns_skill_02_buff_01": "oblvns_skill_02_buff_01_avemujica#1",
+        "oblvns_skill_02_buff": "oblvns_skill_02_buff_avemujica#1",
+        "oblvns_skill_02_hit_02": "oblvns_skill_02_hit_02_avemujica#1",
+        "oblvns_skill_02_hit": "oblvns_skill_02_hit_avemujica#1",
+        "oblvns_skill_02_start_a_02": "oblvns_skill_02_start_a_02_avemujica#1",
+        "oblvns_skill_02_start_a": "oblvns_skill_02_start_b_avemujica#1",
+        "oblvns_skill_02_start_b_02": "oblvns_skill_02_start_b_02_avemujica#1",
+        "oblvns_skill_02_start_b": "oblvns_skill_02_start_a_avemujica#1",
+        "oblvns_skill_02_trail_02": "oblvns_skill_02_trail_02_avemujica#1",
+        "oblvns_skill_02_trail": "oblvns_skill_02_trail_avemujica#1",
+        "oblvns_skill_03_buff": "oblvns_skill_03_buff_avemujica#1",
+        "oblvns_skill_03_hit_02": "oblvns_skill_03_hit_02_avemujica#1",
+        "oblvns_skill_03_hit": "oblvns_skill_03_hit_avemujica#1",
+        "oblvns_skill_03_range": "oblvns_skill_03_range_avemujica#1",
+        "oblvns_skill_03_start": "oblvns_skill_03_start_avemujica#1",
+        "oblvns_skill_03_trail_02": "oblvns_skill_03_trail_02_avemujica#1",
+        "oblvns_skill_03_trail": "oblvns_skill_03_trail_avemujica#1",
+        "oblvns_talent_trail": "oblvns_talent_trail_avemujica#1",
+        "oblvns_attack_01_trail": "oblvns_attack_01_trail_avemujica#1",
+        "oblvns_combat_01_start": "oblvns_combat_01_start_avemujica#1"
+      },
+      "mounts": {
+        "source": "skinpack/char_4182_oblvns.ab char_4182_oblvns_avemujica#1",
+        "graphic": {
+          "path": "Graphic",
+          "pos": [
+            0,
+            0,
+            0
+          ],
+          "rot": [
+            -0.258819,
+            0,
+            0,
+            0.965926
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "points": {
+          "HitPoint": {
+            "front": {
+              "pos": [
+                3.01548e-8,
+                0.232324,
+                -0.249603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/Front/HitPoint",
+              "rot": [
+                0,
+                0,
+                3.10235e-8,
+                1
+              ]
+            },
+            "back": {
+              "pos": [
+                3.01548e-8,
+                0.232324,
+                -0.249603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/Back/HitPoint",
+              "rot": [
+                0,
+                0,
+                3.10235e-8,
+                1
+              ]
+            }
+          },
+          "Muzzle": {
+            "front": {
+              "pos": [
+                0.59859,
+                0.210345,
+                -0.236913
+              ],
+              "bone": "F_Muzzle",
+              "path": "FaceSwitcher/Front/Muzzle",
+              "rot": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "followRot": true
+            },
+            "back": {
+              "pos": [
+                0.742311,
+                0.204475,
+                -0.233524
+              ],
+              "bone": "B_Muzzle",
+              "path": "FaceSwitcher/Back/Muzzle",
+              "rot": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "followRot": true
+            }
+          },
+          "Muzzle_Talent": {
+            "front": {
+              "pos": [
+                0.185652,
+                0.21626,
+                -0.240328
+              ],
+              "bone": "F_Muzzle_Talent",
+              "path": "FaceSwitcher/Front/Muzzle_Talent",
+              "rot": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "followRot": true
+            },
+            "back": {
+              "pos": [
+                0.190026,
+                0.208684,
+                -0.235954
+              ],
+              "bone": "B_Muzzle_Talent",
+              "path": "FaceSwitcher/Back/Muzzle_Talent",
+              "rot": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "followRot": true
+            }
+          },
+          "OriginMuzzle": {
+            "front": {
+              "pos": [
+                0.185652,
+                0.21626,
+                -0.240328
+              ],
+              "bone": "F_OriginMuzzle",
+              "path": "FaceSwitcher/Front/OriginMuzzle",
+              "rot": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "followRot": true
+            },
+            "back": {
+              "pos": [
+                0.190026,
+                0.208684,
+                -0.235954
+              ],
+              "bone": "B_OriginMuzzle",
+              "path": "FaceSwitcher/Back/OriginMuzzle",
+              "rot": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "followRot": true
+            }
+          },
+          "HeadPoint": {
+            "all": {
+              "pos": [
+                6.70107e-8,
+                0.746743,
+                -0.546603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/HeadPoint",
+              "rot": [
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          }
+        }
+      }
+    },
+    "char_4183_mortis@avemujica#1": {
+      "charId": "char_4183_mortis",
+      "replacements": {
+        "mortis_attack_hit_01": "mortis_attack_hit_01_avemujica#1",
+        "mortis_attack_start_01": "mortis_attack_start_01_avemujica#1",
+        "mortis_skill_1_buff_01": "mortis_skill_1_buff_01_avemujica#1",
+        "mortis_skill_1_hit_01": "mortis_skill_1_hit_01_avemujica#1",
+        "mortis_skill_1_start_01": "mortis_skill_1_start_01_avemujica#1",
+        "mortis_skill_2_buff_01": "mortis_skill_2_buff_01_avemujica#1",
+        "mortis_skill_2_buff_02": "mortis_skill_2_buff_02_avemujica#1",
+        "mortis_skill_2_hit_01": "mortis_skill_2_hit_01_avemujica#1",
+        "mortis_skill_2_start_01": "mortis_skill_2_start_01_avemujica#1",
+        "mortis_switchout_01": "mortis_switchout_01_avemujica#1"
+      },
+      "mounts": {
+        "source": "skinpack/char_4183_mortis.ab char_4183_mortis_avemujica#1",
+        "graphic": {
+          "path": "Graphic",
+          "pos": [
+            0,
+            0,
+            0
+          ],
+          "rot": [
+            -0.258819,
+            0,
+            0,
+            0.965926
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "points": {
+          "HitPoint": {
+            "front": {
+              "pos": [
+                3.01548e-8,
+                0.232324,
+                -0.249603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/Front/HitPoint",
+              "rot": [
+                0,
+                0,
+                3.10235e-8,
+                1
+              ]
+            },
+            "back": {
+              "pos": [
+                3.01548e-8,
+                0.232324,
+                -0.249603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/Back/HitPoint",
+              "rot": [
+                0,
+                0,
+                3.10235e-8,
+                1
+              ]
+            }
+          },
+          "HeadPoint": {
+            "all": {
+              "pos": [
+                6.70107e-8,
+                0.746743,
+                -0.546603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/HeadPoint",
+              "rot": [
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          }
+        }
+      }
+    },
+    "char_4184_dolris@avemujica#1": {
+      "charId": "char_4184_dolris",
+      "replacements": {
+        "dolris_attack_01_start": "dolris_attack_01_start_avemujica#1",
+        "dolris_buff_01": "dolris_buff_01_avemujica#1",
+        "dolris_heal_hit_01": "dolris_heal_hit_01_avemujica#1",
+        "dolris_skill_01_buff_01": "dolris_skill_01_buff_01_avemujica#1",
+        "dolris_skill_01_buff_02": "dolris_skill_01_buff_02_avemujica#1",
+        "dolris_skill_02_buff_01": "dolris_skill_02_buff_01_avemujica#1",
+        "dolris_skill_02_buff_02": "dolris_skill_02_buff_02_avemujica#1",
+        "dolris_skill_02_hit_01": "dolris_skill_02_hit_01_avemujica#1",
+        "dolris_skill_02_start_01": "dolris_skill_02_start_01_avemujica#1"
+      },
+      "mounts": {
+        "source": "skinpack/char_4184_dolris.ab char_4184_dolris_avemujica#1",
+        "graphic": {
+          "path": "Graphic",
+          "pos": [
+            0,
+            0,
+            0
+          ],
+          "rot": [
+            -0.258819,
+            0,
+            0,
+            0.965926
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "points": {
+          "HeadPoint": {
+            "all": {
+              "pos": [
+                6.70107e-8,
+                0.746743,
+                -0.546603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/HeadPoint",
+              "rot": [
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          },
+          "HitPoint": {
+            "all": {
+              "pos": [
+                3.01548e-8,
+                0.232324,
+                -0.249603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/HitPoint",
+              "rot": [
+                0,
+                0,
+                3.10235e-8,
+                1
+              ]
+            }
+          }
+        }
+      }
+    },
+    "char_4185_amoris@avemujica#1": {
+      "charId": "char_4185_amoris",
+      "replacements": {
+        "amoris_attack_01_hit_01": "amoris_attack_01_hit_01_avemujica#1",
+        "amoris_attack_01_start_01": "amoris_attack_01_start_01_avemujica#1",
+        "amoris_skill_01_buff_01": "amoris_skill_01_buff_01_avemujica#1",
+        "amoris_skill_01_hit_01": "amoris_skill_01_hit_01_avemujica#1",
+        "amoris_skill_01_hit_02": "amoris_skill_01_hit_02_avemujica#1",
+        "amoris_skill_01_start_01": "amoris_skill_01_start_01_avemujica#1",
+        "amoris_skill_01_start_02": "amoris_skill_01_start_02_avemujica#1",
+        "amoris_skill_01_start_03": "amoris_skill_01_start_03_avemujica#1",
+        "amoris_skill_02_buff_01": "amoris_skill_02_buff_01_avemujica#1",
+        "amoris_skill_02_range_01": "amoris_skill_02_range_01_avemujica#1",
+        "amoris_skill_02_hit_01": "amoris_skill_02_hit_01_avemujica#1",
+        "amoris_skill_02_hit_02": "amoris_skill_02_hit_02_avemujica#1",
+        "amoris_skill_02_start_01": "amoris_skill_02_start_01_avemujica#1",
+        "amoris_skill_02_start_02": "amoris_skill_02_start_02_avemujica#1",
+        "amoris_skill_02_start_03": "amoris_skill_02_start_03_avemujica#1",
+        "amoris_skill_02_start_04": "amoris_skill_02_start_04_avemujica#1",
+        "amoris_skill_02_start_05": "amoris_skill_02_start_05_avemujica#1",
+        "amoris_skill_02_start_06": "amoris_skill_02_start_06_avemujica#1",
+        "amoris_skill_02_start_07": "amoris_skill_02_start_07_avemujica#1",
+        "amoris_skill_02_start_08": "amoris_skill_02_start_08_avemujica#1"
+      },
+      "mounts": {
+        "source": "skinpack/char_4185_amoris.ab char_4185_amoris_avemujica#1",
+        "graphic": {
+          "path": "Graphic",
+          "pos": [
+            0,
+            0,
+            0
+          ],
+          "rot": [
+            -0.258819,
+            0,
+            0,
+            0.965926
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "points": {
+          "HitPoint": {
+            "front": {
+              "pos": [
+                3.01548e-8,
+                0.232324,
+                -0.249603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/Front/HitPoint",
+              "rot": [
+                0,
+                0,
+                3.10235e-8,
+                1
+              ]
+            },
+            "back": {
+              "pos": [
+                3.01548e-8,
+                0.232324,
+                -0.249603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/Back/HitPoint",
+              "rot": [
+                0,
+                0,
+                3.10235e-8,
+                1
+              ]
+            }
+          },
+          "HeadPoint": {
+            "all": {
+              "pos": [
+                6.70107e-8,
+                0.746743,
+                -0.546603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/HeadPoint",
+              "rot": [
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          }
+        }
+      }
+    },
+    "char_4186_tmoris@avemujica#1": {
+      "charId": "char_4186_tmoris",
+      "replacements": {
+        "tmoris_attack_hit_01": "tmoris_attack_hit_01_avemujica#1",
+        "tmoris_attack_start_01": "tmoris_attack_start_01_avemujica#1",
+        "tmoris_skill_1_hit_01": "tmoris_skill_1_hit_01_avemujica#1",
+        "tmoris_skill_1_range_01": "tmoris_skill_1_range_01_avemujica#1",
+        "tmoris_skill_1_range_02": "tmoris_skill_1_range_02_avemujica#1",
+        "tmoris_skill_1_start_01": "tmoris_skill_1_start_01_avemujica#1",
+        "tmoris_skill_2_buff_01": "tmoris_skill_2_buff_01_avemujica#1",
+        "tmoris_skill_2_debuff_01": "tmoris_skill_2_debuff_01_avemujica#1",
+        "tmoris_skill_2_hit_01": "tmoris_skill_2_hit_01_avemujica#1",
+        "tmoris_skill_2_range_01": "tmoris_skill_2_range_01_avemujica#1",
+        "tmoris_skill_2_range_02": "tmoris_skill_2_range_02_avemujica#1",
+        "tmoris_skill_2_start_01": "tmoris_skill_2_start_01_avemujica#1"
+      },
+      "mounts": {
+        "source": "skinpack/char_4186_tmoris.ab char_4186_tmoris_avemujica#1",
+        "graphic": {
+          "path": "Graphic",
+          "pos": [
+            0,
+            0,
+            0
+          ],
+          "rot": [
+            -0.258819,
+            0,
+            0,
+            0.965926
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "points": {
+          "HitPoint": {
+            "front": {
+              "pos": [
+                3.01548e-8,
+                0.232324,
+                -0.249603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/Front/HitPoint",
+              "rot": [
+                0,
+                0,
+                3.10235e-8,
+                1
+              ]
+            },
+            "back": {
+              "pos": [
+                3.01548e-8,
+                0.232324,
+                -0.249603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/Back/HitPoint",
+              "rot": [
+                0,
+                0,
+                3.10235e-8,
+                1
+              ]
+            }
+          },
+          "HeadPoint": {
+            "all": {
+              "pos": [
+                6.70107e-8,
+                0.746743,
+                -0.546603
+              ],
+              "bone": null,
+              "path": "FaceSwitcher/HeadPoint",
+              "rot": [
+                0,
+                0,
+                0,
+                1
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "existingEffectDefinitionsPreserved": true,
+  "totalAdded": {
+    "units": 10,
+    "skills": 11,
+    "projectiles": 42,
+    "skins": 10,
+    "prefabs": 172
+  },
+  "availableOriginalEffects": 225,
+  "originalCharacterModels": 18,
+  "conversion": "Existing project Unity-to-WebGL converter; no substitute artwork"
+}

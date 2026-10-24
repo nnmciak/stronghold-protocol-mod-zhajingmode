@@ -1,4 +1,4 @@
-// ui/jibianPanel.js — 炸惊模拟: the 「已选惊变」panel. Lists the 惊变 the viewed seat has taken (m.private.effects
+﻿// ui/jibianPanel.js — 炸惊模拟: the 「已选惊变」panel. Lists the 惊变 the viewed seat has taken (m.private.effects
 // entries the match marks `jibian: true`, server/match/player/views.js effectsView) beside the room's 敌方惊变 — every
 // card drawn so far (config enemyJibian.rounds: 第 1、第 6 回合各一张，两张同时生效、效果叠加), not just the newest one.
 // While scouting a teammate the panel reads the WATCHED player's effects — game.js
@@ -11,17 +11,34 @@
 
 import { useEffect, useState } from '../../vendor/hooks.module.js';
 import { html, MicroLabel } from './components.js';
-import { RichText, GIcon } from './gameComponents.js';
+import { Img, RichText, GIcon } from './gameComponents.js';
 import { t, tName } from '../../../shared/i18n.js';
 import { RARITY_NAMES } from './choiceOverlay.js';
+import { data } from '../data.js';
+import { resolveJibianArt } from './jibianArt.js';
 
 const cx = (...p) => p.flat().filter(Boolean).join(' ');
 
 /** @param {{ id?: string, name?: string, desc?: string, rarity?: string|null, flavor?: string|null, enemy?: boolean }} e */
 function JibianCard({ e }) {
   const rarity = e.rarity || 'normal';
+  // ★ 2026-10-23：素材清单可能还没加载完（此时 data.get('assets') 是 null → 没有图标）。
+  //   这里主动 load 并订阅，清单到达后重绘一次；之前面板只在打开那一刻取一次，抢不到就一直没图。
+  const [, bump] = useState(0);
+  useEffect(() => {
+    let alive = true;
+    if (!data.get('assets') && typeof data.load === 'function') {
+      Promise.resolve(data.load('assets')).then(() => { if (alive) bump((n) => n + 1); }).catch(() => {});
+    }
+    const unsub = typeof data.subscribe === 'function'
+      ? data.subscribe((n) => { if (alive && n === 'assets') bump((x) => x + 1); })
+      : null;
+    return () => { alive = false; if (typeof unsub === 'function') unsub(); };
+  }, []);
+  const art = resolveJibianArt(data.get('assets'), e);
   return html`<div class=${cx('jbc', e.enemy && 'jbc--enemy')} data-rarity=${rarity}>
     <div class="jbc__top">
+      ${art.icon ? html`<span class=${cx('jbc__icon', art.whiteGlyph && 'jibian-art--white-glyph')}><${Img} src=${art.icon} /></span>` : null}
       <span class="jbc__name">${tName(e.name) || t('惊变')}</span>
       <span class="jbc__rarity">${t(RARITY_NAMES[rarity] || '普通')}</span>
     </div>

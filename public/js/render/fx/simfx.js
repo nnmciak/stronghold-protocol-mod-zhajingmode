@@ -55,7 +55,10 @@ export class FxSim {
    */
   simFx(kind, x, y, extra) {
     const ex = extra && typeof extra === 'object' ? extra : {};
-    const spec = fxSpec(kind, ex);
+    let spec = fxSpec(kind, ex);
+    if (kind === 'mujicaImpact' && this._viewOf(ex.id)?.info?.skin === 'char_4185_amoris@avemujica#1') {
+      spec = { ...spec, c: 0xc77dff };
+    }
     if (spec.a === 'none') return; // an event the screen does not show (hitCap)
     const at = spec.pt ? this._point(Number(x), Number(y)) : this._where(Number(x), Number(y), ex);
     if (!Number.isFinite(at.x) || !Number.isFinite(at.y)) return;

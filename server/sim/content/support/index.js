@@ -231,11 +231,15 @@ export function unitBonds(u) {
 export function isMember(battle, u, bondId) {
   const own = unitBonds(u);
   if (own.includes(bondId)) return true;
+  // ★ 2026-10-23 惊变「Belua multorum es capitums.」：持卡玩家的若叶睦算【调和】成员（只对该玩家生效）。
+  const beluaMortis = !own.includes('maniShip') && hasJibian(battle, u.ownerId, 'jibian_duoshouyeshou')
+    && /^chess_zj_mortis_/.test(String(u && u.def && u.def.raw && u.def.raw.chessId || ''));
+  if (bondId === 'maniShip' && beluaMortis) return true;
   // ★ 2026-10-14 惊变「炎国人会飞」(jibian_yanrenhuifei)：使你的所有【炎】干员获得【突袭】盟约。
   //   "获得盟约" = 让它们被当作突袭成员 —— members 集合就是 isMember 过滤出来的
   //   (bonds/addon/battle.js:118)，所以突袭的整套效果（含再部署）对它们生效。只在该玩家选到这张卡时成立。
   if (bondId === 'raidShip' && own.includes('yanShip') && hasJibian(battle, u.ownerId, 'jibian_yanrenhuifei')) return true;
-  return isCoreBond(bondId) && own.includes('maniShip') && bondActive(battle, u.ownerId, 'maniShip');
+  return isCoreBond(bondId) && (own.includes('maniShip') || beluaMortis) && bondActive(battle, u.ownerId, 'maniShip');
 }
 
 /**

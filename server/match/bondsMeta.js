@@ -125,10 +125,17 @@ function membership(gd, ps) {
   const inHand = new Map();
   const allOnBoard = new Map();
   const add = (m, bond, key) => { let s = m.get(bond); if (!s) m.set(bond, (s = new Set())); s.add(key); };
+  // ★ 2026-10-23：惊变「Belua multorum es capitums.」——持卡玩家的【若叶睦】同时算【调和】成员。
+  const belua = hasJibian(ps, 'jibian_duoshouyeshou');
+  const bondsOfBoard = (p) => {
+    const list = pieceBonds(gd, p);
+    if (belua && /^(?:chess_zj_)?mortis_/i.test(gd.baseIdOf(p.id))) return list.includes('maniShip') ? list : [...list, 'maniShip'];
+    return list;
+  };
   for (const p of boardChess) {
     const base = gd.baseIdOf(p.id);
     const golden = gd.isGolden(p.id);
-    for (const b of pieceBonds(gd, p)) { add(onBoard, b, base); add(onBoardVariant, b, `${base}|${golden ? 1 : 0}`); allOnBoard.set(b, (allOnBoard.get(b) || 0) + 1); }
+    for (const b of bondsOfBoard(p)) { add(onBoard, b, base); add(onBoardVariant, b, `${base}|${golden ? 1 : 0}`); allOnBoard.set(b, (allOnBoard.get(b) || 0) + 1); }
   }
   for (const p of handChess) {
     const base = gd.baseIdOf(p.id);
@@ -140,7 +147,7 @@ function membership(gd, ps) {
 /** 突袭的 bondId —— 「炎国人会飞」要往它里面加人。 */
 const RAID_BOND = 'raidShip';
 /** 会改动盟约【人数】的惊变卡（进 computeBonds 的缓存指纹；以后再有同类卡加到这里即可）。 */
-const COUNT_AFFECTING_JIBIAN = Object.freeze(['jibian_yanrenhuifei']);
+const COUNT_AFFECTING_JIBIAN = Object.freeze(['jibian_yanrenhuifei', 'jibian_duoshouyeshou']);
 
 /**
  * 该玩家有没有选到惊变 `effectId`（备战侧）。战斗侧对应 support/index.js 的 `hasJibian`。

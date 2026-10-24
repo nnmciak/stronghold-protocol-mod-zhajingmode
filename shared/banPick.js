@@ -33,6 +33,13 @@ const isBondId = (v) => typeof v === 'string' && v.length > 0 && v.length <= 64 
 //   （ZHAJING 已在 shared/constants.js 的 DIFFICULTIES 里，中文名也早有：炸惊模拟（BETAv0.799325）。）
 export const BANPICK_DIFFICULTIES = Object.freeze(['FUNNY', 'NORMAL', 'HARD', 'ABYSS', 'ZHAJING']);
 
+/**
+ * ★ 2026-10-23（owner）：这三个是「非核心 + weight 0」的小盟约（不参与随机抽取），
+ *   但玩家仍然可以主动 ban 掉它们（用来把对应干员从自己的池子里移除）：
+ *   企鹅物流 / 岁 / 医师。
+ */
+export const BANNABLE_ZERO_WEIGHT = Object.freeze(new Set(['penguinShip', 'suiShip', 'physicianShip']));
+
 /** How many 盟约 of each kind may be picked off, per difficulty (data/config.json `bans`). */
 export const BAN_QUOTA_FALLBACK = Object.freeze({
   FUNNY: Object.freeze({ core: 0, addon: 1 }),
@@ -82,8 +89,9 @@ export function cleanEntry(entry, quota, bondOf) {
     if (!isBondId(b) || favSet.has(b)) continue;         // a favourited 盟约 is never in the ban list
     const rec = bondOf(b);
     // ★ 2026-10-18：核心盟约不看 weight —— S.E.E.S 是 weight 0 的核心盟约，必须能出现在卡池预选里。
-    //   非核心的 weight-0 盟约（inert，卡池预选里灰显）仍然不可 ban。
-    if (!rec || (!(Number(rec.weight) > 0) && !rec.isCore)) continue;
+    //   非核心的 weight-0 盟约（inert，卡池预选里灰显）默认不可 ban；
+    //   ★ 2026-10-23（owner）：企鹅物流 / 岁 / 医师 这三个虽不参与随机抽取，也开放成可 ban。
+    if (!rec || (!(Number(rec.weight) > 0) && !rec.isCore && !BANNABLE_ZERO_WEIGHT.has(b))) continue;
     if (rec.isCore) { if (core >= quota.core) continue; core++; }
     else { if (addon >= quota.addon) continue; addon++; }
     if (!bonds.includes(b)) bonds.push(b);
@@ -115,7 +123,9 @@ export function toggleBan(entry, bondId, quota, bondOf) {
   const e = cleanEntry(entry, quota, bondOf);
   const has = e.bonds.includes(bondId);
   const rec = bondOf(bondId);
-  if (!rec || !(Number(rec.weight) > 0)) return e;
+  // ★ 2026-10-23：核心盟约不看 weight —— S.E.E.S 的 weight 是 0，但它在大盟约里应当可以 ban
+  //   （列表 banPickerBonds 就是这么列的，cleanEntry 也已经是这个口径；只有这里漏了）。
+  if (!rec || (!(Number(rec.weight) > 0) && !rec.isCore && !BANNABLE_ZERO_WEIGHT.has(bondId))) return e;
   if (has) return cleanEntry({ ...e, bonds: e.bonds.filter((b) => b !== bondId) }, quota, bondOf);
   // adding: refuse when the kind's quota is already used up (the UI greys the rest out, this is the guard)
   const used = e.bonds.filter((b) => !!bondOf(b)?.isCore === !!rec.isCore).length;

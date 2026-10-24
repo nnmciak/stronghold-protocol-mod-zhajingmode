@@ -211,6 +211,9 @@ function installYan(battle, pid, bb, members) {
   if (!reached(battle, pid, 'yanShip', bb.power_bond_char_cnt)) return;
   const ex = reached(battle, pid, 'yanShip', bb.ex_bond_char_cnt);
   battle.on('battleStart', () => {
+    // ★ 2026-10-24（owner 我方惊变「龙的传人」）：持有该卡时【炎】盟约**不再**生成炎佑，
+    //   改由 jibian.js 按「每 1000 层任意盟约召唤一只」结算。
+    if (S.hasJibian(battle, pid, 'jibian_longdechuanren')) return;
     // PRTS: the sums count real 炎 operators only (调和 operators' stats are not collected unless they are 炎 too)
     let atk = 0, hp = 0;
     for (const u of S.playerOps(battle, pid, { fieldOnly: true })) {
@@ -806,8 +809,13 @@ export function install(battle) {
  */
 export function payHammers(ctx) {
   if (!ctx.bondActive('victoriaShip')) return 0;
-  const p = S.buffParams(ctx.data?.bonds?.victoriaShip ?? S.bondRecord('victoriaShip'), VICTORIA_REWARD_KEY);
-  const step = Math.floor(num(p?.layer, 0));
+  // ★ 2026-10-22（owner）：层数步长取**合并后的盟约记录**（炸惊 bb.layer=100，普通 25）。
+  //   原来是 `ctx.data?.bonds` —— 那是 gd.raw 原始数据（没有炸惊覆盖），于是炸惊里仍然每 25 层发一把锤子，
+  //   而卡面写的是 100 层。玩家反馈「文本 100 层、实际 25 层」即此。
+  const rec = (typeof S.bondRecord === 'function' ? S.bondRecord('victoriaShip') : null)
+    || (ctx.data && ctx.data.bonds && ctx.data.bonds.victoriaShip) || null;
+  const p = S.buffParams(rec, VICTORIA_REWARD_KEY);
+  const step = Math.floor(num((rec && rec.bb && rec.bb.layer) ?? p?.layer, 0));
   if (!p || !(step > 0)) return 0;
   const due = Math.floor(ctx.layers('victoriaShip') / step);
   const count = Math.max(0, Math.floor(num(p.count, 1)));

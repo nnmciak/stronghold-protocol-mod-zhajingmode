@@ -207,6 +207,16 @@ export class PlayerDiy {
     this.diyBanned = Object.freeze(banned);
   }
 
+  /**
+   * ★ 2026-10-23：setupVote.completeSetupReroll 调的就是这个名字，但方法一直不存在（实测 reroll 直接抛
+   *   TypeError → reportError('reroll setup') → 重抽开局失败）。补上：重建 stock 并返回 { stock, banned }。
+   * @param {Set<string>} off
+   */
+  buildDiyStock(off = new Set()) {
+    this.initDiyStock(off);
+    return { stock: this.diyStock, banned: this.diyBanned };
+  }
+
   // poolOf(baseId) / pool() live in player/rules.js: in the 100-seat variant every player has a pool of its own for
   // base chess, and the 自选 stock IS routed separately — `poolOf` sends a slotted slot's baseId to `diyStock`
   // (rules.js `_diyStockPoolFor`), because a DIY slot is `isDiy` and therefore in no pool's `entries`.

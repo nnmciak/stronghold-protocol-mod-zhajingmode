@@ -132,6 +132,8 @@ export const PHASE = Object.freeze({
   // 炸惊模拟 规则14: the 敌方惊变 reveal — ONE card drawn automatically before round 1, shown to the whole room
   // (flickerMs of rolling, then resultMs of the zoomed result) before the round's own flow continues
   ENEMY_JIBIAN: 'ENEMY_JIBIAN',
+  // ★ 2026-10-24（owner）：隐秘核心战前的「隐秘惊变」揭示阶段（保底一张隐秘稀有度卡）
+  HIDDEN_JIBIAN: 'HIDDEN_JIBIAN',
   SP_DRAFT: 'SP_DRAFT',
   PREP: 'PREP',
   COMBAT: 'COMBAT',
@@ -144,7 +146,7 @@ export const PHASE = Object.freeze({
 
 export const PHASE_NAMES = {
   LOBBY: N_('等待中'), INFO_CHECK: N_('确认本局信息'), BAND_DRAFT: N_('选择策略'), BATTLE_CHECK: N_('协议启动'),
-  ROUND_START: N_('回合开始'), ENEMY_JIBIAN: N_('敌方惊变'), SP_DRAFT: N_('机变阶段'), PREP: N_('休整期'), COMBAT: N_('作战中'), UNITE: N_('联防阶段'),
+  ROUND_START: N_('回合开始'), ENEMY_JIBIAN: N_('敌方惊变'), HIDDEN_JIBIAN: N_('隐秘惊变'), SP_DRAFT: N_('机变阶段'), PREP: N_('休整期'), COMBAT: N_('作战中'), UNITE: N_('联防阶段'),
   SETTLE: N_('结算'), FINAL_ASSAULT: N_('最终攻势'), HIDDEN_CORE: N_('隐秘核心'), RESULT: N_('模拟结束'),
 };
 

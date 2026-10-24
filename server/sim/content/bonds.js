@@ -18,8 +18,8 @@ async function load(path) {
   }
 }
 
-const [core, addon, supportMeta] = await Promise.all([load('./bonds/core.js'), load('./bonds/addon.js'), load('./support/meta.js')]);
-const PARTS = Object.freeze([['bonds/core', core], ['bonds/addon', addon]]);
+const [core, addon, mujica, supportMeta] = await Promise.all([load('./bonds/core.js'), load('./bonds/addon.js'), load('./mujicaBond.js'), load('./support/meta.js')]);
+const PARTS = Object.freeze([['bonds/core', core], ['bonds/addon', addon], ['mujicaBond', mujica]]);
 
 function runAll(fnName, arg, pre = null) {
   let first = null;

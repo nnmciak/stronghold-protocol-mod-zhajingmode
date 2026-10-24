@@ -161,23 +161,45 @@ export function layerCamera(field, layer, mySide = 'L') {
  * where whose column would be ambiguous (联防 / boss pairs) or there are no effects data (a server-run field's meta
  * comes from the server without effects — the column stays empty rather than showing one's own).
  */
-export function spectateEffects(spec, members) {
+export function spectateEffects(spec, members, source = data) {
   if (!Array.isArray(members) || members.length !== 1 || !isObj(spec)) return undefined;
   const p = Array.isArray(spec.players) ? spec.players.find((x) => isObj(x) && x.playerId === members[0]) : null;
   if (!p || !Array.isArray(p.playerEffects)) return undefined;
+  const config = source.get('config');
+  const mode = config?.modes?.[spec.modeId];
+  const pools = mode ? [mode] : Object.values(config?.modes || {});
+  const jibianCards = new Map(pools.flatMap(m => Array.isArray(m?.jibian?.pool) ? m.jibian.pool : [])
+    .filter(c => c?.effectId || c?.id).map(c => [c.effectId || c.id, c]));
   const out = [];
   for (const pe of p.playerEffects) {
-    if (!isObj(pe) || typeof pe.id !== 'string' || !pe.id) continue;
+    if (!isObj(pe)) continue;
+    const rawId = pe.data?.effectId || pe.effectId || pe.key || pe.id;
+    if (typeof rawId !== 'string' || !rawId) continue;
+    const cardId = rawId.replace(/^jibian:/, '').split('#')[0];
     const counter = pe.counter != null ? { counter: pe.counter } : {};
+    const card = jibianCards.get(cardId);
+    if (card || pe.jibian || String(pe.key || '').startsWith('jibian:')) {
+      out.push({ id: pe.id || cardId, effectId: cardId, name: card?.name || pe.name || cardId,
+        desc: card?.desc || pe.desc || '', iconKind: 'choice', iconId: cardId, jibian: true,
+        rarity: card?.rarity || pe.rarity || null, flavor: card?.flavor || pe.flavor || null,
+        ...(card?.iconBond || pe.iconBond ? { iconBond: card?.iconBond || pe.iconBond } : {}), ...counter });
+      continue;
+    }
     if (pe.source === 'band') {
-      const band = data.list('bands').find((b) => b && b.effectId === pe.id);
+      const band = source.list('bands').find((b) => b && b.effectId === pe.id);
       if (band) {
         out.push({ id: pe.id, name: band.effectName || band.name, desc: band.desc || '', iconKind: 'band', iconId: band.iconId || band.bandId, ...counter });
         continue;
       }
     }
-    const rec = data.lookup('effects', pe.id);
+    const rec = source.lookup('effects', pe.id);
     out.push({ id: pe.id, name: rec?.name || pe.id, desc: rec?.desc || rec?.descRaw || '', iconKind: pe.source || 'choice', iconId: pe.id, ...counter });
   }
   return out;
+}
+
+/** Keep each owner's effects separate on a shared field (联防 / boss). */
+export function spectateEffectsByPlayer(spec, members, source = data) {
+  return Object.fromEntries((Array.isArray(members) ? members : [])
+    .map(pid => [pid, spectateEffects(spec, [pid], source)]));
 }

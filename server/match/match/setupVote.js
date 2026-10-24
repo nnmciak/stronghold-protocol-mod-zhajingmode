@@ -86,7 +86,12 @@ export class MatchSetupVote {
       const pool = new SharedPool(this.gd, { banned: bans.banned });
       if (!pool.entries.size) throw new Error('rerolled chess pool is empty');
       const off = new Set([...bans.drawn, ...bans.staticOff]);
-      const stocks = this.order.map((ps) => ps.buildDiyStock(off));
+      // ★ 2026-10-23：重抽开局时，自选编队的 off 也要用**玩家自己的**禁用盟约（ps.deniedBonds），
+      //   否则玩家 ban 掉的盟约其干员会从「自选编队」漏回来（卡池预选只影响商店池）。
+      const stocks = this.order.map((ps) => ps.buildDiyStock(new Set([
+        ...(Array.isArray(ps.deniedBonds) && ps.deniedBonds.length ? ps.deniedBonds : bans.drawn),
+        ...bans.staticOff,
+      ])));
       prepared = { setup, stage, bans, pool, stocks };
     } catch (e) {
       this.reportError('reroll setup', e);

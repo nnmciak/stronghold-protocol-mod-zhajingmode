@@ -72,7 +72,7 @@ import { net as appNet } from '../net.js';
 import { store as appStore } from '../store.js';
 import { unitStatsEntry, fxForm } from '../../../shared/protocol.js';
 import { SIM_HZ } from '../../../shared/constants.js';
-import { spectateEffects } from './observe.js';
+import { spectateEffects, spectateEffectsByPlayer } from './observe.js';
 import { recordError, setBattleSource } from '../diag.js';
 
 // ★ 2026-10-18：与服务端同一个 SIM_HZ（shared/constants.js），否则回放会和服务端不同步
@@ -87,7 +87,7 @@ const STATE_EV = new Set(['spawn', 'die', 'deploy', 'status', 'skill', 'leak']);
  * The b.ev tuples a catch-up frame or the hidden-tab backlog keeps: the state-bearing kinds, and every fx that sets an
  * enemy's model form (shared/protocol.js fxForm — dropped, the view kept the old model: player report #5 after 0.1.0).
  */
-export const keepsState = (x) => Array.isArray(x) && (STATE_EV.has(x[0]) || fxForm(x) !== undefined);
+export const keepsState = (x) => Array.isArray(x) && (STATE_EV.has(x[0]) || fxForm(x) !== undefined || (x[0] === 'fx' && x[1] === 'mujicaFever'));
 /**
  * Hidden-tab backlog cap (tuples) of the battle on screen. Past it the backlog is compacted (compactHeld: only the last
  * 'status' per unit and status, the last 'skill' per unit — what the view ends up showing); only a backlog still past it
@@ -581,6 +581,7 @@ export function createBattleRunner(deps) {
       live: !e.done, battleId: e.battleId, players: e.members.slice(), local: true, speed: e.speed,
       // the watched player's effects column (user playtest #2; undefined for 联防 / boss pairs and server-run fields)
       effects: spectateEffects(e.spec, e.members),
+      effectsByPlayer: spectateEffectsByPlayer(e.spec, e.members),
       // which half each player holds (联防: the first helper takes the right half; boss pairs: L / R)
       sides: Object.fromEntries((e.spec.players || []).filter((p) => p && p.playerId).map((p) => [p.playerId, p.side === 'R' || Number(p.colOffset) >= 8 ? 'R' : 'L'])),
     };

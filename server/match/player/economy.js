@@ -83,6 +83,9 @@ export class PlayerEconomy {
    * under BOND_LAYER_CAP (999, shared/constants.js) — a gain at the cap adds 0 and dispatches nothing.
    */
   addLayers(bondId, n, { requireActive = false, reason = '' } = {}) {
+    // ★ 2026-10-23 惊变「集中一点」：窗口期内所有叠层只落到层数最高的**已激活**盟约
+    const redirect = this.jizhongyidianTarget(bondId);
+    if (redirect) { bondId = redirect; requireActive = true; }
     // ★ 惊变羁绊：层数厨（所有盟约 ×2）/ 脚踏实地（附属盟约 ×2 或 ×3）
     n = this.jibianBondLayerBonus(bondId, n);
     if (!this.gd.bond(bondId) || !Number.isFinite(n) || n <= 0) return 0;
@@ -94,6 +97,24 @@ export class PlayerEconomy {
     this.recompute();
     this.m.dispatch(this, 'onLayers', { bondId, from: before, to: before + add, reason });
     return add;
+  }
+
+  /**
+   * 「集中一点」的重定向目标：窗口期内返回"层数最高的已激活盟约"（与 `bondId` 相同或没有激活盟约时返回 null）。
+   * @param {string} bondId 本来要加层的盟约
+   * @returns {string|null}
+   */
+  jizhongyidianTarget(bondId) {
+    const until = Number(this.counters && this.counters['jibian:jizhongyidian:until']);
+    const round = Number(this.m && this.m.round) || 0;
+    if (!(until > round)) return null;
+    let top = null, best = -1;
+    for (const [id, st] of Object.entries(this.bonds || {})) {
+      if (!st || !st.active) continue;
+      const L = Number(st.layers) || 0;
+      if (L > best) { best = L; top = id; }
+    }
+    return top && top !== bondId ? top : null;
   }
 
   /**
@@ -533,7 +554,9 @@ export class PlayerEconomy {
     // ★ 2026-10-15（用户，惊变「红松骑士团」）：选了那张卡的【本回合】不能出售干员。
     //   计数器里存的是「禁用是在第几回合发生的」，跨回合自然失效 ⇒ 不必在 onRoundStart 清理。
     //   键与 server/sim/content/jibian.js 的 K.pinusNoSell 一致（那边写 P + 'hongsongqishituan:nosell'）。
-    if (this.counters && this.counters['jibian:hongsongqishituan:nosell'] === this.round) {
+    // ★ 2026-10-24 修：`ps.round` 是【本回合统计对象】（{sells,…}），不是回合号 —— 原来拿它和
+    //   计数器里的回合号比较永远不相等，所以「本回合不能出售」从来没生效过。回合号在 `this.m.round`。
+    if (this.counters && this.counters['jibian:hongsongqishituan:nosell'] === this.m.round) {
       this.m.toast(this, 'warn', '红松骑士团：本回合不能出售干员');
       return fail(ERR.BAD_MSG, 'selling is disabled this round (红松骑士团)');
     }
@@ -541,15 +564,19 @@ export class PlayerEconomy {
     if (!loc) return fail(ERR.BAD_TARGET);
     if (loc.piece.kind !== 'chess') return fail(ERR.BAD_TARGET, loc.piece.kind === 'item' ? 'items cannot be sold' : 'tokens cannot be sold');
     const piece = loc.piece;
-    // its equipment returns to the hand (overflow temp): refuse rather than destroy it when there is no room
-    const room = this.hand.filter((x) => x == null).length + this.temp.filter((x) => x == null).length + (loc.area === 'hand' || loc.area === 'temp' ? 1 : 0);
-    if ((piece.items || []).length > room) return fail(ERR.HAND_FULL, 'no room for the equipment');
+    // ★ 2026-10-22（owner）：装备放不下时**不再拒绝出售**（一个干员叠了好几把锤子时手牌放不下，玩家就卖不掉了）。
+    //   现在照常卖：能放进手牌/整备区的照放，放不下的按该装备的 price 折算成资金，并弹一条提示。
+    // ★ 2026-10-22（owner）：放不下的装备**直接销毁**（不折算资金）——只是为了让干员能卖出去。
+    const itemList = piece.items || [];
     this._detach(loc);
     this.removeTokensOf(piece.uid);
-    for (const it of piece.items || []) {
-      if (!this.stow(it, { allowTemp: true })) this.m.log.warn?.(`[match ${this.m.roomCode}] ${this.playerId}: item ${it.id} lost on sell (no space)`);
+    let itemDestroyed = 0;
+    for (const it of itemList) {
+      if (this.stow(it, { allowTemp: true })) continue;
+      itemDestroyed++;
     }
     piece.items = [];
+    if (itemDestroyed > 0) this.m.toast(this, 'warn', `装备放不下：${itemDestroyed} 件已销毁`);
     this.returnCopies(piece);
     const ev = { piece, gain: this.gd.sellPrice(piece.id) };
     this.m.dispatch(this, 'onSold', ev);

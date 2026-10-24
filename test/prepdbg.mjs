@@ -1,0 +1,16 @@
+﻿import { Match } from '../server/match/Match.js';
+import { getData } from '../server/data.js';
+import { getDefaultRegistry } from '../server/match/effectsMeta.js';
+const m=new Match({roomCode:'T',mode:'solo',difficulty:'ZHAJING',modeId:'mode_single_zhajing',seed:3,data:getData(),registry:getDefaultRegistry(),seats:[{seat:0,playerId:'p1',name:'t',isBot:false,connected:true}],send:()=>true,broadcast:()=>{},onEnd:()=>{}});
+m.phase='PREP'; m.round=1;
+const ps=m.players.get('p1');
+const piece=ps.newPiece('chess','chess_zj_amoris_a');
+const cells=[...ps.deployMap()].filter(([,cls])=>cls==='melee').map(([k])=>k);
+ps.board.set(cells[0],piece); ps.recompute();
+ps.layers.mujicaShip=4;
+console.log('before layers', JSON.stringify(ps.layers), '| pending', JSON.stringify(ps.pendingFunds));
+const r=m.dispatcher.dispatch(ps,'onPrepEnd',{piece, where:'board', kind:'garrison'});
+console.log('dispatch 返回', JSON.stringify(r));
+console.log('after layers', JSON.stringify(ps.layers), '| pending', JSON.stringify(ps.pendingFunds));
+console.log('errors', m.dispatcher.errors);
+m.dispose();

@@ -1,4 +1,4 @@
-// server/sim/content/ejibian.js — 炸惊模拟 规则14「敌方惊变」(ejibian_*) 的实际效果。
+﻿// server/sim/content/ejibian.js — 炸惊模拟 规则14「敌方惊变」(ejibian_*) 的实际效果。
 //
 // 抽卡本身在 Match 里（match/match/phases.js 的 enterEnemyJibian：按 jibian.rarityWeights 摇稀有度 → 从
 // modes[*].enemyJibian.pool 里抽一张 → 播 flickerMs + resultMs 的揭示动画）；本文件负责「抽到之后到底发生什么」。
@@ -22,6 +22,7 @@
 //       ejibian_douququ           斗蛐蛐        10% 概率复刻我方随机单位的数值
 //       ejibian_gaodingtouer      搞定他们的头儿 领袖生命 −50%，道中敌人基础数值 +30%
 //       ejibian_sakaziwushu       萨卡兹巫术      所有敌人造成伤害时，附带该次伤害 10% 的凋亡损伤（owner 2026-10-18）
+//       ejibian_jiangshiweicheng  丧尸围城        出怪量 +100%（Match 侧：countMul ×2，owner 2026-10-24）
 //   * Match 侧（出怪表 / 波次：入职测试把小怪换成源石虫、鸭爵的第 7/8 回合、强行顶吗的同时进场，以及量变/质变的
 //     出怪量增减 —— 这几张要改的是「出什么、出几只、什么时候出」，改在 sim 里已经太晚。本文件只负责「算什么」
 //     （下面的 MATCH 段：matchJibianPlan / jibianDuckParams），「怎么改」落在 match/waves.js 的 templateSpawns
@@ -152,6 +153,144 @@ export function install(battle) {
     jibanRefresh(name);
   };
 
+  // =============================================================================================================
+  // 隐秘惊变（boss 专属，owner 2026-10-24）—— 只在「隐秘核心」前抽到，全部围绕 boss。
+  // =============================================================================================================
+  const HIDDEN_CARDS = Object.freeze({
+    snap: 'ejibian_hidden_snap',            // 打个响指：所有盟约层数 -50%（Match 侧）
+    absolute: 'ejibian_hidden_absolute',    // 绝对数值：boss 生命 +1000%、攻击 +100%
+    song: 'ejibian_hidden_song',            // 甜美歌喉：每 15 s 全场干员吃 boss 30% 攻击的神经损伤
+    sacrifice: 'ejibian_hidden_sacrifice',  // 献祭：玩家每 100 层盟约 → boss 生命 +1%
+    purge: 'ejibian_hidden_purge',          // 诛伏赐死：所有玩家某个（同一个）盟约层数变 0（Match 侧）
+    cannon: 'ejibian_hidden_cannon',        // 钢铁大炮：boss 防 +300%、攻 +200%、法抗 70
+    dps: 'ejibian_hidden_dps',              // dps 检测器：每 50 s boss 回复 10% 最大生命
+    puppet: 'ejibian_hidden_puppet',        // 傀儡把戏：血量降到 1% 时满血复活并强化（一次）
+    random: 'ejibian_hidden_random',        // 脚填数值：boss 基础数值随机 50%–999%
+  });
+
+  /** 该玩家所有盟约层数之和（献祭用）。 */
+  const totalLayers = () => {
+    let n = 0;
+    for (const ps of battle.players || []) {
+      const bonds = (ps && ps.bonds) || {};
+      for (const id of Object.keys(bonds)) n += Math.max(0, Number(bonds[id] && bonds[id].layers) || 0);
+    }
+    return n;
+  };
+  const liveBoss = () => (battle.enemies || []).find((e) => e && e.alive && isBoss(e)) || null;
+
+  // 出怪结算（boss 出场时定数值）：priority 20，跑在原有 enemySpawn 之后，乘区才盖得住
+  battle.on('enemySpawn', ({ enemy: e }) => {
+    if (!e || !e.alive || !isBoss(e)) return;
+    // 傀儡把戏换出来的新 boss：数值惊变不重复叠加（否则绝对数值 ×11 会再来一次）
+    if (battle._puppetSpawning) return;
+    if (has(HIDDEN_CARDS.absolute)) {
+      passiveBuff(battle, e, P + 'hidden:absolute', { hpMul: 11, atkMul: 2 });
+      battle.fx('grow', { x: e.x, y: e.y, id: e.id });
+    }
+    if (has(HIDDEN_CARDS.cannon)) {
+      // 法抗「变为 70」= 直接定基础值（不是乘区）
+      pinBase(e, { res: 70 });
+      passiveBuff(battle, e, P + 'hidden:cannon', { defMul: 4, atkMul: 3 });
+      battle.fx('grow', { x: e.x, y: e.y, id: e.id });
+    }
+    if (has(HIDDEN_CARDS.sacrifice)) {
+      const mul = 1 + Math.floor(totalLayers() / 100) * 0.01;
+      passiveBuff(battle, e, P + 'hidden:sacrifice', { hpMul: mul });
+    }
+    if (has(HIDDEN_CARDS.random)) {
+      const m = battle.rng.range(0.5, 9.99);
+      passiveBuff(battle, e, P + 'hidden:random', { hpMul: m, atkMul: m, defMul: m });
+      battle.fx('grow', { x: e.x, y: e.y, id: e.id });
+    }
+  }, { priority: 20 });
+
+  // 甜美歌喉：每 15 游戏秒，全场干员吃一次神经损伤（数值按当前 boss 攻击的 30%）
+  if (has(HIDDEN_CARDS.song)) {
+    battle.every(15, () => {
+      const boss = liveBoss();
+      if (!boss) return;
+      const amount = (Number(boss.s && boss.s.atk) || 0) * 0.3;
+      if (!(amount > 0)) return;
+      for (const op of battle.allyUnits || []) {
+        if (!op || !op.alive || op.side !== 'ally' || op.kind !== 'op') continue;
+        try { applyElement(battle, boss, op, { element: 'neural', amount, mul: 1, type: 'element' }); } catch { /* 目标离场 */ }
+      }
+    });
+  }
+
+  // dps 检测器：每 50 游戏秒，boss 回复 10% 最大生命
+  if (has(HIDDEN_CARDS.dps)) {
+    battle.every(50, () => {
+      const boss = liveBoss();
+      if (!boss) return;
+      const heal = (Number(boss.s && boss.s.maxHp) || 0) * 0.1;
+      if (heal > 0) battle.heal(boss, boss, heal, { self: true, tags: ['ejibian'] });
+    });
+  }
+
+  // 傀儡把戏：血量掉到 1% 及以下 → 立刻换成另一只随机 boss 并恢复满血（一次）。
+  //   ★ 2026-10-24 新引擎做法：真正 spawn 一只新 boss（同位置、继承血池），旧 boss 静默移除
+  //   （不走 death / leak，避免被当成"boss 被击杀"结算）；换 boss 期间给 battle 打标记，
+  //   让本文件自己的 boss 数值惊变（绝对数值 / 钢铁大炮 / 脚填数值 …）不要给新 boss 再叠一次。
+  if (has(HIDDEN_CARDS.puppet)) {
+    const swapBoss = (target) => {
+      // 候选领袖：优先用 Match 随 flags 下发的完整表（战场数据可能被裁剪到"本场用到的敌人"）
+      const raw = (battle.data && battle.data.raw && battle.data.raw.enemies) || {};
+      const all = (battle.flags && Array.isArray(battle.flags.bossKeys) && battle.flags.bossKeys.length)
+        ? battle.flags.bossKeys
+        : Object.keys(raw).filter((k) => raw[k] && String(raw[k].rank || '').toUpperCase() === 'BOSS');
+      const skip = new Set([target.defId, target.def && target.def.key, target.name]);
+      const keys = all.filter((k) => !skip.has(k) && !skip.has('enemy_' + k));
+      if (!keys.length) return false;
+      const key = keys[Math.floor(battle.rng() * keys.length)];
+      const pool = target.bossPool || null;
+      const pos = [target.y, target.x];
+      battle._puppetSpawning = true;
+      let nb = null;
+      try { nb = battle.spawnEnemy(key, { pos, tag: 'boss', mods: target.mods || undefined }); } finally { battle._puppetSpawning = false; }
+      if (!nb) return false;
+      if (pool) {
+        nb.bossPool = pool;
+        // ★ 共享血池：这刀伤害的记账可能在本回调之后才落账，所以回满要做两次（立即 + 下一帧补一次），
+        //   否则血池会被本跳的扣血再拉回 1%。
+        pool.hp = pool.maxHp;
+        if (nb.base) { nb.base.maxHp = pool.maxHp; nb.markDirty(); }
+        nb.hp = nb.s ? nb.s.maxHp : nb.hp;
+      }
+      // 静默移除旧 boss：不触发 death / leak，也不让它再被同步/计数
+      target.alive = false;
+      target.hp = 0;
+      target.bossPool = null;
+      battle.enemies = (battle.enemies || []).filter((x) => x !== target);
+      battle.units = (battle.units || []).filter((x) => x !== target);
+      battle._enemiesDirty = true;
+      battle.fx('appear', { x: nb.x, y: nb.y, id: nb.id });
+      return true;
+    };
+    let puppetUsed = false;
+    battle.on('damaged', ({ target }) => {
+      if (puppetUsed || !target || !target.alive || !isBoss(target)) return;
+      const max = Number(target.s && target.s.maxHp) || 0;
+      if (!(max > 0) || target.hp / max > 0.01) return;
+      puppetUsed = true;
+      const poolRef = target.bossPool || null;
+      // 换 boss（等这一跳伤害的账记完），随后把共享血池补满 —— 这几个 after 全部注册在外层，
+      //   不嵌套在另一个 after 里（嵌套注册会在外层回调结束时被一起清掉）。
+      battle.after(0, () => { if (!swapBoss(target)) puppetUsed = false; });
+      const fill = () => {
+        if (!poolRef || !(poolRef.maxHp > 0)) return;
+        poolRef.hp = poolRef.maxHp;
+        const nb = (battle.enemies || []).find((x) => x && x.alive && isBoss(x));
+        if (!nb) return;
+        if (nb.base) { nb.base.maxHp = poolRef.maxHp; nb.markDirty(); }
+        nb.hp = nb.s ? nb.s.maxHp : nb.hp;
+      };
+      battle.after(0.05, fill);
+      battle.after(0.3, fill);
+      battle.after(0.8, fill);
+    });
+  }
   // ---------------------------------------------------------------------------------------------------------------
   // 出怪结算：priority 10 —— 在 enemies.js(100) / bosses.js(90) 的建怪之后跑，数值才盖得住
   // ---------------------------------------------------------------------------------------------------------------
@@ -289,6 +428,7 @@ export const MATCH_CARDS = Object.freeze({
   sameTime: 'ejibian_qiangxingdingma',   // 强行顶吗
   slime: 'ejibian_ruzhiceshi',           // 入职测试
   duck: 'ejibian_yajue',                 // 谁选的鸭爵？？
+  horde: 'ejibian_jiangshiweicheng',      // 丧尸围城（owner 2026-10-24）：出怪量 +100%
 });
 
 /** 源石虫（入职测试把小怪换成它；enemies.json 的基础款）。 */
@@ -304,6 +444,8 @@ export const RUZHI_SLIME_TOTAL = 100;
 /** 出怪量乘区（牌面「增加 40%」/「减少 40%」——后者 2026-10-17 用户从 20% 改成 40%）。 */
 export const LIANGBIAN_COUNT_MUL = 1.4;
 export const ZHIBIAN_COUNT_MUL = 0.6;
+/** 丧尸围城（传奇，owner 2026-10-24）：出怪量 +100% ⇒ ×2，与量变/质变的乘区相乘。 */
+export const HORDE_COUNT_MUL = 2;
 /** 鸭爵「神秘顾客」被拉满的回合（牌面「第 7.8 回合时」）。 */
 export const YAJUE_ROUNDS = Object.freeze([7, 8]);
 /**
@@ -355,7 +497,9 @@ export function heavenTimeLimit(battle, base) {
 export function matchJibianPlan(rng, round, cards) {
   const has = cardSet(cards);
   if (!has.size) return null;
-  const countMul = (has.has(MATCH_CARDS.countUp) ? LIANGBIAN_COUNT_MUL : 1) * (has.has(MATCH_CARDS.countDown) ? ZHIBIAN_COUNT_MUL : 1);
+  const countMul = (has.has(MATCH_CARDS.countUp) ? LIANGBIAN_COUNT_MUL : 1)
+    * (has.has(MATCH_CARDS.countDown) ? ZHIBIAN_COUNT_MUL : 1)
+    * (has.has(MATCH_CARDS.horde) ? HORDE_COUNT_MUL : 1);
   const sameTime = has.has(MATCH_CARDS.sameTime);
   const slime = has.has(MATCH_CARDS.slime) && jibianRoll(rng, round) < RUZHI_CHANCE;
   if (countMul === 1 && !sameTime && !slime) return null;
@@ -380,4 +524,39 @@ export function jibianDuckParams(p, { round, cards } = {}) {
   // ★ 2026-10-13（用户）：不是"换满上限"（官方上限只有 2 ✗，所以第 7/8 回合也最多换 2 只 ✗），
   //   而是【换掉全部候选】—— `replaceAll` 由 duckReplace 读取（候选定义不变：非领袖 / 非飞行 / 非器物 / 未换过）。
   return { ...p, min: hi, max: hi, minweight: 0, maxweight: 1, replaceAll: true };
+}
+
+/**
+ * 隐秘惊变的 **Match 侧**结算（抽到即发生，作用于玩家的盟约层数）：
+ *   · 打个响指：所有玩家的所有盟约层数 ×0.5（向下取整）
+ *   · 诛伏赐死：选一个「总和最高」的盟约，把所有玩家在该盟约上的层数清零（全场同一个）
+ * @param {any} match @param {string[]} ids 抽到的卡 id
+ */
+export function applyHiddenMatchCards(match, ids) {
+  if (!match || !Array.isArray(ids) || !ids.length) return;
+  const set = new Set(ids);
+  const players = match.players ? [...match.players.values()] : [];
+  if (set.has('ejibian_hidden_snap')) {
+    for (const ps of players) {
+      if (!ps || !ps.layers) continue;
+      for (const id of Object.keys(ps.layers)) {
+        const v = Math.max(0, Math.floor((Number(ps.layers[id]) || 0) * 0.5));
+        try { ps.setLayers(id, v, { reason: 'ejibian' }); } catch { ps.layers[id] = v; }
+      }
+    }
+  }
+  if (set.has('ejibian_hidden_purge')) {
+    const totals = new Map();
+    for (const ps of players) {
+      for (const [id, v] of Object.entries((ps && ps.layers) || {})) totals.set(id, (totals.get(id) || 0) + Math.max(0, Number(v) || 0));
+    }
+    let best = null, bestV = -1;
+    for (const [id, v] of totals) if (v > bestV) { best = id; bestV = v; }
+    if (best) {
+      for (const ps of players) {
+        if (!ps || !ps.layers || !(Number(ps.layers[best]) > 0)) continue;
+        try { ps.setLayers(best, 0, { reason: 'ejibian' }); } catch { ps.layers[best] = 0; }
+      }
+    }
+  }
 }

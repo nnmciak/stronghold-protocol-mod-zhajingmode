@@ -83,6 +83,26 @@ export function hasClipping(data) {
 }
 
 /**
+ * Only eyelid clips can use the centre-point fallback below. Other masks cut a moving image, e.g. Mortis's
+ * 提线的本我 mirror reflection (Front2 / Front3 → F_Weapon_Side2 / F_Weapon_Side). Its reflection is a long
+ * strip: hiding/showing the whole strip by its centre lets it spill across her body. Keep the original stencil
+ * for any skeleton with a non-eye clip, including unknown clip names, at every quality/crowd setting.
+ */
+export function requiresExactClipping(data) {
+  for (const skin of data?.skins || []) {
+    const list = typeof skin.getAttachments === 'function' ? skin.getAttachments() : [];
+    for (const e of list) {
+      const a = e?.attachment;
+      if (!isClip(a)) continue;
+      const start = data?.slots?.[e.slotIndex]?.name || a.name || '';
+      const end = a.endSlot?.name || '';
+      if (!/eye/i.test(start) || !/eye/i.test(end)) return true;
+    }
+  }
+  return false;
+}
+
+/**
  * Is (x, y) inside the polygon of `n` points `pts` (flat [x0, y0, x1, y1, …])? Ray casting (PR #384 by @Convey123).
  */
 export function pointInPolygon(x, y, pts, n) {
@@ -309,8 +329,10 @@ export class SpineActor {
      * Clipping attachments render as stencil masks (≈1.5 ms of GPU each per frame on tiled GPUs): such skeletons
      * are drawn through the impostor atlas while clipping is on, and clipping is switched off when too many of them
      * share a field (app.js budget) — then _eyeMaskFallback hides what a closed eyelid would cut (GitHub #177).
+     * A non-eye clip must stay exact: the eyelid fallback cannot crop reflections or other large moving art.
      */
     this.clipped = hasClipping(spineData);
+    this.exactClipping = this.clipped && requiresExactClipping(spineData);
     this.clipOn = true;
     this._clipHidden = new Set(); // slot indexes the eyelid fallback hid in its last pass (_eyeMaskFallback)
     if (this.clipped) {
@@ -349,9 +371,9 @@ export class SpineActor {
     this._play(this._idleName(), true);
   }
 
-  /** Enable / disable the skeleton's clipping masks. */
+  /** Apply the clipping budget; non-eye masks always retain their original stencil. */
   setClipping(on) {
-    on = !!on;
+    on = !!on || !!this.exactClipping;
     if (!this.clipped || on === this.clipOn) return;
     this.clipOn = on;
     if (on) this._showClipHidden();   // the stencil takes over from the eyelid fallback

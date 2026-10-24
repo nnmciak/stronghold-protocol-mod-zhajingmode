@@ -26,6 +26,14 @@ export class PlayerRound {
     // (mode.interest { capital: 5, interest: 1, max: 2 }), the same shape as the 坎诺特 band's `coin_carry_over`
     // (bands/meta.js K.coin_carry_over), which stacks on top of it. It is folded into ev.income so every onIncome hook
     // and the client see one number; `interestCapped` marks the 「封顶」 case (the bonus already sits at `max`).
+    // ★ 2026-10-23 敌方惊变「惊天魔盗团」：**上回合剩余资金清 0**。
+    //   放在利息计算之前 —— 清空后本金为 0，本轮只发基础收入，也不会再算利息。
+    const ejCards = Array.isArray(this.m && this.m.enemyJibianCards) ? this.m.enemyJibianCards : [];
+    if (ejCards.includes('ejibian_jingtianmodaotuan') && this.funds > 0) {
+      const lost = this.funds;
+      this.funds = 0;
+      try { this.m.toast(this, 'warn', `惊天魔盗团：上回合剩余 ${lost} 资金被清空`); } catch { /* toast 失败不影响 */ }
+    }
     const it = this.gd.interest;
     const held = Math.max(0, Math.trunc(Number(this.funds) || 0));
     const interest = it && held >= it.capital ? Math.min(it.max, Math.floor(held / it.capital) * it.interest) : 0;

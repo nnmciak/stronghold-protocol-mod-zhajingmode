@@ -1,0 +1,2626 @@
+{
+  "sources": [
+    {
+      "path": ".cache/mujica-source/audio_data.json",
+      "url": "https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/audio_data.json",
+      "transport": "existing",
+      "bytes": 8180533,
+      "sha256": "8e71a0da5a4033b4ca58d4178c2203aac8f53b66e72e6325505a7d486aef073c"
+    },
+    {
+      "path": ".cache/mujica-source/charword_table.json",
+      "url": "https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/master/zh_CN/gamedata/excel/charword_table.json",
+      "transport": "existing",
+      "bytes": 11224032,
+      "sha256": "5d630ffb7973021f351db14e0d9ac112cd58e741468f9f6e64fb2e11c8e70685"
+    },
+    {
+      "path": "public/assets/char/avatar/char_4182_oblvns.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4182_oblvns.png",
+      "transport": "existing",
+      "bytes": 63083,
+      "sha256": "2da1ccdcc45a5b12bcb8d3e4ac3f8d1cb9b09a8712f972c3d87fdf89996bb562"
+    },
+    {
+      "path": "public/assets/char/avatar/char_4183_mortis.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4183_mortis.png",
+      "transport": "existing",
+      "bytes": 48143,
+      "sha256": "7ffa8312d860a18fdf31753e25e414185edfdc642d92c157b6f09f68a592ab67"
+    },
+    {
+      "path": "public/assets/char/avatar/char_4184_dolris.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4184_dolris.png",
+      "transport": "existing",
+      "bytes": 52402,
+      "sha256": "b56709359fcfb6a21175813d879113ce74aaa98c775efa8a9ae33bcb8061f0b5"
+    },
+    {
+      "path": "public/assets/char/avatar/char_4182_oblvns_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4182_oblvns_2.png",
+      "transport": "existing",
+      "bytes": 67747,
+      "sha256": "5cec24bd030d53c2f0fe142c901ad77ab5672843d849fc425db61573f4caf90e"
+    },
+    {
+      "path": "public/assets/char/avatar/char_4183_mortis_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4183_mortis_2.png",
+      "transport": "existing",
+      "bytes": 64344,
+      "sha256": "190774af2749a8f8da041732a584e0be450ac4b4baaa49b2c254be8e857d8aa1"
+    },
+    {
+      "path": "public/assets/char/avatar/char_4184_dolris_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4184_dolris_2.png",
+      "transport": "existing",
+      "bytes": 62499,
+      "sha256": "a52e13ecdffa51404dcf4f3d8551de2f21fc538d428c8eec68da31c137818ea3"
+    },
+    {
+      "path": "public/assets/char/portrait/char_4182_oblvns_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4182_oblvns_1.png",
+      "transport": "existing",
+      "bytes": 122223,
+      "sha256": "feaeb125a94d4d09044935b76772ceaefbac8058e522c2b153aa23b084560ce3"
+    },
+    {
+      "path": "public/assets/char/portrait/char_4183_mortis_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4183_mortis_1.png",
+      "transport": "existing",
+      "bytes": 108377,
+      "sha256": "16dc4f2bf8f8ccef2213f6683214ee8277a63cdc272d149b2bd56b09cb355504"
+    },
+    {
+      "path": "public/assets/char/portrait/char_4184_dolris_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4184_dolris_1.png",
+      "transport": "existing",
+      "bytes": 109748,
+      "sha256": "57afead932cd09985e84880f8e2527e44b76084d01f44319069dbfc1a19fab0e"
+    },
+    {
+      "path": "public/assets/char/portrait/char_4182_oblvns_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4182_oblvns_2.png",
+      "transport": "existing",
+      "bytes": 127540,
+      "sha256": "0d6cc80aa6cc9fd4fc65ecf17dc2ec96c74ecc37dfb59e9018ff8d02efb28f4d"
+    },
+    {
+      "path": "public/assets/char/portrait/char_4183_mortis_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4183_mortis_2.png",
+      "transport": "existing",
+      "bytes": 130558,
+      "sha256": "fb6a0b7aae4c9c67df8a9492ba236e2df9060ba6ae990fbc274744453a00806c"
+    },
+    {
+      "path": "public/assets/char/portrait/char_4184_dolris_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4184_dolris_2.png",
+      "transport": "existing",
+      "bytes": 106544,
+      "sha256": "0ea0293e5363c0ee902d7823303eceb6c615500f7cb7063066bb3a7f8008d66e"
+    },
+    {
+      "path": "public/assets/spine/op/char_4184_dolris/front/char_4184_dolris.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4184_dolris/char_4184_dolris/Front/char_4184_dolris.skel",
+      "transport": "existing",
+      "bytes": 228694,
+      "sha256": "802f881d6de4c2b3b4a93d15e390ccd19fcf0ea103d776dfcf27f76b78c1fd2c"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/front/char_4183_mortis.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis/Front/char_4183_mortis.skel",
+      "transport": "existing",
+      "bytes": 399993,
+      "sha256": "6cd512fb51f9828f678d92a88af9f0467f2ceb6ce210204cd90e9af2a7df4e27"
+    },
+    {
+      "path": "public/assets/spine/op/char_4184_dolris/front/char_4184_dolris.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4184_dolris/char_4184_dolris/Front/char_4184_dolris.atlas",
+      "transport": "existing",
+      "bytes": 11015,
+      "sha256": "2ee110bfa7d469db2b247859574b6c37d3b8974c4ea250341475ac9f7e715bf9"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/front/char_4182_oblvns.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns/Front/char_4182_oblvns.skel",
+      "transport": "existing",
+      "bytes": 1071707,
+      "sha256": "42bd0999dceb3157cdeab8d896163519cd8fafd93d702d10b83014934bafa3d8"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/front/char_4183_mortis.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis/Front/char_4183_mortis.atlas",
+      "transport": "existing",
+      "bytes": 14662,
+      "sha256": "2ddf930210896b248ff01ec0182b0579741274caf64f281c2c5b36c3a9ba9ed3"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/front/char_4182_oblvns.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns/Front/char_4182_oblvns.atlas",
+      "transport": "existing",
+      "bytes": 19845,
+      "sha256": "2806e2bd11ffa9372d5829df591fd9821936057c94383121e72d6f4f7564d3e9"
+    },
+    {
+      "path": "public/assets/spine/op/char_4184_dolris/front/char_4184_dolris.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4184_dolris/char_4184_dolris/Front/char_4184_dolris.png",
+      "transport": "existing",
+      "bytes": 129587,
+      "sha256": "cd31b1f258403ba7ebfcf857ac9d9fcf4d28c2a6393ec757b462dd83d9508ad5"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/front/char_4183_mortis.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis/Front/char_4183_mortis.png",
+      "transport": "existing",
+      "bytes": 229162,
+      "sha256": "e44459b8858fb8560b9f9672712bf3bf340a872c52ba4bda5770a86ae1192bf3"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/front/char_4182_oblvns.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns/Front/char_4182_oblvns.png",
+      "transport": "existing",
+      "bytes": 332918,
+      "sha256": "b0e6f16fd24c15a68d48d5f15d7d409dfc43b3caa983843dfb2f35b0effab94e"
+    },
+    {
+      "path": "public/assets/char/skin_avatar/char_4184_dolris_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4184_dolris_avemujica%231.png",
+      "transport": "existing",
+      "bytes": 62541,
+      "sha256": "c057404868468f78e46001099a1cff7537cffc25b9e78bbc2897c00b7e082404"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/back/char_4183_mortis.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis/Back/char_4183_mortis.skel",
+      "transport": "existing",
+      "bytes": 319847,
+      "sha256": "972fb5a075dcd3df1f83941af06fb5ffa3ff151dd24d897bf7158c24335340fa"
+    },
+    {
+      "path": "public/assets/char/skin_portrait/char_4184_dolris_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4184_dolris_avemujica%231.png",
+      "transport": "existing",
+      "bytes": 118612,
+      "sha256": "8b0c82ab0ccc7214fad37b30a7eacfc483876ebe5646f0de4d7e624d83e3a69d"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/back/char_4183_mortis.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis/Back/char_4183_mortis.atlas",
+      "transport": "existing",
+      "bytes": 14662,
+      "sha256": "2ddf930210896b248ff01ec0182b0579741274caf64f281c2c5b36c3a9ba9ed3"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/back/char_4182_oblvns.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns/Back/char_4182_oblvns.skel",
+      "transport": "existing",
+      "bytes": 1002567,
+      "sha256": "27670b2ef314387f4d4b51896e1f67b3d07b32fc858b6ada8bdadecd7169160d"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/back/char_4182_oblvns.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns/Back/char_4182_oblvns.atlas",
+      "transport": "existing",
+      "bytes": 19845,
+      "sha256": "2806e2bd11ffa9372d5829df591fd9821936057c94383121e72d6f4f7564d3e9"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/back/char_4183_mortis.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis/Back/char_4183_mortis.png",
+      "transport": "existing",
+      "bytes": 229162,
+      "sha256": "e44459b8858fb8560b9f9672712bf3bf340a872c52ba4bda5770a86ae1192bf3"
+    },
+    {
+      "path": "public/assets/spine/op/char_4184_dolris/char_4184_dolris_avemujica_1/front/char_4184_dolris_avemujica_1.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4184_dolris/char_4184_dolris_avemujica_1/Front/char_4184_dolris_avemujica_1.skel",
+      "transport": "existing",
+      "bytes": 279258,
+      "sha256": "6fbd6b38084e727aee6231a3c6284484e4775c8b6617ab5e8324231b6b72af7c"
+    },
+    {
+      "path": "public/assets/char/skin_avatar/char_4183_mortis_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4183_mortis_avemujica%231.png",
+      "transport": "existing",
+      "bytes": 72596,
+      "sha256": "ce90229a821fe7e0a23787f07d0e6a2da43ee205f2dae909629b33141ba87248"
+    },
+    {
+      "path": "public/assets/spine/op/char_4184_dolris/char_4184_dolris_avemujica_1/front/char_4184_dolris_avemujica_1.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4184_dolris/char_4184_dolris_avemujica_1/Front/char_4184_dolris_avemujica_1.atlas",
+      "transport": "existing",
+      "bytes": 11953,
+      "sha256": "7111018e00e8ed98aecbeaef212e7e8fc51f9d3840e638300d3eece896c6ad86"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/back/char_4182_oblvns.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns/Back/char_4182_oblvns.png",
+      "transport": "existing",
+      "bytes": 332918,
+      "sha256": "b0e6f16fd24c15a68d48d5f15d7d409dfc43b3caa983843dfb2f35b0effab94e"
+    },
+    {
+      "path": "public/assets/char/skin_portrait/char_4183_mortis_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4183_mortis_avemujica%231.png",
+      "transport": "existing",
+      "bytes": 131746,
+      "sha256": "a0e62a03ab690df1dbdb3aba78ece2600333eb3f49616c9138607516a01afe40"
+    },
+    {
+      "path": "public/assets/spine/op/char_4184_dolris/char_4184_dolris_avemujica_1/front/char_4184_dolris_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4184_dolris/char_4184_dolris_avemujica_1/Front/char_4184_dolris_avemujica_1.png",
+      "transport": "existing",
+      "bytes": 186268,
+      "sha256": "43b9dcd3226cfc09046faa61cb538235c79cef92f51fd8b3ac4bb2bac9686ddb"
+    },
+    {
+      "path": "public/assets/char/skin_avatar/char_4182_oblvns_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4182_oblvns_avemujica%231.png",
+      "transport": "existing",
+      "bytes": 68635,
+      "sha256": "57931cbfaac64d44d7ed33d3b4c41d5b7468c103720c1f0e4de30dcadd2d738c"
+    },
+    {
+      "path": "public/assets/char/skin_portrait/char_4182_oblvns_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4182_oblvns_avemujica%231.png",
+      "transport": "existing",
+      "bytes": 127111,
+      "sha256": "6d6d279741b40ba4c963d660c12474abb9ed4813ad809d2dbebbe8dfa6aa35c1"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/char_4183_mortis_avemujica_1/front/char_4183_mortis_avemujica_1.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis_avemujica_1/Front/char_4183_mortis_avemujica_1.skel",
+      "transport": "existing",
+      "bytes": 736831,
+      "sha256": "725dc77d31fafdfe5a83018c63dc95973df24e52f6519dd5f62385c68ce867b4"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/char_4183_mortis_avemujica_1/front/char_4183_mortis_avemujica_1.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis_avemujica_1/Front/char_4183_mortis_avemujica_1.atlas",
+      "transport": "existing",
+      "bytes": 21932,
+      "sha256": "6412aef5378bd7aab1ca33cc914c38eb135dab167161def4a98f3b36af258780"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/char_4182_oblvns_avemujica_1/front/char_4182_oblvns_avemujica_1.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns_avemujica_1/Front/char_4182_oblvns_avemujica_1.skel",
+      "transport": "existing",
+      "bytes": 935689,
+      "sha256": "277efc237e29b944ace1ebdab5214ba0368bce4ec47b18cebf2457727f3d6093"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/char_4182_oblvns_avemujica_1/front/char_4182_oblvns_avemujica_1.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns_avemujica_1/Front/char_4182_oblvns_avemujica_1.atlas",
+      "transport": "existing",
+      "bytes": 11363,
+      "sha256": "1e11003b25069e27c0bd72b303b3d78eba63425eacbda99cec5ff1e3e73b8127"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/char_4183_mortis_avemujica_1/front/char_4183_mortis_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis_avemujica_1/Front/char_4183_mortis_avemujica_1.png",
+      "transport": "existing",
+      "bytes": 402444,
+      "sha256": "c90ed26b9bfe5641ec1088729defb166fa9291ea01e89e33687c269601398df6"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/char_4182_oblvns_avemujica_1/front/char_4182_oblvns_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns_avemujica_1/Front/char_4182_oblvns_avemujica_1.png",
+      "transport": "existing",
+      "bytes": 267744,
+      "sha256": "8dfb13852b2fa2e9ebab56d2eb7b3e8f133b608c64f8836c49ab37e123b4a14f"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/char_4183_mortis_avemujica_1/back/char_4183_mortis_avemujica_1.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis_avemujica_1/Back/char_4183_mortis_avemujica_1.skel",
+      "transport": "existing",
+      "bytes": 590230,
+      "sha256": "af795bbaec66b6a61eb7d683ae5e1fc8da11d39c3ea732ae210d36bfdf1001b1"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/char_4183_mortis_avemujica_1/back/char_4183_mortis_avemujica_1.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis_avemujica_1/Back/char_4183_mortis_avemujica_1.atlas",
+      "transport": "existing",
+      "bytes": 21930,
+      "sha256": "6e3ea9de3fcb0fd7cf39785a95aab5599e03e268ac0c764ec16f612f5fad48c3"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/char_4182_oblvns_avemujica_1/back/char_4182_oblvns_avemujica_1.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns_avemujica_1/Back/char_4182_oblvns_avemujica_1.skel",
+      "transport": "existing",
+      "bytes": 712199,
+      "sha256": "478b54b4b3463f4f09c16223bf6e0d163569095e55cab4b29e09d23916bce41d"
+    },
+    {
+      "path": "public/assets/spine/op/char_4183_mortis/char_4183_mortis_avemujica_1/back/char_4183_mortis_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4183_mortis/char_4183_mortis_avemujica_1/Back/char_4183_mortis_avemujica_1.png",
+      "transport": "existing",
+      "bytes": 424769,
+      "sha256": "73c7c934d3f5b6821b3b604de3047a7244f453471367cb626329956334249450"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/char_4182_oblvns_avemujica_1/back/char_4182_oblvns_avemujica_1.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns_avemujica_1/Back/char_4182_oblvns_avemujica_1.atlas",
+      "transport": "existing",
+      "bytes": 8439,
+      "sha256": "a48fed03b61619dc98a5a4d1638a71feacaf950398c13bf30c522a45eae14780"
+    },
+    {
+      "path": "public/assets/spine/op/char_4182_oblvns/char_4182_oblvns_avemujica_1/back/char_4182_oblvns_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4182_oblvns/char_4182_oblvns_avemujica_1/Back/char_4182_oblvns_avemujica_1.png",
+      "transport": "existing",
+      "bytes": 228117,
+      "sha256": "948d9a7224ae655763e1b4a523eb9dcdff4414119e44d8d49e70d421958e4521"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4184_dolris_1.png",
+      "url": "https://media.prts.wiki/a/af/%E7%AB%8B%E7%BB%98_%E4%B8%89%E8%A7%92%E5%88%9D%E5%8D%8E_1.png",
+      "transport": "existing",
+      "bytes": 540339,
+      "sha256": "83591dfed02e8fd9af44f1cc629c88691bc31ec99fd2f6a1b3cfe45ec8d4b033"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4183_mortis_1.png",
+      "url": "https://media.prts.wiki/c/c3/%E7%AB%8B%E7%BB%98_%E8%8B%A5%E5%8F%B6%E7%9D%A6_1.png",
+      "transport": "existing",
+      "bytes": 588673,
+      "sha256": "3cbc30447a0aa1a9b13975e33899d1712e307901fe2c8481f1620c90755829ef"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4184_dolris_2.png",
+      "url": "https://media.prts.wiki/1/1d/%E7%AB%8B%E7%BB%98_%E4%B8%89%E8%A7%92%E5%88%9D%E5%8D%8E_2.png",
+      "transport": "existing",
+      "bytes": 7303763,
+      "sha256": "70968183a3844f25a7488daebe71ea168ba02e530bce7f156ab0323853374d4e"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4183_mortis_2.png",
+      "url": "https://media.prts.wiki/6/67/%E7%AB%8B%E7%BB%98_%E8%8B%A5%E5%8F%B6%E7%9D%A6_2.png",
+      "transport": "existing",
+      "bytes": 3490123,
+      "sha256": "546514c43c820c9e3d038d0f183fa3aa44cd6768654b276a3dbfdc1f81181130"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4184_dolris_skin1.png",
+      "url": "https://media.prts.wiki/5/5a/%E7%AB%8B%E7%BB%98_%E4%B8%89%E8%A7%92%E5%88%9D%E5%8D%8E_skin1.png",
+      "transport": "existing",
+      "bytes": 5989205,
+      "sha256": "488403d3230b4530a991784061cad696ca8813f0bc977de7371ad1c0d5902127"
+    },
+    {
+      "path": "public/assets/skill/skchr_dolris_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_dolris_1.png",
+      "transport": "existing",
+      "bytes": 31134,
+      "sha256": "725d62e4343276d4c8568c91e906ab9488b3c82833c89256fce5697e6c305fe3"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4183_mortis_skin1.png",
+      "url": "https://media.prts.wiki/8/88/%E7%AB%8B%E7%BB%98_%E8%8B%A5%E5%8F%B6%E7%9D%A6_skin1.png",
+      "transport": "existing",
+      "bytes": 6550910,
+      "sha256": "2fea00f4646f82702975c8dbeb7fdb5695710ef42239da95ac405e624cb0840c"
+    },
+    {
+      "path": "public/assets/skill/skchr_dolris_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_dolris_2.png",
+      "transport": "existing",
+      "bytes": 33638,
+      "sha256": "c338a000768bd34758b7620d5770194321409049e10449312f9882fce15449fd"
+    },
+    {
+      "path": "public/assets/skill/skchr_mortis_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_mortis_1.png",
+      "transport": "existing",
+      "bytes": 27761,
+      "sha256": "24fe8b994516653c69b93ee8f08c2c31718441fa77ca3ad14c8b7a0fe021e5fb"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_011.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_011.mp3",
+      "transport": "existing",
+      "bytes": 64174,
+      "sha256": "969ab19b5b9bc645c04356ef9d4be406e5cce4cc8c8e151dcace705e82e8824d"
+    },
+    {
+      "path": "public/assets/skill/skchr_mortis_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_mortis_2.png",
+      "transport": "existing",
+      "bytes": 30759,
+      "sha256": "4f32cb0ac795505a6c4e33fa866e37357257d1f463e61bfeeeb595aee2e9dc20"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_017.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_017.mp3",
+      "transport": "existing",
+      "bytes": 27394,
+      "sha256": "dfe8c8e6a6b44e52456e2f7fc50cb3b4ae67888ea2e00ea8f844b763e124a6a8"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_011.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_011.mp3",
+      "transport": "existing",
+      "bytes": 30111,
+      "sha256": "548516622ac9498d78e4a03d2eab15126021b9ed9ab10e4be9362cdda6300b4c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_018.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_018.mp3",
+      "transport": "existing",
+      "bytes": 41813,
+      "sha256": "fb05b0655fc18c8f4aaae02224a80a9b7771954724624695dee4c1fb2b52ae9d"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_017.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_017.mp3",
+      "transport": "existing",
+      "bytes": 6078,
+      "sha256": "352ab698abb434ee93876e65b19f2e963c084a7e24ba57859f3dd030cceed1f0"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_019.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_019.mp3",
+      "transport": "existing",
+      "bytes": 6078,
+      "sha256": "564305cec23ac1634cd51c62e55bff3b49ea924dd24587020a2b2f2c80ccd5e3"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_018.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_018.mp3",
+      "transport": "existing",
+      "bytes": 15691,
+      "sha256": "a4ff9d7ad3d5be5afc56d19d7f21d7078821872cdae70ff0414862c64f7d8bfc"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_020.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_020.mp3",
+      "transport": "existing",
+      "bytes": 30947,
+      "sha256": "6a8de1b29aff3c46caf32b1f52aada4d86d9f1c4c3eab649507461985af6c988"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_019.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_019.mp3",
+      "transport": "existing",
+      "bytes": 6914,
+      "sha256": "86b227d543c83a184d1e050a37fa6ce46559e2cee53ad90d1535dd82fba34341"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_021.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_021.mp3",
+      "transport": "existing",
+      "bytes": 6078,
+      "sha256": "a458554aaf0c8fc50f6103a2b8ef0c1c459cbf49ce59cd13a0c4dd79b6ae3487"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_020.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_020.mp3",
+      "transport": "existing",
+      "bytes": 15691,
+      "sha256": "57bdd238f35ec0598d0701f011d7fb483114403ce3fd1093baaabbae50b8368a"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_022.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_022.mp3",
+      "transport": "existing",
+      "bytes": 17363,
+      "sha256": "05e655011de1768c497694b183f7d6fd421d31c074a0d951e3ab4ed24874968d"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_021.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_021.mp3",
+      "transport": "existing",
+      "bytes": 14855,
+      "sha256": "6a0b0c73eba7c301aea3ae8e08ecf56439697bf06c94afa5ed6a7b5c605012a4"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_023.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_023.mp3",
+      "transport": "existing",
+      "bytes": 21960,
+      "sha256": "de31692e895f65cd885fcec146eb23043815eaa97cfdd379eb9c28cd3f2f2118"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_022.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_022.mp3",
+      "transport": "existing",
+      "bytes": 10884,
+      "sha256": "9952bf2b789ad3bbfd6a61389e95c0470fb548fcc6517239384c78c32ad0b0f4"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_024.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_024.mp3",
+      "transport": "existing",
+      "bytes": 21333,
+      "sha256": "d81508b31357ce6fe968dbd61ef3e1c14a4c314739521400f7ecc9ce98e49986"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_023.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_023.mp3",
+      "transport": "existing",
+      "bytes": 17363,
+      "sha256": "ce3481f445eb218cbcef3a239db7394577735e8f54863e473b5204cb34449b4c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_025.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_025.mp3",
+      "transport": "existing",
+      "bytes": 5660,
+      "sha256": "e517850e246fd752dad4ad5cc93cf4f5ac4068d3fc4bd8d1dac82d4e9fcf6ab6"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_024.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_024.mp3",
+      "transport": "existing",
+      "bytes": 14437,
+      "sha256": "7632dd423478daa187d9b7312dac139ab15ea6166538b074f00aa788cb409875"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_026.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_026.mp3",
+      "transport": "existing",
+      "bytes": 24886,
+      "sha256": "6c0465b101da0bc7fe0da1c43a029e2b0dc4954bf4802307a92ae81e1ef1cb3e"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_025.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_025.mp3",
+      "transport": "existing",
+      "bytes": 9213,
+      "sha256": "68e9ae6fa73b0808e058449ad731697cc5c29e722f6876ea23bb230fe1b75c15"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_027.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_027.mp3",
+      "transport": "existing",
+      "bytes": 7959,
+      "sha256": "d08bd2142fc351fbb9471414b57e60d967ccfa5ed6fc57679a59601cfc6abcc4"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_026.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_026.mp3",
+      "transport": "existing",
+      "bytes": 22796,
+      "sha256": "dd4d06c36b621fffc64bf722d75fbc97512222d577dbd66c9997cf3f42447bc3"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_028.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_028.mp3",
+      "transport": "existing",
+      "bytes": 8586,
+      "sha256": "aa91eb23fb210d0fa846faa3bd59d924d575d953608f1ba2896262517236844c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_027.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_027.mp3",
+      "transport": "existing",
+      "bytes": 16318,
+      "sha256": "8ac7aa53624e8b5f289b6479c2dc3e7bfa6f8acd015c4a68715b9b1cc8783c05"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_029.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_029.mp3",
+      "transport": "existing",
+      "bytes": 47874,
+      "sha256": "6a7ba8977038985c47294ef43dd21428d5a51bd45adedb812785f982f4d0983c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_028.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_028.mp3",
+      "transport": "existing",
+      "bytes": 14437,
+      "sha256": "678274275fd0d6755a2b5c7c24a90efaadd0819560e7ceb58c490da06701f2e8"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_030.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_030.mp3",
+      "transport": "existing",
+      "bytes": 23005,
+      "sha256": "2ebefcedeeb095af3ada7372900277e4a656863f182895dcdd6412cbfce4b78c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_029.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_029.mp3",
+      "transport": "existing",
+      "bytes": 7332,
+      "sha256": "3ed2dbfa76222f082b156a252a6e3c0b7ef14d4a2b4698fc2e9a1b215578f1af"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_031.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_031.mp3",
+      "transport": "existing",
+      "bytes": 21960,
+      "sha256": "1a14f625cc32ab0e94d8fda0ab7325ec601f1db76d87d2fdecb7888771e1f79c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_030.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_030.mp3",
+      "transport": "existing",
+      "bytes": 26349,
+      "sha256": "f8031e56c942b24a8700546e0899a5eb255bbfe5232412c44bde5997b4bedd82"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_032.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_032.mp3",
+      "transport": "existing",
+      "bytes": 35544,
+      "sha256": "689c67ef7481f471adf4d458051360fa51806d88e8fde6d22b90b663867c1011"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_031.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_031.mp3",
+      "transport": "existing",
+      "bytes": 25304,
+      "sha256": "9659145cf9b95eb33b85b19ac4186ad898377970f845aed1efe3f548fe9e7849"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_032.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_032.mp3",
+      "transport": "existing",
+      "bytes": 21333,
+      "sha256": "4f9d70b0f276dc74eefa1145dc706b43080abd03eecb6c420980b737fc8c1f43"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4182_oblvns_1.png",
+      "url": "https://media.prts.wiki/a/aa/%E7%AB%8B%E7%BB%98_%E4%B8%B0%E5%B7%9D%E7%A5%A5%E5%AD%90_1.png",
+      "transport": "existing",
+      "bytes": 656203,
+      "sha256": "d887a34eacd09b333b046dd5518d335e7b4301e717aeeee901ffb66224b0f872"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4182_oblvns_2.png",
+      "url": "https://media.prts.wiki/e/e1/%E7%AB%8B%E7%BB%98_%E4%B8%B0%E5%B7%9D%E7%A5%A5%E5%AD%90_2.png",
+      "transport": "existing",
+      "bytes": 7929207,
+      "sha256": "2460fe121cce630102dfb112d339ad2c43ff5fd7f92aea9c14ec80e240b62a04"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4182_oblvns_skin1.png",
+      "url": "https://media.prts.wiki/f/f4/%E7%AB%8B%E7%BB%98_%E4%B8%B0%E5%B7%9D%E7%A5%A5%E5%AD%90_skin1.png",
+      "transport": "existing",
+      "bytes": 4007758,
+      "sha256": "757e8730a8c54abc48c94cbd5c04015fb66fcfe48026a9f5fe8f7abcdf46bb8f"
+    },
+    {
+      "path": "public/assets/skill/skchr_oblvns_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_oblvns_1.png",
+      "transport": "existing",
+      "bytes": 33325,
+      "sha256": "0957ea568328f60bb2dc7aaad85a30398e28c011059a3e4c70e3565fad6b4148"
+    },
+    {
+      "path": "public/assets/skill/skchr_oblvns_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_oblvns_2.png",
+      "transport": "existing",
+      "bytes": 33324,
+      "sha256": "1d9ecdc9774f9af7834645a2efb2471b7be7180f3ab9cff1d649b3e99feeb9a5"
+    },
+    {
+      "path": "public/assets/skill/skchr_oblvns_3.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_oblvns_3.png",
+      "transport": "existing",
+      "bytes": 34790,
+      "sha256": "3c81b4f3e7db9ebb3b656a40b8b30b34a469d0f037d1e9233a363d97ed145df7"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_011.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_011.mp3",
+      "transport": "existing",
+      "bytes": 62711,
+      "sha256": "e1d5d3c2761fa0fad0695cfb3f9d1ebe996337c7dfb35c1fc12e9fea9e7dd065"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_017.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_017.mp3",
+      "transport": "existing",
+      "bytes": 18617,
+      "sha256": "90d74526ff481c4b72a273b15f1bd22ec3da1a2383b7873a8336cef2a8ffc69b"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_018.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_018.mp3",
+      "transport": "existing",
+      "bytes": 47247,
+      "sha256": "e4707fd0147ba533ba1e2a3f6112a88d7011af719febdf693e2cd2a5c9a91819"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_019.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_019.mp3",
+      "transport": "existing",
+      "bytes": 27603,
+      "sha256": "27c3dd34d897931bd7eb6f4f4c69f68676dda05f39aa31953e08d514e8525ef5"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_020.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_020.mp3",
+      "transport": "existing",
+      "bytes": 8168,
+      "sha256": "706c64c99f70d65f7aae5751a315eea25518a2e9dc1203726b31b3e0536187b7"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_021.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_021.mp3",
+      "transport": "existing",
+      "bytes": 43485,
+      "sha256": "8d5ed2ba2c1a798e94ed8bb4b33194654d1e4b09b0cc36a5c5b32dbd7885a02a"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_022.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_022.mp3",
+      "transport": "existing",
+      "bytes": 20080,
+      "sha256": "e0d411c82a28cdeda605700b6ef1db7072e8452577ddebf080da6148993726aa"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_023.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_023.mp3",
+      "transport": "existing",
+      "bytes": 11720,
+      "sha256": "a8e2fda9847796560f322890e3826207dc7c93bf8cafef3911029a3d9c331d7b"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_024.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_024.mp3",
+      "transport": "existing",
+      "bytes": 15691,
+      "sha256": "a1c12fdcfb7a7b4d4ac83602fb6bfe3cc59e7ed0a53a29184022d6abb3a340f7"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_025.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_025.mp3",
+      "transport": "existing",
+      "bytes": 22169,
+      "sha256": "f657cf4aaffd6476dddc452e087b2248f3021eada193fcbf29ffa6a1108a2abf"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_026.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_026.mp3",
+      "transport": "existing",
+      "bytes": 21333,
+      "sha256": "e6d30307b80722023002d57ec46ba0495880a6d7f47bac34310ecd0bc64c68e9"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_027.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_027.mp3",
+      "transport": "existing",
+      "bytes": 26767,
+      "sha256": "b3f6266ef8179f0cfeff5f5bf7d5d8bcfff37b5fa383a80ff8a12ac0fd78a09b"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_028.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_028.mp3",
+      "transport": "existing",
+      "bytes": 37216,
+      "sha256": "99087c90e9b6e82f4443dee796ffdac502e364bd5fcc26a827cb5bf425644da1"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_029.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_029.mp3",
+      "transport": "existing",
+      "bytes": 72742,
+      "sha256": "96b5f92da43cd8a2ba4231c8c53738a070ff21a64c10ef32b716f8c9ba19e063"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_030.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_030.mp3",
+      "transport": "existing",
+      "bytes": 35335,
+      "sha256": "8b4ad032818ecf353d4012217fff7b6661beafab6d531a8e6abfedb7c1d65521"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_031.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_031.mp3",
+      "transport": "existing",
+      "bytes": 9840,
+      "sha256": "444ec425d33a006ec088dd37f39718c7f6c8f15e50ec0e74d67ca510b1519aad"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_032.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_032.mp3",
+      "transport": "existing",
+      "bytes": 31991,
+      "sha256": "64d91c11d629a1a9084db4d62c6396cc2bdd9992e68b93c9fdc8e48e6033935a"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_001.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_001.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_001.mp3",
+      "bytes": 25513,
+      "sha256": "9a31bca8839e7e4b208b989735648aa0989a7221fae500bd72524fb7aea8ccc1"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_001.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_001.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_001.mp3",
+      "bytes": 68772,
+      "sha256": "ff7a7ee242ef32c77cc1c6450b79e4b777d32e95600ee9c6b81d65a9e6751dfb"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_001.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_001.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_001.mp3",
+      "bytes": 69399,
+      "sha256": "637fe9b49705f5d31dd2c7d4388de25c174b4aaa57f347bdd6bd1c67834e7931"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_002.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_002.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_002.mp3",
+      "bytes": 63756,
+      "sha256": "37f49eb5af6a19f1993eb2f9d139425edf27457d7d37b0c3b954248c0c4187d9"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_002.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_002.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_002.mp3",
+      "bytes": 182248,
+      "sha256": "10c55f0e459b89ea3330f70f0b57b3816f7b466ada0d9441e66ba810fcabc0a0"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_003.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_003.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_003.mp3",
+      "bytes": 33036,
+      "sha256": "7e7b5a0b9396106e00f267f4c8b4188187bfe6fbfbf71cf5dfea6e039896351d"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_003.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_003.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_003.mp3",
+      "bytes": 64592,
+      "sha256": "674ca10274953da63a5d3794cbace9054f566f7c8e3e06782b7a805f89424dde"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_002.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_002.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_002.mp3",
+      "bytes": 130212,
+      "sha256": "b533499b76a080217880bc18a1b630f76772d25ae9b0ce6b890e08dd1e15dd23"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_004.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_004.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_004.mp3",
+      "bytes": 28648,
+      "sha256": "fe8794d76fd1204fd2846f802dd396b5cd286ea91b6c9d82ca3b0d5a4e48592e"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_004.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_004.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_004.mp3",
+      "bytes": 91760,
+      "sha256": "de48b436abac4bd2038e3d47b05997a66dade3ca1ee3fc86c9a3bf0d42f5c490"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_005.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_005.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_005.mp3",
+      "bytes": 46202,
+      "sha256": "1a1a1b3c9aebf14f2157c8eb705632ef10d686cd15cd24a6ef7e29f5a9be7f7b"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_003.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_003.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_003.mp3",
+      "bytes": 65219,
+      "sha256": "7e694af67a194b5c91ee3f0b618d8488a0942070071ad7658a53e354d750b0cc"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_005.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_005.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_005.mp3",
+      "bytes": 183084,
+      "sha256": "c2105346b3dc1ffc2e71683853884b229b7008d3e91a505ebf1b6108c60e8955"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_004.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_004.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_004.mp3",
+      "bytes": 167201,
+      "sha256": "e102fd871a3d5dc0b004e3758c0136231a948f76ca2f5b51c8d0be235446ed8a"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_006.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_006.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_006.mp3",
+      "bytes": 51635,
+      "sha256": "d8259dbccf7a194358fce5cc0d2a14b976788e0c5d96de8dd169429e06399436"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_006.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_006.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_006.mp3",
+      "bytes": 158842,
+      "sha256": "a1c00ee02c93e6ebb503d035d7c64708ce90490142ed80b80779d53e8541eff2"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_007.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_007.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_007.mp3",
+      "bytes": 207743,
+      "sha256": "870bc78b2ea3ab741d37b9ce39c143f5639e50f6233bb58f642e3504f84fe3ad"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_007.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_007.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_007.mp3",
+      "bytes": 70444,
+      "sha256": "8cc36aacd24f685fd5bccf1f8a03556da33bce37b4626f3e5609955b62ca1f1f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_005.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_005.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_005.mp3",
+      "bytes": 96357,
+      "sha256": "b9d570094e041054a1c163666647271eae50fa820e4456b38c8e5b6016cd8522"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_008.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_008.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_008.mp3",
+      "bytes": 123524,
+      "sha256": "172e5c631538235fb9005af4e08b6f0c35999c7c99fec19eb4807813a3627682"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_008.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_008.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_008.mp3",
+      "bytes": 51218,
+      "sha256": "2e43636997067f73257273d5723b13b29580fd9afb78c8c97cc0c5455ae9a950"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_009.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_009.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_009.mp3",
+      "bytes": 103671,
+      "sha256": "9f998f0bf167ee66fed5f182a822733dc314a8429df83fe8ebf1dc87313ae863"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_006.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_006.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_006.mp3",
+      "bytes": 163649,
+      "sha256": "81be33ce5c956fac4c7bdf456e5cf585c71380f9c795781b9062bda3cbd1c80f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_010.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_010.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_010.mp3",
+      "bytes": 175769,
+      "sha256": "fb7ac27afd0658aa468c6d3d0b910ae7e8a4c2733c456b9f7f0ac563f2c5d341"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_007.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_007.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_007.mp3",
+      "bytes": 92178,
+      "sha256": "f84e8fb8a8114933b6b16994fe60c32550ae8a8a927e42eea44ba6ec241f1bbd"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_009.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_009.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_009.mp3",
+      "bytes": 35126,
+      "sha256": "f77b21a2d294eb90c3b7193dca75ad49c64997a2dc83f239eff5b3baaa9ee978"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_012.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_012.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_012.mp3",
+      "bytes": 34081,
+      "sha256": "721847f68973bb8e08d23863d41581d7eaa7cc780daf91e9af21e5bfb0130807"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_010.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_010.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_010.mp3",
+      "bytes": 17781,
+      "sha256": "afba6800a5f79f2bdf185ded0df74b36791e47ca0a13585253be9ff058bfc038"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_008.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_008.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_008.mp3",
+      "bytes": 131048,
+      "sha256": "f291697a4cdf4817f4f8cfbfa05ca6c9f89f5a289d70f0c18162526f13358d43"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_013.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_013.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_013.mp3",
+      "bytes": 87371,
+      "sha256": "0c8ec3cd3be25fa160942396971eb69672d19d991ef916c8e96f5171812f5a9e"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_012.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_012.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_012.mp3",
+      "bytes": 74832,
+      "sha256": "4718463189c4b34c4e15e5e4765b12e5e62d5db2517ad31e8fec058a6e8ecd2c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_014.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_014.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_014.mp3",
+      "bytes": 64174,
+      "sha256": "3c9f267eed761ac2cc51a2427fffa7deb4b54bdb6a894d046c5ed78261529dea"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_009.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_009.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_009.mp3",
+      "bytes": 155707,
+      "sha256": "3ccf076714e4e42440a5690f0db9cf5a9eabf4226f14fb99d8b9b24655648b48"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_013.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_013.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_013.mp3",
+      "bytes": 25304,
+      "sha256": "140cd0c5016df92ab0dd0b8edf86a64004786d42645a6791973ea4938c3b8fad"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_033.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_033.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_033.mp3",
+      "bytes": 44739,
+      "sha256": "0be57a9289226d11df521ea3bf875971581da49fb7ce6a9a9a76e12d5b8d620d"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_010.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_010.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_010.mp3",
+      "bytes": 31782,
+      "sha256": "7a93a92f60f24c5a948e85288d91fac3def88feb58fa712ae0cc7ebe04837e66"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_034.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_034.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_034.mp3",
+      "bytes": 5660,
+      "sha256": "b408a80cc72c4f4fc2aba4b7cf81f8672286de9435b471dfc4b95e0457257f0a"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_014.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_014.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_014.mp3",
+      "bytes": 12556,
+      "sha256": "b005b22fdb95c923b64779705af6d91b7705783b19c9b9962cd6668581775c03"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_012.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_012.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_012.mp3",
+      "bytes": 28857,
+      "sha256": "fe0feb818dc588ad1c2b3ea9f7efa041304b9a01e0465fad0272b900bf0c6c1f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_036.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_036.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_036.mp3",
+      "bytes": 22587,
+      "sha256": "b7fef21adab47ade68f39b5df750b55effa9f6a65df7e3ebc49d4226c09e4e74"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_033.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_033.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_033.mp3",
+      "bytes": 16527,
+      "sha256": "32e2b0272ef7b639edfe5b3e6fa68c845cb7125435ee64f4868e6af6678f4e9c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_013.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_013.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_013.mp3",
+      "bytes": 69608,
+      "sha256": "f020799df0b4e48331b02f3c28f7df62d440c2e14a0fa00357f7ae6d51cf1334"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_037.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_037.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_037.mp3",
+      "bytes": 7123,
+      "sha256": "a301f74f52f3b8189b66c4c3bdb01f7fe0491362bdeef9c4e3f7b7057864698f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_034.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_034.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_034.mp3",
+      "bytes": 6078,
+      "sha256": "4b073402cb44102945786199006f24d496c1b20cd55d49e0a218b88e4720f744"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_038.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_038.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_038.mp3",
+      "bytes": 121435,
+      "sha256": "e8aa1d7b2dfaee7297a76322a242770a730b1b832a18e253e7a860c7cddce53f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_014.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_014.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_014.mp3",
+      "bytes": 143587,
+      "sha256": "bbc534c478c677aab4e5fdf376941e7d19c7e50d7e8e56fd64d9249e2719e2d9"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_036.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_036.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_036.mp3",
+      "bytes": 15482,
+      "sha256": "4a817446fef93611cf02fb6732ded91e2e2dae82205d05af13b80b3ffd0d4c72"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_042.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_042.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_042.mp3",
+      "bytes": 93640,
+      "sha256": "e71accb2284fd3c597bab95fd82a4070df71d1465d1ec451868f1529ef5c4e66"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_033.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_033.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_033.mp3",
+      "bytes": 19662,
+      "sha256": "9244a726ebacbfecda86e2c02c57e499e864c856e874a2d8b457ba417e4d98a5"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_043.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_043.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_043.mp3",
+      "bytes": 160932,
+      "sha256": "104122b6e42673032964bb361b0d9eb65386b82309c0e3899aa7f40758972366"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_037.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_037.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_037.mp3",
+      "bytes": 8168,
+      "sha256": "360806d52badc5cb3b40c0b942a2f2df3b9df028427cc3b700e583cace2d24e1"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_034.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_034.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_034.mp3",
+      "bytes": 55188,
+      "sha256": "332c383928d28f69f96c17e63b76c68b6142ab5684fc9c0117cca53188e9eb43"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4182_oblvns/cn_044.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_044.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4182_oblvns/cn_044.mp3",
+      "bytes": 97402,
+      "sha256": "1627e64462e552255530d3700127c3beb6da009720ffc028eaf3da97af2c9877"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_036.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_036.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_036.mp3",
+      "bytes": 23632,
+      "sha256": "e424920d7705f6c4342c86a899e7f0484cc663bb5d162fc1606c0863f5db6fd4"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_038.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_038.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_038.mp3",
+      "bytes": 75250,
+      "sha256": "45c8e62cac725f9289e2ca646fe31df462f3bea35c8427f2a9c15395fe6d2546"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_atk/p_atk_mjckyrdslnt.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdslnt.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdslnt.mp3",
+      "bytes": 13485,
+      "sha256": "39546222276acfb41cbf98c0ec432853d266e26420818b2f789c925881801d07"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_037.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_037.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_037.mp3",
+      "bytes": 6705,
+      "sha256": "79fe4d802fcb0cfe61ed54af5d6cff2b26b93a60494cbc1de932040e64748e00"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjckyrdnt.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjckyrdnt.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjckyrdnt.mp3",
+      "bytes": 8685,
+      "sha256": "fa443dc3eef417eb1cf9408b7d9871395302437295ccda0a42e38b1722ef8a19"
+    },
+    {
+      "path": "public/assets/audio/sfx/battle/b_char/b_char_dead.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/battle/b_char/b_char_dead.mp3",
+      "transport": "existing",
+      "bytes": 32017,
+      "sha256": "7ee156b13393184acd1ead67e14dc5d462055bb096eb9163d53785aef769762d"
+    },
+    {
+      "path": "public/assets/audio/sfx/battle/b_char/b_char_set.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/battle/b_char/b_char_set.mp3",
+      "transport": "existing",
+      "bytes": 22822,
+      "sha256": "d88386e13f2394b8cfce6db85c56f209718cf6c9dc408eb8a628e96c50d64467"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_atk/p_atk_mjckyrdnt_h.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdnt_h.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdnt_h.mp3",
+      "bytes": 8301,
+      "sha256": "8407b90f7091d80221a7cf85de0f9ad3fd5a3319533503eeacdc937793f671ca"
+    },
+    {
+      "path": "public/assets/char/avatar/char_4185_amoris.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4185_amoris.png",
+      "transport": "existing",
+      "bytes": 58822,
+      "sha256": "7e397656bde6a382ff87b2d6cc51f7d3a3782a98192d7f3121d44a729d05e184"
+    },
+    {
+      "path": "public/assets/char/avatar/char_4185_amoris_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4185_amoris_2.png",
+      "transport": "existing",
+      "bytes": 59919,
+      "sha256": "f417c028c6fb668d1c76ed6b212dcced09deef00daaf6bf610771e14e4639b02"
+    },
+    {
+      "path": "public/assets/char/portrait/char_4185_amoris_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4185_amoris_1.png",
+      "transport": "existing",
+      "bytes": 107241,
+      "sha256": "8e3679fc8647ab182df3738fca242e2c5aac55f9beb908d8f7e080f1a3d818bd"
+    },
+    {
+      "path": "public/assets/char/portrait/char_4185_amoris_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4185_amoris_2.png",
+      "transport": "existing",
+      "bytes": 114882,
+      "sha256": "cadb1d95e035053505d3717db6068de04488320eaa54f41a0506b666466c3971"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/front/char_4185_amoris.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris/Front/char_4185_amoris.skel",
+      "transport": "existing",
+      "bytes": 308759,
+      "sha256": "b5d7a75ab219cbf9830fb2c4784bbed2fc22af90c873e1e273a161cd0b653cbe"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/front/char_4185_amoris.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris/Front/char_4185_amoris.atlas",
+      "transport": "existing",
+      "bytes": 16860,
+      "sha256": "7e244c18482a8d8c11f6a3f10c9206931d075a9a23096f784a8e56b210dcd229"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/front/char_4185_amoris.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris/Front/char_4185_amoris.png",
+      "transport": "existing",
+      "bytes": 557729,
+      "sha256": "53a2b834222a4a17bc8ce030a8cdae2222746e1b8c3b7973a842be3b6b29422f"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/back/char_4185_amoris.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris/Back/char_4185_amoris.skel",
+      "transport": "existing",
+      "bytes": 260691,
+      "sha256": "77fad82a3f33a24d9be72b40004def3a84d43b316edd0d849b764da5b1d231e4"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/back/char_4185_amoris.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris/Back/char_4185_amoris.atlas",
+      "transport": "existing",
+      "bytes": 12603,
+      "sha256": "ae2ef967fc0a0dc2c75e78c719c68903e453b2772e6c56707bf7b4b85ccd25d3"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/back/char_4185_amoris.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris/Back/char_4185_amoris.png",
+      "transport": "existing",
+      "bytes": 542356,
+      "sha256": "b6fc24fd571b7717b18de959a6a96daeaf1e33bdb2f200e69f16e25ee500674c"
+    },
+    {
+      "path": "public/assets/char/skin_avatar/char_4185_amoris_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4185_amoris_avemujica%231.png",
+      "transport": "existing",
+      "bytes": 70097,
+      "sha256": "241ea76db1b093476387a5a139695749e49df6953e8e171d3c6e762de85aff85"
+    },
+    {
+      "path": "public/assets/char/skin_portrait/char_4185_amoris_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4185_amoris_avemujica%231.png",
+      "transport": "existing",
+      "bytes": 128840,
+      "sha256": "5aec8aa299861a409b33100de6c3c1111747b1331cd9defc79551dddcc05073a"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_042.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_042.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_042.mp3",
+      "bytes": 63756,
+      "sha256": "7ecbe6fb6813d08161d46876b3aff200d186062f4c9df1fe16d3e33f04d16e33"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/char_4185_amoris_avemujica_1/front/char_4185_amoris_avemujica_1.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris_avemujica_1/Front/char_4185_amoris_avemujica_1.skel",
+      "transport": "existing",
+      "bytes": 532298,
+      "sha256": "949e7140fe1403ec972cbd9cc1e394a39a3a5a9f343ea209afac881da94d4368"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/char_4185_amoris_avemujica_1/front/char_4185_amoris_avemujica_1.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris_avemujica_1/Front/char_4185_amoris_avemujica_1.atlas",
+      "transport": "existing",
+      "bytes": 13313,
+      "sha256": "4bbad5b2c9d066e3a57447efbb6e40a5e08732422e00326a0d4ec4f8d8ba7e1a"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/char_4185_amoris_avemujica_1/front/char_4185_amoris_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris_avemujica_1/Front/char_4185_amoris_avemujica_1.png",
+      "transport": "existing",
+      "bytes": 385888,
+      "sha256": "aa05c2b52d6c741d0277c078ce0a18f3da63d7aeac020e16147a94c6d0f118c9"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/char_4185_amoris_avemujica_1/back/char_4185_amoris_avemujica_1.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris_avemujica_1/Back/char_4185_amoris_avemujica_1.skel",
+      "transport": "existing",
+      "bytes": 415126,
+      "sha256": "3539313ea2dac1b15c610dc7bfdb487e7f82424c8efc83c58ff087dfc58577dc"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/char_4185_amoris_avemujica_1/back/char_4185_amoris_avemujica_1.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris_avemujica_1/Back/char_4185_amoris_avemujica_1.atlas",
+      "transport": "existing",
+      "bytes": 8348,
+      "sha256": "10cc3488a65f3926338622097200a1eec38df86a05fa81122e6e5d28caac522a"
+    },
+    {
+      "path": "public/assets/spine/op/char_4185_amoris/char_4185_amoris_avemujica_1/back/char_4185_amoris_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4185_amoris/char_4185_amoris_avemujica_1/Back/char_4185_amoris_avemujica_1.png",
+      "transport": "existing",
+      "bytes": 360734,
+      "sha256": "9107a0ac3c54a99393bafa967237babf30b0c3dddc2572259f49c1bd65690a2d"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_038.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_038.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_038.mp3",
+      "bytes": 132093,
+      "sha256": "c6a6c6d783b32ee1ed48717db73a5e6956626100ff41178258e7d54803c853a0"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4185_amoris_1.png",
+      "url": "https://media.prts.wiki/5/5b/%E7%AB%8B%E7%BB%98_%E7%A5%90%E5%A4%A9%E5%AF%BA%E8%8B%A5%E9%BA%A6_1.png",
+      "transport": "existing",
+      "bytes": 430995,
+      "sha256": "e7ae972c4c62b718cb6e6e79edd4ffe63b6432f096df12cdffa7c0473d228d41"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4185_amoris_2.png",
+      "url": "https://media.prts.wiki/d/d9/%E7%AB%8B%E7%BB%98_%E7%A5%90%E5%A4%A9%E5%AF%BA%E8%8B%A5%E9%BA%A6_2.png",
+      "transport": "existing",
+      "bytes": 6895914,
+      "sha256": "e559c27f62e8076a749a60837568e5d87ec16552c90a808c5ee0d4d1abb8f0df"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4185_amoris_skin1.png",
+      "url": "https://media.prts.wiki/1/1b/%E7%AB%8B%E7%BB%98_%E7%A5%90%E5%A4%A9%E5%AF%BA%E8%8B%A5%E9%BA%A6_skin1.png",
+      "transport": "existing",
+      "bytes": 6188424,
+      "sha256": "fe0570bfa662658ec3fc55c7faad4504c19a443345a5f973e2414e92c865fcd6"
+    },
+    {
+      "path": "public/assets/skill/skchr_amoris_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_amoris_1.png",
+      "transport": "existing",
+      "bytes": 31559,
+      "sha256": "5a56407171c7f3052ab36ee18175fa1a3c343555f3241ad5df80acf431e6a6e3"
+    },
+    {
+      "path": "public/assets/skill/skchr_amoris_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_amoris_2.png",
+      "transport": "existing",
+      "bytes": 31521,
+      "sha256": "ad109c3f48ac100293a30e27f2b679b99b20bc24218249e0d487a881313793dc"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_011.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_011.mp3",
+      "transport": "existing",
+      "bytes": 56442,
+      "sha256": "456e03e51335023f4230ced0ac3ff2ab1dc6c08358780059307369c9094200b2"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_017.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_017.mp3",
+      "transport": "existing",
+      "bytes": 15482,
+      "sha256": "fc97013897a8ddced9a75da74c0cb72bb01e0a145afff1cb69573c370075fe79"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_018.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_018.mp3",
+      "transport": "existing",
+      "bytes": 35126,
+      "sha256": "cccee26cc242b23fddfbc38f41ec5ce7964d977fdcc4b7c0eacb847554110f5a"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_019.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_019.mp3",
+      "transport": "existing",
+      "bytes": 15482,
+      "sha256": "f44ceef8bd6d91ff3b9aded5854c0801e681e9b87fae498f86c5ed32d158ffb2"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_020.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_020.mp3",
+      "transport": "existing",
+      "bytes": 17363,
+      "sha256": "a61e2ba2cd3dbf8368270eb4a0a0bdb657a96f2035755409f021d459264e8bed"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_021.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_021.mp3",
+      "transport": "existing",
+      "bytes": 13810,
+      "sha256": "d7e247adda15042b6476792dd4aabeb81b8429947b5e608e82355667d274d0b5"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_022.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_022.mp3",
+      "transport": "existing",
+      "bytes": 14228,
+      "sha256": "01bd91b37b029cb2b64ebc136a916f4f18b0c69d73ba270ccc24c7aee3ce0d5f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_023.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_023.mp3",
+      "transport": "existing",
+      "bytes": 10258,
+      "sha256": "2e61ece51bb9f4a5652064bce080f172495460a489e4296b325a27a73bc5db65"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_024.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_024.mp3",
+      "transport": "existing",
+      "bytes": 11929,
+      "sha256": "164fa74d2b5d28594230d7c9e0b8d89cd1da5dacd580039020423f41d71f4afe"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_025.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_025.mp3",
+      "transport": "existing",
+      "bytes": 21542,
+      "sha256": "e0b0b5a07834cfd0e7099444886308a0f66104f33571554029a388c1fa12fa3a"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_026.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_026.mp3",
+      "transport": "existing",
+      "bytes": 5451,
+      "sha256": "cc3852037f82e7a7e3d06031ef57dadd52a7831682b7ca28b3814e728f9c6fe7"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_027.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_027.mp3",
+      "transport": "existing",
+      "bytes": 14646,
+      "sha256": "89aa7a6269d3f1b4bb21ef275e4d2cf93f986c8af34fd0b12cfdd80d6b09b0e2"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_028.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_028.mp3",
+      "transport": "existing",
+      "bytes": 7959,
+      "sha256": "6d14a009d8810fb2b3d8cff051147e6d89c86384fc52900d18a3f9a88d15bb3e"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_029.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_029.mp3",
+      "transport": "existing",
+      "bytes": 30320,
+      "sha256": "5bc71153bc3f63a39136eabb290dccf5794ef6998ec7a287698df6a617e4914a"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_030.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_030.mp3",
+      "transport": "existing",
+      "bytes": 46411,
+      "sha256": "e4a281209ab9b7e3ad61eadd383c5120c12197d1f1da02d49ae966dd024cdfdb"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_031.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_031.mp3",
+      "transport": "existing",
+      "bytes": 27394,
+      "sha256": "5dd3a8823228a5270bad8fd2efa6dd2592bc58313a6b7aef35008285107b01e9"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_032.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_032.mp3",
+      "transport": "existing",
+      "bytes": 36589,
+      "sha256": "d251637abab7f699ababe9a999a68cbf08d381b09db53300c6e24f7bba4c9893"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_042.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_042.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_042.mp3",
+      "bytes": 25304,
+      "sha256": "e6cc715270cffef7e78964ab1fef12be9bada8bb4ffebe8b5602b58936e9a171"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_043.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_043.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_043.mp3",
+      "bytes": 39515,
+      "sha256": "fedbe4e82d68d6295fd835e5bfeb969c1f3a66693870e52f71106744f07b33e3"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_001.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_001.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_001.mp3",
+      "bytes": 31364,
+      "sha256": "50edbb0867e8ac536c7053684cfb4ccb839078cd81d5dd593fbe6d26ec630ee4"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_043.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_043.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_043.mp3",
+      "bytes": 138989,
+      "sha256": "ad0476c98a25b7f9c7ed74af309ba93c8153b4e7040b97af11d837cbd8b2f8aa"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_002.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_002.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_002.mp3",
+      "bytes": 83818,
+      "sha256": "99502671f2a51fe6fe4535425289f51dddceb15d2d22a8e129839e2e233ab84f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4183_mortis/cn_044.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_044.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4183_mortis/cn_044.mp3",
+      "bytes": 76504,
+      "sha256": "3acb40fcd9570b1ef898bffd91b9baee84d212e0106bec0af49a1ad4f70fc1af"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4184_dolris/cn_044.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_044.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4184_dolris/cn_044.mp3",
+      "bytes": 181203,
+      "sha256": "fa8d7db84b028b1e52ea6ed1888a55cec72ca5c435fae80e3db86d0eecab94eb"
+    },
+    {
+      "path": "public/assets/char/avatar/char_4186_tmoris.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4186_tmoris.png",
+      "transport": "existing",
+      "bytes": 54317,
+      "sha256": "fb206a553a9bdd8d9eb77eac27e24e2b3587ba27f7843f54034e45cb0ea96d59"
+    },
+    {
+      "path": "public/assets/char/avatar/char_4186_tmoris_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4186_tmoris_2.png",
+      "transport": "existing",
+      "bytes": 64498,
+      "sha256": "20eb6b7d11d2c5a2db1a6404b87b731f392054567b7f070c7a723371c65ca00b"
+    },
+    {
+      "path": "public/assets/char/portrait/char_4186_tmoris_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4186_tmoris_1.png",
+      "transport": "existing",
+      "bytes": 106762,
+      "sha256": "f3daabcca47fe26dcbe92d2b2a244e7e2d3bfdca60658cf989cfed5955afe62c"
+    },
+    {
+      "path": "public/assets/char/portrait/char_4186_tmoris_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4186_tmoris_2.png",
+      "transport": "existing",
+      "bytes": 135159,
+      "sha256": "fbecbb6774a6da6508fbad82408daec2d30c26d84a5099cb18f222c70af50bd7"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/front/char_4186_tmoris.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris/Front/char_4186_tmoris.skel",
+      "transport": "existing",
+      "bytes": 208277,
+      "sha256": "40dbd12bda928b6ee014e3a356abb1a64dda3b25839d1f1d65655f13cde861fa"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/front/char_4186_tmoris.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris/Front/char_4186_tmoris.atlas",
+      "transport": "existing",
+      "bytes": 7830,
+      "sha256": "ac208fe98996cab56d9da14584097f1ef62185d4c602aae625d3cd8b1ac09d46"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/front/char_4186_tmoris.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris/Front/char_4186_tmoris.png",
+      "transport": "existing",
+      "bytes": 105026,
+      "sha256": "ab2f1e7304768d8e0d896bb70a4d30cfe747cfa015d07fb8316c1c86b5a873b0"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/back/char_4186_tmoris.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris/Back/char_4186_tmoris.skel",
+      "transport": "existing",
+      "bytes": 138257,
+      "sha256": "3d8634d27f3ed65771b6ea00bfd2c251f5fe2655239e290eef47ccb084b343ea"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/back/char_4186_tmoris.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris/Back/char_4186_tmoris.atlas",
+      "transport": "existing",
+      "bytes": 4697,
+      "sha256": "5b9b0a4e136c9c9a6ec1fcbf2f1a6edfc514b50116ad460ea807547d26b7e23e"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/back/char_4186_tmoris.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris/Back/char_4186_tmoris.png",
+      "transport": "existing",
+      "bytes": 82165,
+      "sha256": "8d128063ba4a9f8b1b06d65959e132649e74e56d34f2ff2c0222f140ea057307"
+    },
+    {
+      "path": "public/assets/char/skin_avatar/char_4186_tmoris_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/avatar/char_4186_tmoris_avemujica%231.png",
+      "transport": "existing",
+      "bytes": 62349,
+      "sha256": "ec878f31584ebe9bd0d265d6ba5cfaacc93c127cb79379e06ce2851d45dd609b"
+    },
+    {
+      "path": "public/assets/char/skin_portrait/char_4186_tmoris_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/portrait/char_4186_tmoris_avemujica%231.png",
+      "transport": "existing",
+      "bytes": 123923,
+      "sha256": "0e6f82f435ad7ad983999450c6f6f1984515ffe90eb268a48271551b0bf062ba"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_003.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_003.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_003.mp3",
+      "bytes": 36798,
+      "sha256": "c6404fe77c1b44c627234b855c35076c61e03cf52d55f7404fbc23c92b143f59"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/char_4186_tmoris_avemujica_1/front/char_4186_tmoris_avemujica_1.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Front/char_4186_tmoris_avemujica_1.skel",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Front/char_4186_tmoris_avemujica_1.skel",
+      "bytes": 334107,
+      "sha256": "155c47ef5ec310d534b4cb3bde9c9687d06476211841d6501590e8a8c58528df"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_atk/p_atk_mjcgtr_n.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjcgtr_n.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjcgtr_n.mp3",
+      "bytes": 8109,
+      "sha256": "2c155c9fa5123ad66376992967e9427ca1d30ac7a0559a2fdc85e453f3ae2d77"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_004.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_004.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_004.mp3",
+      "bytes": 99910,
+      "sha256": "43ea9e550224803e143de9dae82358f95eee8a526a07eec1a87f398d3c1c8fc4"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/char_4186_tmoris_avemujica_1/front/char_4186_tmoris_avemujica_1.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Front/char_4186_tmoris_avemujica_1.atlas",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Front/char_4186_tmoris_avemujica_1.atlas",
+      "bytes": 8828,
+      "sha256": "bc3c90b036d125a8f20eda23cb6d8b83fecfc2e787bb5a07b876ce0f172cc23c"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjcgtr_n.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcgtr_n.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcgtr_n.mp3",
+      "bytes": 9261,
+      "sha256": "c31b279fd11e628d3f7d6f236f6f58f03d2ba12266cba427e7542d3b3478046f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_005.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_005.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_005.mp3",
+      "bytes": 56651,
+      "sha256": "41c50f7f4a11cc73b9b0b6032b509454544ff54e09ce11161ca74dd01f8e12d6"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjcgtr_h.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcgtr_h.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcgtr_h.mp3",
+      "bytes": 8301,
+      "sha256": "936940226df2d74343e968bec2191d3a5f54769a0bdf8524781a125ced3f9423"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/char_4186_tmoris_avemujica_1/front/char_4186_tmoris_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Front/char_4186_tmoris_avemujica_1.png",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Front/char_4186_tmoris_avemujica_1.png",
+      "bytes": 153877,
+      "sha256": "36bfcfb65693475fb83fffb259e9852d520fb54408a022577e2b594299147767"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_006.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_006.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_006.mp3",
+      "bytes": 120390,
+      "sha256": "3b684392347b5df0138c4e04701794bb7790b27dea10e1de4f98f7a47f140d65"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_007.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_007.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_007.mp3",
+      "bytes": 110777,
+      "sha256": "304f6a1c236e77bd6384c79df64c5e0f21b0757d3e802889c4c15e57b0a783f9"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_008.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_008.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_008.mp3",
+      "bytes": 66473,
+      "sha256": "435fdbb4eccbf658250a3e018020cdf06e3c7881cef2444130fa7d36e934645f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_009.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_009.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_009.mp3",
+      "bytes": 143587,
+      "sha256": "86fdd12b5b8cc6be320beb8bd9b9b7f14d2af65ac17682a440dd233a93e1a3e9"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/char_4186_tmoris_avemujica_1/back/char_4186_tmoris_avemujica_1.skel",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Back/char_4186_tmoris_avemujica_1.skel",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Back/char_4186_tmoris_avemujica_1.skel",
+      "bytes": 260790,
+      "sha256": "eacbc1df48345217b3ed544c811ab17a891830972df2e3378745b28ccb208753"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_010.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_010.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_010.mp3",
+      "bytes": 76713,
+      "sha256": "9ed4d396192e7d69e48d17c900f98ae2651aee4eeaa0d85f3dfa175918bca1ab"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/char_4186_tmoris_avemujica_1/back/char_4186_tmoris_avemujica_1.atlas",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Back/char_4186_tmoris_avemujica_1.atlas",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Back/char_4186_tmoris_avemujica_1.atlas",
+      "bytes": 5722,
+      "sha256": "bdbbc4d892b19ca6320fbb0131d3856bbe8e5b8055bd62652d62bd9bb4131e90"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_012.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_012.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_012.mp3",
+      "bytes": 30529,
+      "sha256": "4d1e215145ab474f38ec6e4883aafb4e73552741945abbeaf2a0058afe142891"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_013.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_013.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_013.mp3",
+      "bytes": 35126,
+      "sha256": "b777ad00e5b9bcde98c7580bb85c2849296ea133622a24c947aae10c9246b411"
+    },
+    {
+      "path": "public/assets/spine/op/char_4186_tmoris/char_4186_tmoris_avemujica_1/back/char_4186_tmoris_avemujica_1.png",
+      "url": "https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Back/char_4186_tmoris_avemujica_1.png",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/fexli/ArknightsResource/main/spine/char_4186_tmoris/char_4186_tmoris_avemujica_1/Back/char_4186_tmoris_avemujica_1.png",
+      "bytes": 140987,
+      "sha256": "1548544de8d60c306e6f6fb814aaed056d08d63e31590f6fe5ccd58770706f9f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_014.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_014.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_014.mp3",
+      "bytes": 49755,
+      "sha256": "f2c4e4f9dae60f4bbec5485bf07b83d1f39072989e6eaa79befdf056afe277ed"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4186_tmoris_1.png",
+      "url": "https://media.prts.wiki/6/64/%E7%AB%8B%E7%BB%98_%E5%85%AB%E5%B9%A1%E6%B5%B7%E9%93%83_1.png",
+      "transport": "https://media.prts.wiki/6/64/%E7%AB%8B%E7%BB%98_%E5%85%AB%E5%B9%A1%E6%B5%B7%E9%93%83_1.png",
+      "bytes": 543141,
+      "sha256": "27081c82c57c4376df29fc871dbf54c000f3c41dadd29e163bd65f8125906120"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_033.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_033.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_033.mp3",
+      "bytes": 29066,
+      "sha256": "ad9ada56550714537362376773d231f1dba2116675cb371d3f9470cabe341c6e"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_034.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_034.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_034.mp3",
+      "bytes": 9840,
+      "sha256": "0fbba086380209735a673baf69695864c4f37943fcb5a1e9f26b44492c34e4ed"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4186_tmoris_2.png",
+      "url": "https://media.prts.wiki/0/09/%E7%AB%8B%E7%BB%98_%E5%85%AB%E5%B9%A1%E6%B5%B7%E9%93%83_2.png",
+      "transport": "https://media.prts.wiki/0/09/%E7%AB%8B%E7%BB%98_%E5%85%AB%E5%B9%A1%E6%B5%B7%E9%93%83_2.png",
+      "bytes": 8760866,
+      "sha256": "81bf8f5021f6f17518af2ddd5df573f0ed23bb6324ab5ab08c86269442e85180"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_036.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_036.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_036.mp3",
+      "bytes": 20289,
+      "sha256": "510a14c629c60641d700e1f986bb18d4a759b28e1518eba19d7dfe82309f46a6"
+    },
+    {
+      "path": "public/assets/char/illustration/char_4186_tmoris_skin1.png",
+      "url": "https://media.prts.wiki/b/ba/%E7%AB%8B%E7%BB%98_%E5%85%AB%E5%B9%A1%E6%B5%B7%E9%93%83_skin1.png",
+      "transport": "https://media.prts.wiki/b/ba/%E7%AB%8B%E7%BB%98_%E5%85%AB%E5%B9%A1%E6%B5%B7%E9%93%83_skin1.png",
+      "bytes": 6799679,
+      "sha256": "78e45e45659d4e7f8f3c218641cef33b25cc95780f4d4de346fb94cd1173bd94"
+    },
+    {
+      "path": "public/assets/skill/skchr_tmoris_1.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_tmoris_1.png",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_tmoris_1.png",
+      "bytes": 31413,
+      "sha256": "ed59e354865ca45efd10f93a12471a31c3f54251170b69c12ae94dc8008b9687"
+    },
+    {
+      "path": "public/assets/skill/skchr_tmoris_2.png",
+      "url": "https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_tmoris_2.png",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/yuanyan3060/ArknightsGameResource/main/skill/skill_icon_skchr_tmoris_2.png",
+      "bytes": 33102,
+      "sha256": "01f96e39a36c6ab38ceaca27a540444faa82de19cdc0cecd26e8eab43c78c097"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_037.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_037.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_037.mp3",
+      "bytes": 11302,
+      "sha256": "b263b4fd7a28f4e1022bfacfd0b399d55ee0a20c4e05225bc43596820debeeda"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_011.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_011.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_011.mp3",
+      "bytes": 36589,
+      "sha256": "5de95ac650526cda954add930cbaa27d1b01c59bbfad962e5f431ce795e3129c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_038.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_038.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_038.mp3",
+      "bytes": 58741,
+      "sha256": "7573decd9829ed36b65a6e3849ec7c93e8c7b6b1be7a13350e07656664313301"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_042.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_042.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_042.mp3",
+      "bytes": 20289,
+      "sha256": "7bc963c698bab40792848e9a7f3618984e71a58168d39a9b1abd6072d3f3134f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_017.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_017.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_017.mp3",
+      "bytes": 6705,
+      "sha256": "8ed1564d7fdef4897a5dcf79c2bc496df1a31de1c9705b9ad991ba1e87db3080"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_043.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_043.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_043.mp3",
+      "bytes": 88207,
+      "sha256": "b6a73019d02a106764a5636a84bd2364828956f128447e704108da75d1dd4f59"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4185_amoris/cn_044.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_044.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4185_amoris/cn_044.mp3",
+      "bytes": 58950,
+      "sha256": "cc0e4ff47e90f7863607547f8b0c681a0ce65d79e6247410fc0fb2b225e680f2"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_018.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_018.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_018.mp3",
+      "bytes": 23005,
+      "sha256": "08ac91faa831a62f3bcdf1e9e9d97c9c8d3502901e483d7b2c2fe359ba2740fd"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_019.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_019.mp3",
+      "transport": "existing",
+      "bytes": 10467,
+      "sha256": "26ebaf2485f257af26948f99dba0c0d8e0ef5a6967427e00060256c1ff9e133c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_020.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_020.mp3",
+      "transport": "existing",
+      "bytes": 18826,
+      "sha256": "0356d32fa316bb812cd2596fd8282095a2664839e17ee5245b59e44dd865cb83"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_021.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_021.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_021.mp3",
+      "bytes": 3361,
+      "sha256": "e8536bd46a1fbbbbed06bfe4c8fc16bfcda592ca651d96442dc79aca23e90098"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_022.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_022.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_022.mp3",
+      "bytes": 7332,
+      "sha256": "7c2287c3ebfbdc26e04b6484eb28f23cea0ceb16567e9718152ae016c97a6eb2"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_023.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_023.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_023.mp3",
+      "bytes": 8795,
+      "sha256": "c0c97e99338a78d3302d7e8db367c0a0982c186400c3d066d4e1393216555f0e"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_024.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_024.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_024.mp3",
+      "bytes": 10467,
+      "sha256": "f4cf4f578581cd8819278e419c2b1d12205a872b76ef3ed7da9d552280a3845f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_025.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_025.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_025.mp3",
+      "bytes": 8168,
+      "sha256": "4c8db6dd092147e4791622e2afbe50bce732a3dcb7c85e6b7ac5e130f0814e10"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_026.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_026.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_026.mp3",
+      "bytes": 9631,
+      "sha256": "96181e0010941a593488ac0f4ada4a228abe66432b321cdeb5ffda8ff6fe5e85"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_027.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_027.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_027.mp3",
+      "bytes": 2943,
+      "sha256": "1d295076063a4b909443fb7e037bbf52efbc5d1f612fc6ef700ba76951b12d0d"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_028.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_028.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_028.mp3",
+      "bytes": 6914,
+      "sha256": "97473954386e299a4496408646a4c744a91820daef2748bdb5b99ce2403f66d8"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_029.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_029.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_029.mp3",
+      "bytes": 23005,
+      "sha256": "3578501dbb2d8092da50347abb5d5394ab1cb2e39e1286f93b6fb04b4c655e2c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_030.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_030.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_030.mp3",
+      "bytes": 21333,
+      "sha256": "18b46dafe28a431e3263f8b3923313d6a4e41d83af07feda6752354bceb5dcf6"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_031.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_031.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_031.mp3",
+      "bytes": 25513,
+      "sha256": "23f582c92c261e66d3d18009851b81b2b03643dbedcec4c955af265ab4d326d6"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_032.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_032.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_032.mp3",
+      "bytes": 26767,
+      "sha256": "35ffbf4a400aecce0866a096b44579392190a8b2acdb2a516b7c2fbbfc072371"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_001.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_001.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_001.mp3",
+      "bytes": 49755,
+      "sha256": "237a11ce19c8ed0ad0e424b0be827b31e6ca92c4c4fe16ba862714b99d033722"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_002.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_002.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_002.mp3",
+      "bytes": 125405,
+      "sha256": "1a1d8c236f8135a6da7db43f89f68cef266e720270c032c68dfa6f2e4006a5be"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_003.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_003.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_003.mp3",
+      "bytes": 72742,
+      "sha256": "53f5ae973213ac6065d2f63bf58b8ca7513640dcaeac9ee2f35499e1fb120f8d"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_004.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_004.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_004.mp3",
+      "bytes": 108896,
+      "sha256": "adb63d5bc6d2c3081f138e7082ad429667190d6b7681ec0f7fcf7a59006284e8"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_005.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_005.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_005.mp3",
+      "bytes": 39724,
+      "sha256": "b3f1914b25046d1e680c2e0b351d956348101b4f5fffccc3ede034087f9beb4b"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_006.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_006.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_006.mp3",
+      "bytes": 132302,
+      "sha256": "5ee422bc0c09819883c2b5970f2c10bf120139b451d55c4643b0276cc0e2febd"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_007.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_007.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_007.mp3",
+      "bytes": 48083,
+      "sha256": "65c81c2320ce2f2c6d49eec12a4b9579e90bb67d6459b858a3520d552dc9a1a6"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_008.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_008.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_008.mp3",
+      "bytes": 129794,
+      "sha256": "a00a2c6e6bab2992d2a9f78fd47d9afea38629aca2fa42d4a5fde34651f035ff"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_009.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_009.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_009.mp3",
+      "bytes": 72951,
+      "sha256": "9fdbeb9942adfb7e75d067874a04644316f43dceaf77f168e9c9efb9adb96506"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_010.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_010.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_010.mp3",
+      "bytes": 65010,
+      "sha256": "d0ed6c55f4a69b5e2d6ffa0ebf1c90cbe832c32f562568263bad3e9f0891822e"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_012.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_012.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_012.mp3",
+      "bytes": 27394,
+      "sha256": "e35535801adc6caeafd9503ad3d1d11022fd2bad98df0d60742b2cbc1b47cd16"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_013.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_013.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_013.mp3",
+      "bytes": 14437,
+      "sha256": "af30e8ad78a8402c699c037d48317d0af0b17396fcbb5c5f6f2082edeb69d05e"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_014.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_014.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_014.mp3",
+      "bytes": 87789,
+      "sha256": "6852bd93b0071327c08f1cb14c87f59205ebd293b03ec04e7ed3cdbc47fee72c"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_033.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_033.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_033.mp3",
+      "bytes": 32618,
+      "sha256": "3072edaedd3b9ae04e5ec7e6f8182c476068c6aabdf282f4b3a21f7a639fc1d8"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_034.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_034.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_034.mp3",
+      "bytes": 2316,
+      "sha256": "ef7c85c20cc892a910a9b70b09d15bfdddadf5a2a1a66fb53279c5ad51875a5a"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_036.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_036.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_036.mp3",
+      "bytes": 13810,
+      "sha256": "140236bc8da0f9e377fe3d5c0eaf875c28ae43cd74161a8bffe9fc8caaf052b5"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_037.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_037.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_037.mp3",
+      "bytes": 6914,
+      "sha256": "17836fc369345388c58582f8d06066044bc71cda0b36d42ebdc246cfa3460faf"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_038.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_038.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_038.mp3",
+      "bytes": 50173,
+      "sha256": "17e90785cc6b4a8255d7ef89d3c04fe349c432a30bb9af13f67e32a4838e1c86"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_042.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_042.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_042.mp3",
+      "bytes": 30738,
+      "sha256": "7bdb87cdd05a3b66038c9d882b5474c5f1427eb0872fd4064e7a56037eff5e23"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_043.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_043.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_043.mp3",
+      "bytes": 112658,
+      "sha256": "4476cdd63b185c00be9bd0ab926acbc6e8f7bd8018dbe2b1e74dd9e0add9e68f"
+    },
+    {
+      "path": "public/assets/audio/voice/jp/char_4186_tmoris/cn_044.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_044.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/voice/char_4186_tmoris/cn_044.mp3",
+      "bytes": 117882,
+      "sha256": "2522dcb31ace9e4c91de13e3e572cccbf82a487c6b5ecffb424b0d6dfdce458b"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_atk/p_atk_mjcstbbs_n.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjcstbbs_n.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjcstbbs_n.mp3",
+      "bytes": 6189,
+      "sha256": "e8ed2a2b52c86f9f7e662d1aa821793bafd6745ac1013014730a640f71393829"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjcstbbs_n.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcstbbs_n.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcstbbs_n.mp3",
+      "bytes": 7149,
+      "sha256": "7d2c1de3cae4a534069ff441dd46939216a8200d699f21de3700eb30e68cf3cf"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_atk/p_atk_mjcstbbs_h.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjcstbbs_h.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjcstbbs_h.mp3",
+      "bytes": 5805,
+      "sha256": "ab84acb5834a59aedb17a8e3085243d6a04922b3a18fcb0d472671f352097d60"
+    },
+    {
+      "path": "public/assets/audio/bgm/mujica/fever_mid.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/music/character/m_bat_avemujica_mid.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/music/character/m_bat_avemujica_mid.mp3",
+      "bytes": 404205,
+      "sha256": "211fbea5cfc88c40938a00c36f6365ae7405708501bd191e2028d2400f034b57"
+    },
+    {
+      "path": "public/assets/audio/bgm/mujica/fever_full.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/music/character/m_bat_avemujica_full.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/music/character/m_bat_avemujica_full.mp3",
+      "bytes": 404205,
+      "sha256": "b5199b468f085a47863bf867f401b50581bcb6cf0d8190cd30137b49500f5f45"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_atk/p_atk_mjckyrdnt.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdnt.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdnt.mp3",
+      "bytes": 10413,
+      "sha256": "2cb365a5c32d29ddb3ce339dd32eb7569bb208f80c86eb971e0550da6fdf2f43"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_atk/p_atk_mjckyrdnt_r.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdnt_r.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdnt_r.mp3",
+      "bytes": 8301,
+      "sha256": "ddec43e404f76b930438217228c46bde30c4cd9520b7a215ee2f8579b5ece299"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjckyrdnt_r.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjckyrdnt_r.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjckyrdnt_r.mp3",
+      "bytes": 9453,
+      "sha256": "565558112afcdd534bf958abe8ade0f684f3f3df511342199591b9225575652d"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjckyrdglsnt.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjckyrdglsnt.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjckyrdglsnt.mp3",
+      "bytes": 5805,
+      "sha256": "a82be209b06ebbe0059987a02538f3ce4df5ba18e5475e7108511f56e7b20656"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_atk/p_atk_mjckyrdnt_p.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdnt_p.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdnt_p.mp3",
+      "bytes": 8301,
+      "sha256": "4ad5c3d1e7fadd97a8fa4df31a291d6690f7b649ee314d6ccd7ba3a9ae94fb86"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjckyrdslnt_h1.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdslnt_h1.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdslnt_h1.mp3",
+      "bytes": 44013,
+      "sha256": "354818bfd809c640a16ad6951191fd0682ae86064a697a10c8842e24fd8985be"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjckyrdglsnt_d1.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdglsnt_d1.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdglsnt_d1.mp3",
+      "bytes": 30957,
+      "sha256": "771f480965c87256860366fd7ac7f23e0647796942c0ca07b1007090d9495a4a"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjckyrdnt_p.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjckyrdnt_p.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjckyrdnt_p.mp3",
+      "bytes": 6573,
+      "sha256": "983642d5a97d6039d576d87bdc35815b36243e7736d1dd3c92bdb252b5ade231"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjckyrdslnt_h2.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdslnt_h2.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdslnt_h2.mp3",
+      "bytes": 44013,
+      "sha256": "48ee00ef5cb7efc8db5663dbf0181b5250969355b12304235a14dedec997f398"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjckyrdglsnt_d2.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdglsnt_d2.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdglsnt_d2.mp3",
+      "bytes": 30189,
+      "sha256": "126b7e6673e2e0f599f6fda1e40bd3ac211241409002e7c229bf891c26015349"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_atk/p_atk_mjckyrdslnt_lp.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdslnt_lp.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjckyrdslnt_lp.mp3",
+      "bytes": 79341,
+      "sha256": "c55d4431bb521010a6d1c6c4cfa8b9c6eea708c5a1b78ec12801ed915771ec5b"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjckyrdslnt_s1.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdslnt_s1.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdslnt_s1.mp3",
+      "bytes": 87789,
+      "sha256": "42411dfadcd0099eae14877785b2cf2c7d77f0dbca64b45f760675e8d3d95f69"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjckyrdslnt.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjckyrdslnt.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjckyrdslnt.mp3",
+      "bytes": 13869,
+      "sha256": "557894f66a99ed867fbed7ff2de49a9f5c7a5b28c96ec35bcd11a93283996da1"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjckyrdglsnt_d3.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdglsnt_d3.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdglsnt_d3.mp3",
+      "bytes": 31341,
+      "sha256": "f48684eddba003d180622b31853bc9ea47be703a6a1344872f4f3a60093cabae"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjcgtr_d.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtr_d.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtr_d.mp3",
+      "bytes": 28269,
+      "sha256": "1e87cd2f909f020df655ab3ddfa53416c0ef3b6eb924c8f5a0caaa0418af1861"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_atk/p_atk_mjcgtr_h.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjcgtr_h.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjcgtr_h.mp3",
+      "bytes": 10221,
+      "sha256": "a9912f513e2c1a157d11aeec93750c20f53585ceb9223f3d1f7f94e4ddaafe03"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjcgtr_h1.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtr_h1.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtr_h1.mp3",
+      "bytes": 22125,
+      "sha256": "584f19090407494c16e2baf2fefe043613d267bb2f37de8fa19a8c33eaadf2a2"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjcgtrsmk.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcgtrsmk.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcgtrsmk.mp3",
+      "bytes": 13869,
+      "sha256": "345be65ab6aac81f1fb247dc4d6e4768bccc4566af46f38aef6021ea39658078"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjckyrdslnt_s2.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdslnt_s2.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjckyrdslnt_s2.mp3",
+      "bytes": 99309,
+      "sha256": "1fee0e6236b4d0d5334c0f462c69d2d285c2a57f9349d9278ee73cdb8b1ed3a6"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjcgtr_h2.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtr_h2.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtr_h2.mp3",
+      "bytes": 22125,
+      "sha256": "c7724f8e28f444674d50a0a6a2fe1dff798f716db297ca2e59b9379bffae961f"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjcgtrvl_d1.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtrvl_d1.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtrvl_d1.mp3",
+      "bytes": 29037,
+      "sha256": "7fd948a6bc365706ed36d33b1f7b63556a6f88a56df39f2d019a5783fe916124"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjcbtrm.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcbtrm.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcbtrm.mp3",
+      "bytes": 14061,
+      "sha256": "fd95caeef6df553cc1193fdf105414c70a5937dcbddc055dbf8fa6c51ea907ab"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjcgtrvl.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcgtrvl.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcgtrvl.mp3",
+      "bytes": 6573,
+      "sha256": "fa83a76e430d16aa05a5f52926be76037b0b59fee385e0db049327a67b6a41e4"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjcgtrvl_h.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtrvl_h.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtrvl_h.mp3",
+      "bytes": 112749,
+      "sha256": "5a079dd6fcf2798b6569bb9da55119c0af3dd5e17f67ec1b157e81ff6a4a0f80"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjcgtrvl_d2.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtrvl_d2.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtrvl_d2.mp3",
+      "bytes": 29037,
+      "sha256": "4aad28646a7fcdf1e7a3ba36ee538565d3cc9df43a7355eb19407018d2661f4a"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjcbtrm_d.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcbtrm_d.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcbtrm_d.mp3",
+      "bytes": 78957,
+      "sha256": "806dc5b3fe2480e8c0b29e0be2291a25a15a0c108d3fddfe6e4d4bffb7756187"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjcbtrm_s.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcbtrm_s.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcbtrm_s.mp3",
+      "bytes": 10413,
+      "sha256": "bd585beca8015f59fbe63a7fae47b2064102503eaa32c260d83e2c9ef7d5ab6c"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjcgtr_h3.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtr_h3.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtr_h3.mp3",
+      "bytes": 21741,
+      "sha256": "64eac9be1febf2a7d9561fe737720e7315786ed31658a988daf7c80d14636816"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_imp/p_imp_mjcbtrm_b.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcbtrm_b.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_imp/p_imp_mjcbtrm_b.mp3",
+      "bytes": 12333,
+      "sha256": "83c29ce8528b4d2e4b1c47a5dc09bbe4dea6c6dec71af9caf3db239fe18600d0"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjcbtrm_h.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcbtrm_h.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcbtrm_h.mp3",
+      "bytes": 91245,
+      "sha256": "aa9a2bf907ba5b68b92bd8b88e064ebb69601e0f4bfefbe791db8e684c1cdc33"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjcgtrvl_d3.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtrvl_d3.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcgtrvl_d3.mp3",
+      "bytes": 28653,
+      "sha256": "c6de279bfb264044f0e0617d3e423e744af21f13573f4469c22e62086c85395d"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_atk/p_atk_mjcstbbs_d.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjcstbbs_d.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_atk/p_atk_mjcstbbs_d.mp3",
+      "bytes": 17325,
+      "sha256": "fafd859550d0e3ff438f7d21ad20e7f75f52faee6e0f10e36457661dd860020f"
+    },
+    {
+      "path": "public/assets/audio/sfx/player/p_skill/p_skill_mjcstbbs_h.mp3",
+      "url": "https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcstbbs_h.mp3",
+      "transport": "https://gh-proxy.com/https://raw.githubusercontent.com/ArknightsAssets/ArknightsAssets2/voice/assets/dyn/audio/sound_beta_2/player/p_skill/p_skill_mjcstbbs_h.mp3",
+      "bytes": 37869,
+      "sha256": "7e8eb4c683ddb70d592da2dc59ae205d53f57974a2f6df8142b523fb2b332841"
+    }
+  ],
+  "warnings": [],
+  "chars": {
+    "char_4182_oblvns": {
+      "name": "丰川祥子",
+      "skins": [
+        "char_4182_oblvns@avemujica#1"
+      ],
+      "voiceSlots": [
+        "gacha",
+        "squad",
+        "squadFirst",
+        "start",
+        "faceEnemy",
+        "select",
+        "place",
+        "skill1",
+        "skill2",
+        "skill3",
+        "skill4",
+        "resultFour",
+        "resultThree",
+        "resultTwo",
+        "resultLose"
+      ],
+      "animations": {
+        "Attack": 1.3,
+        "Combat": 1.3,
+        "Default": 0,
+        "Die": 1,
+        "Idle": 4,
+        "Skill_1": 1.3,
+        "Skill_2_Idle_A": 4,
+        "Skill_2_Idle_B": 4,
+        "Skill_2_Loop_A": 1.3,
+        "Skill_2_Loop_B": 1.3,
+        "Skill_2_Start": 1,
+        "Skill_2_Trans_A": 0.333,
+        "Skill_2_Trans_B": 0.333,
+        "Skill_3_Begin": 0.333,
+        "Skill_3_End": 0.333,
+        "Skill_3_Idle": 3.667,
+        "Skill_3_Loop": 1.167,
+        "Start": 1
+      }
+    },
+    "char_4184_dolris": {
+      "name": "三角初华",
+      "skins": [
+        "char_4184_dolris@avemujica#1"
+      ],
+      "voiceSlots": [
+        "gacha",
+        "squad",
+        "squadFirst",
+        "start",
+        "faceEnemy",
+        "select",
+        "place",
+        "skill1",
+        "skill2",
+        "skill3",
+        "skill4",
+        "resultFour",
+        "resultThree",
+        "resultTwo",
+        "resultLose"
+      ],
+      "animations": {
+        "Default": 0,
+        "Die": 1,
+        "Idle": 4,
+        "Skill_1_Begin": 1.333,
+        "Skill_1_End": 0.667,
+        "Skill_1_Loop": 3.333,
+        "Skill_2_Begin": 0.333,
+        "Skill_2_End": 1.167,
+        "Skill_2_Loop": 1.333,
+        "Start": 1
+      }
+    },
+    "char_4183_mortis": {
+      "name": "若叶睦",
+      "skins": [
+        "char_4183_mortis@avemujica#1"
+      ],
+      "voiceSlots": [
+        "gacha",
+        "squad",
+        "squadFirst",
+        "start",
+        "faceEnemy",
+        "select",
+        "place",
+        "skill1",
+        "skill2",
+        "skill3",
+        "skill4",
+        "resultFour",
+        "resultThree",
+        "resultTwo",
+        "resultLose"
+      ],
+      "animations": {
+        "Attack": 1.2,
+        "Default": 0,
+        "Doll_Default": 0,
+        "Doll_Die": 1,
+        "Doll_Idle": 18.133,
+        "Doll_SwitchOut": 1,
+        "Doll_Switchin": 1,
+        "Idle": 6.667,
+        "Skill_1": 1.2,
+        "Skill_2": 0.9,
+        "Start": 1,
+        "Stun": 1,
+        "SwitchOut": 1
+      }
+    },
+    "char_4185_amoris": {
+      "name": "祐天寺若麦",
+      "skins": [
+        "char_4185_amoris@avemujica#1"
+      ],
+      "voiceSlots": [
+        "gacha",
+        "squad",
+        "squadFirst",
+        "start",
+        "faceEnemy",
+        "select",
+        "place",
+        "skill1",
+        "skill2",
+        "skill3",
+        "skill4",
+        "resultFour",
+        "resultThree",
+        "resultTwo",
+        "resultLose"
+      ],
+      "animations": {
+        "Attack": 1.8,
+        "Default": 0,
+        "Die": 1,
+        "Idle": 1,
+        "Skill_1": 1.8,
+        "Skill_2": 1.8,
+        "Start": 1
+      }
+    },
+    "char_4186_tmoris": {
+      "name": "八幡海铃",
+      "skins": [
+        "char_4186_tmoris@avemujica#1"
+      ],
+      "voiceSlots": [
+        "gacha",
+        "squad",
+        "squadFirst",
+        "start",
+        "faceEnemy",
+        "select",
+        "place",
+        "skill1",
+        "skill2",
+        "skill3",
+        "skill4",
+        "resultFour",
+        "resultThree",
+        "resultTwo",
+        "resultLose"
+      ],
+      "animations": {
+        "Attack": 1,
+        "Default": 0,
+        "Die": 1,
+        "Idle": 4,
+        "Skill_1": 1.5,
+        "Skill_2_Begin": 0.333,
+        "Skill_2_End": 0.667,
+        "Skill_2_Loop": 2,
+        "Start": 1
+      }
+    }
+  },
+  "generatedAt": "2026-10-22T10:27:00.720Z"
+}

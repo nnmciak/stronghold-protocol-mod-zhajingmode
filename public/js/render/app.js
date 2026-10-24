@@ -170,6 +170,7 @@ import { t } from '../../../shared/i18n.js';
 // from another player's board carries `piece.skin` from the server instead (publicView), and that wins.
 import { skinFor } from '../ui/skins.js';
 import { audio } from '../audio.js';
+import { createMujicaHud } from './mujicaHud.js';
 
 export { ensurePixi } from './app/pixi.js';
 
@@ -232,6 +233,8 @@ export async function createFieldView(host, options = {}) {
   // Construction is synchronous until the complete view can own cancellation. If setup throws,
   // dispose only the resources acquired by this attempt, never another view's host contents.
   const setupCleanup = [];
+  const mujicaHud = createMujicaHud(host);
+  setupCleanup.push(() => mujicaHud.destroy());
   let destroyed = false;
   let view = null;
   let onAbort;
@@ -841,7 +844,7 @@ export async function createFieldView(host, options = {}) {
   function setPrep(ps, options) {
     if (destroyed) return false;
     const o = options && typeof options === 'object' ? options : {};
-    if (mode !== 'prep') enterPrepMode();
+    if (mode !== 'prep') { mujicaHud.clear(); audio.mujicaStates?.clear(); audio.setMujicaFever(null); enterPrepMode(); }
     lastPrep = { ps, o };
     editable = !!o.editable;
     canPlaceFn = typeof o.canPlace === 'function' ? o.canPlace : null;
@@ -1503,6 +1506,7 @@ export async function createFieldView(host, options = {}) {
 
   function enterBattle(meta) {
     if (destroyed || !meta || typeof meta !== 'object') return false;
+    mujicaHud.clear();
     holdScene(true); // before the prep views go: the cache is never "quiet" across the switch
     drag.reset();
     endDragVisual(false);
@@ -1722,6 +1726,8 @@ export async function createFieldView(host, options = {}) {
       }
       case 'status': { const v = views.get(e[1]); if (v) { v.onStatus?.(e[2], !!e[3]); wiring.status(v, e[2], !!e[3]); } break; }
       case 'fx': {
+        if (e[1] === 'mujicaFever') { mujicaHud.update(e[4]); break; }
+        if (e[1] === 'mujicaSound') break;
         if (e[4] && typeof e[4] === 'object' && e[4].consumed && e[4].id != null) {
           consumedIds.add(e[4].id);
           if (consumedIds.size > 200) consumedIds.delete(consumedIds.values().next().value);
@@ -1896,9 +1902,10 @@ export async function createFieldView(host, options = {}) {
   // Crowded fields render skeletons through staggered RenderTexture impostors (units.js): the interval grows with
   // the number of Spine units so the per-frame vertex work stays roughly constant (hysteresis: re-evaluated
   // every 30 frames). Prep and ordinary fields keep full-rate direct rendering.
-  // Spine clipping masks (the eyelids on the current roster) each cost a stencil render-pass break (~2–5 ms of GPU on
+  // Spine clipping masks each cost a stencil render-pass break (~2–5 ms of GPU on
   // tiled GPUs): kept only for a lone clipped skeleton at high quality; without them SpineActor hides the eyeball slots a
-  // closed lid would cut (GitHub #177, spine.js _eyeMaskFallback)
+  // closed lid would cut (GitHub #177, spine.js _eyeMaskFallback). Non-eye masks retain exact clipping at every
+  // quality level through SpineActor.setClipping and the small clipped-impostor pages.
   let clipAllowed = true;
   function pickClipping() {
     let n = 0;
@@ -2205,6 +2212,8 @@ export async function createFieldView(host, options = {}) {
     destroy() {
       if (destroyed) return;
       destroyed = true;
+      mujicaHud.destroy();
+      audio.mujicaStates?.clear(); audio.setMujicaFever(null);
       try { ro?.disconnect(); } catch { /* ignore */ }
       try { offAssets?.(); } catch { /* ignore */ }
       globalThis.document?.removeEventListener?.('visibilitychange', onVisible);

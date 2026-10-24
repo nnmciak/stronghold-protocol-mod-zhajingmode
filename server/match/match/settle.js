@@ -66,6 +66,18 @@ export class MatchSettle {
       //   uniteResult.perPlayer[pid].layerGains 里（unite.js combineUniteResults 原样拷贝每场的 pp），
       //   这里把两份相加 —— 同一名干员先打自己的场、再在联战里打一场，两边涨的层数都算数。
       const gains = { ...(r.layerGains || {}) };
+      // ★ 2026-10-23 惊变「集中一点」：窗口期内，这一场的所有叠层并到层数最高的已激活盟约
+      {
+        const top = ps.jizhongyidianTarget ? ps.jizhongyidianTarget('__none__') : null;
+        if (top) {
+          let total = 0;
+          for (const n of Object.values(gains)) if (Number.isFinite(n) && n > 0) total += n;
+          if (total > 0) {
+            for (const k of Object.keys(gains)) delete gains[k];
+            gains[top] = total;
+          }
+        }
+      }
       // 「只有炸惊有」：非炸惊时联战的 layerGainsEnabled 是 false，up.layerGains 本来就是空的，
       // 这里再加一道显式闸，意图写在代码里。
       if (this.gd.zhajing && up && up.layerGains && typeof up.layerGains === 'object') {

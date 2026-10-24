@@ -12,9 +12,13 @@ import { buildBattleSpec, createBattleFromSpec } from '../../sim/spec.js';
 const SERVER_FIELD_STAGGER_MS = 40;
 
 /** 单人房最多把几个机器人字段交给房主浏览器代跑（默认 = CLIENT_BOTS_SOLO_MAX；SP_CLIENT_BOTS_MAX 可调，0 = 不代跑）。 */
+// ★ 2026-10-22（owner）：默认**不再**把机器人字段派给房主浏览器代跑。
+//   实测今天线上日志：bot field → client exec 2101 次，其中 1835 次以 server takeover (timeout) 收场 ——
+//   也就是每一轮都在等 `timeLimit / gameSpeed + 15 s` 的宽限，玩家看到的就是「AI 打的时候要等时间流完」。
+//   服务端 headless 跑一场只要几十到几百毫秒，没有必要交给浏览器。需要时可用 SP_CLIENT_BOTS_MAX 调回来。
 const CLIENT_EXEC_MAX = Number.isFinite(Number(process.env.SP_CLIENT_BOTS_MAX))
   ? Math.max(0, Math.floor(Number(process.env.SP_CLIENT_BOTS_MAX)))
-  : CLIENT_BOTS_SOLO_MAX;   // 共享上限，lobby.js 的房间 AI 上限用的是同一个数
+  : 0;   // 共享上限，lobby.js 的房间 AI 上限用的是同一个数
 /** ★ 2026-10-18 深夜：多真人房里**每个真人**最多代跑几个机器人字段（房主一个人扛 12 个会掉帧，摊开更好）。 */
 const CLIENT_EXEC_PER_PERSON = Number.isFinite(Number(process.env.SP_CLIENT_BOTS_PER_PERSON))
   ? Math.max(0, Math.floor(Number(process.env.SP_CLIENT_BOTS_PER_PERSON)))
@@ -245,6 +249,23 @@ export class MatchClientCombat {
     });
   }
 
+  /**
+   * ★ 2026-10-22（owner）：这场战斗有没有真人在看 —— 该场里有连接的真人，或有连接的观战者。
+   * 用来决定结果要不要按战场时钟压着发：没人看的场次（纯 AI 场）算完就即时出结果，
+   * 有人看的场次保持原来的实时节奏（队友的进度条不会跳）。
+   */
+  _fieldWatched(f) {
+    const mine = new Set(f.players || []);
+    for (const ps of (this.players && this.players.values ? this.players.values() : [])) {
+      if (!ps || ps.isBot || ps.left || !ps.connected) continue;
+      if (mine.has(ps.playerId)) return true;
+    }
+    for (const sp of (this.spectators && this.spectators.values ? this.spectators.values() : [])) {
+      if (sp && !sp.isBot && !sp.left && sp.connected) return true;
+    }
+    return false;
+  }
+
   /** A server-run normal / 联防 field's result is released at the battle's natural end on the field clock. */
   _armRelease(f) {
     if (f.doneTimer) { this.cancel(f.doneTimer); f.doneTimer = null; }
@@ -286,6 +307,11 @@ export class MatchClientCombat {
       f.resultSource = 'server';
       f.timeline = run.timeline;
       f.endGt = Number(run.battle.time) || 0;
+      // ★ 2026-10-22（owner）：没人看的场次（纯 AI 场）算完立即出结果。
+      //   旧行为一律等「这场战斗在战场上自然结束」才释放（_armRelease），而 AI 的场次常常打满时间上限，
+      //   于是每一轮都要陪等 AI 的整场时长 —— 玩家反馈的「AI 打的时候也要等时间流完」即此。
+      //   有真人观看 / 暂停中仍走原来的实时节奏。
+      if (!this.paused && !this._fieldWatched(f)) { this._fieldDone(f); return; }
       this._armRelease(f);
     };
     if (!Number.isFinite(this.headlessSliceMs)) {

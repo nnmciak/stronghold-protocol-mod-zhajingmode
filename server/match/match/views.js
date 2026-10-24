@@ -215,6 +215,23 @@ export class MatchViews {
     }
     // 炸惊模拟 规则14: the 敌方惊变. During its reveal phase the pool rides along so every client can flicker through
     // real entries; afterwards the drawn card alone stays (a match-long global enemy buff, so it is shown all match).
+    // ★ 2026-10-24（owner）：隐秘惊变（隐秘核心战前的专属揭示阶段）
+    if (this.hiddenJibian) {
+      v.hiddenJibian = {
+        hidden: true, label: this.hiddenJibian.label, cards: this.hiddenJibian.cards, round: this.hiddenJibian.round,
+      };
+      if (this.phase === PHASE.HIDDEN_JIBIAN) {
+        const ej = typeof this.gd.enemyJibian === 'function' ? this.gd.enemyJibian() : null;
+        const hj = ej && ej.hidden;
+        const pool = [...(Array.isArray(hj && hj.pool) ? hj.pool : []), ...((ej && Array.isArray(ej.pool)) ? ej.pool : [])];
+        v.hiddenJibian.pool = pool.slice(0, 24).map((c) => ({
+          id: c.effectId || c.id || null, name: c.name || '', desc: c.desc || '',
+          rarity: c.rarity || null, flavor: c.flavor || null,
+        }));
+        v.hiddenJibian.flickerMs = Number(hj && hj.flickerMs) || Number(ej && ej.flickerMs) || 2200;
+        v.hiddenJibian.resultMs = Number(hj && hj.resultMs) || Number(ej && ej.resultMs) || 1800;
+      }
+    }
     if (this.enemyJibian) {
       v.enemyJibian = { rarity: this.enemyJibian.rarity, card: this.enemyJibian.card, round: this.enemyJibian.round };
       if (this.phase === PHASE.ENEMY_JIBIAN) {

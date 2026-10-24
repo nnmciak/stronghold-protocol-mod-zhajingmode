@@ -227,6 +227,7 @@ export function absorbShields(battle, target, amount, type = null) {
 export function dealDamage(battle, source, target, dmgIn) {
   if (!target || !target.alive || target.removed || target.hidden || !target.deployed) return 0;
   const dmg = dmgIn && dmgIn._norm ? dmgIn : makeDamageInfo(dmgIn);
+  if (battle._hooks.damageAttempt) battle.emit('damageAttempt', { source, target, dmg });
   if (dmg.type === 'element') return applyElement(battle, source, target, dmg);
   // 无来源 (dmg.sourceless, element bursts): hooks see no source — nothing keyed on "damage dealt by X" (ATK-up vs a
   // tag, 伤害提升 items / bonds / modules, reflect, "受到来自…的伤害") can recognise it; `credit` names the unit that still
@@ -579,5 +580,6 @@ export function heal(battle, source, target, amount, opts = {}) {
     if (source.side === 'ally' && source.ownerId != null) { const pp = battle._pp(source.ownerId); if (pp) pp.healingDone += actual; }
   }
   if (actual >= 0.5 && !opts.silent) battle._ev(['heal', target.id, Math.round(actual)]);
+  if (actual > 0 && battle._hooks.healed) battle.emit('healed', { source, target, amount: actual, opts });
   return actual;
 }

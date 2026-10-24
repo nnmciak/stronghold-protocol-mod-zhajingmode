@@ -70,12 +70,15 @@ export function pairPlayers(alive) {
  *
  * 炸惊（用户 2026-10-11 定稿）不走上面那套：`mode.bossHpScale.baseHp` + `ladder` 直接给出「基础血量 × 人数阶梯」，
  * 见 bossLadderHp（基础 1000 万，每多一人 +150%，>4 人每人再 +200%，>10 人每人 ×2）。
+ * @param {{ hidden?: boolean }} [opts] `hidden` = 隐秘核心（第 15 回合）的血量倍率（mode.hiddenBossHpMul，默认 2）
  */
-export function bossPoolHp(gd, bossId, aliveCount) {
+export function bossPoolHp(gd, bossId, aliveCount, opts = {}) {
   const modeScale = gd && gd.mode && gd.mode.bossHpScale;
   const baseHp = modeScale ? Number(modeScale.baseHp) : NaN;
+  // ★ 2026-10-23（owner）：隐秘核心的 Boss 血量单独翻倍（默认 ×2，可用 mode.hiddenBossHpMul 调）。
+  const hiddenMul = opts && opts.hidden ? Math.max(0, Number((gd && gd.mode && gd.mode.hiddenBossHpMul) ?? 2) || 2) : 1;
   if (modeScale && modeScale.ladder && Number.isFinite(baseHp) && baseHp > 0) {
-    return Math.max(1, Math.round(bossLadderHp(baseHp, modeScale.ladder, aliveCount)));
+    return Math.max(1, Math.round(bossLadderHp(baseHp, modeScale.ladder, aliveCount) * hiddenMul));
   }
   const boss = gd.boss(bossId);
   const diff = gd.difficulty;
@@ -86,13 +89,13 @@ export function bossPoolHp(gd, bossId, aliveCount) {
   const modeMul = typeof gd.bossPoolHpMul === 'number' && gd.bossPoolHpMul > 0 ? gd.bossPoolHpMul : 1;
   const share = typeof gd.bossPoolShare === 'function' ? gd.bossPoolShare(aliveCount)
     : bossPoolShareOf(gd.mode && gd.mode.bossHpScale, gd.config && gd.config.bossHpScale, !!gd.isSolo, aliveCount);
-  return Math.max(1, Math.round(base * modeMul * share * tune));
+  return Math.max(1, Math.round(base * modeMul * share * tune * hiddenMul));
 }
 
 /**
- * 炸惊 boss 血量阶梯（用户 2026-10-11）：基础 `baseHp`；联机每多一名玩家 +`perExtra`（1.5 = +150%），
- * 超过 4 人后每名再 +`after4`（2 = +200%），超过 10 人后每名 ×2（指数）。
- * baseHp=1000万 时：1 人 1000万 · 2 人 2500万 · 4 人 5500万 · 5 人 7500万 · 10 人 1.75亿 · 11 人 3.5亿 · 12 人 7亿。
+ * 炸惊 boss 血量阶梯（用户 2026-10-11 定稿，2026-10-23 改）：基础 `baseHp`；联机每多一名玩家 +`perExtra`（1 = +100%），
+ * 超过 4 人后每名再 +`after4`（1 = +100%），**不再有 10 人上限**（owner 2026-10-23「加算逻辑不变，但没有上限了」）；
+ * `doubleAfter10` 仍可叠一个 10 人后的 ×2 指数（当前配置是 false）。
  * @param {number} baseHp @param {{ perExtra?: number, after4?: number, doubleAfter10?: boolean }} ladder
  * @param {number} aliveCount @returns {number}
  */
@@ -100,7 +103,7 @@ export function bossLadderHp(baseHp, ladder, aliveCount) {
   const n = Math.max(1, Math.min(100, Math.trunc(Number(aliveCount) || 1)));
   const per = Number(ladder && ladder.perExtra) || 0;
   const after4 = Number(ladder && ladder.after4) || 0;
-  const lin = 1 + per * Math.max(0, Math.min(n, 4) - 1) + after4 * Math.max(0, Math.min(n, 10) - 4);
+  const lin = 1 + per * Math.max(0, Math.min(n, 4) - 1) + after4 * Math.max(0, n - 4);
   const exp = ladder && ladder.doubleAfter10 === false ? 1 : 2 ** Math.max(0, n - 10);
   return baseHp * lin * exp;
 }

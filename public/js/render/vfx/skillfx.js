@@ -215,6 +215,8 @@ export class SkillFx {
     // ★ 2026-10-18（模组自有，移植 VFX 时保留）：`${unit id}|${kind}` → { st, hs, until }
     //   `_keyed`：kit 每 0.12 s 报一次移动的那种**同一个**实例（赤刃明霄陈 S3 的龙）
     this.keyed = new Map();
+    this.mujicaNotes = new Map(); // noteId -> one original effect following the simulated note
+    this.mujicaFever = new Map();
     this.born = new Map();     // unit id → { frame, own } of its official birth effect (deployed: FxWiring.deploy's key)
     this.frame = 0;            // FxWiring.tick counts frames: events of one frame share a value
     this.sweep = 0;
@@ -893,6 +895,8 @@ export class SkillFx {
       this.tloops.clear();
       // ★ 2026-10-18（移植 VFX 时保留模组的东西）：keyed 实例（赤刃明霄陈 S3 的龙）切档时也要收掉
       for (const id of [...this.keyed.keys()]) this._stopKeyed(id);
+      for (const n of this.mujicaNotes.values()) n.h.stop();
+      this.mujicaNotes.clear();
       for (const t of this.aloops.values()) t.h.stop();
       this.aloops.clear();
       this.tier = tier;
@@ -974,6 +978,7 @@ export class SkillFx {
     if (this.marks.length) this.marks = this.marks.filter((m) => m.until > now);
     // a keyed instance its kit stopped reporting (the wave died, the skill ended) ends with its own fade
     for (const [id, k] of this.keyed) if (now >= k.until || !k.hs.every((h) => h.alive)) this._stopKeyed(id);
+    for (const [id, n] of this.mujicaNotes) if (now >= n.until || !n.h.alive) { n.h.stop(); this.mujicaNotes.delete(id); }
   }
 
   /**
@@ -1006,7 +1011,11 @@ export class SkillFx {
 
   /** b.ev ['fx', kind, x, y, extra]: true when the official layer stands for it (module header: bindings 1–4). */
   simFx(kind, x, y, extra) {
+    if (kind === 'mujicaSound') return true; // audio-only event: no procedural fallback flash
+    if (kind === 'mujicaFever' && extra?.playerId != null) this.mujicaFever.set(extra.playerId, !!extra.active);
     if (!this.active() || !extra || typeof extra !== 'object' || typeof kind !== 'string') return false;
+    if (kind === 'mujicaNote') return this._mujicaNote(x, y, extra);
+    if (kind === 'mujicaImpact') return this._mujicaImpact(x, y, extra);
     const now = this.w.ofx.time;
     // a skill start cast with every charge stored (the kit's `charged`: 卡涅利安) — the `[eff_cond]` state (_cond)
     if (extra.charged === true && extra.id != null) { const C = this.units.get(extra.id); if (C) C.charged = true; }
@@ -1057,6 +1066,64 @@ export class SkillFx {
     // (3) the frame of the official skill start, (4) a skill-tagged flash while the official loops play
     if (U.startFrame === this.frame && (U.ewin ? U.ewin.draws : U.drawsStart)) return true;
     return extra.skill != null && on && (U.loops.some((h) => h.alive) || !!U.ewin?.loops.some((h) => h.alive));
+  }
+
+  /** Amoris strikes tiles with or without enemies; each simulated hammer hit owns one original impact. */
+  _mujicaImpact(x, y, extra) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
+    const source = this.w.view(extra.id);
+    const skinMap = this.w.idx.mujicaSkinMaps?.[source?.info?.skin];
+    const projectileKey = skinMap?.projectiles?.[extra.projectile] || extra.projectile;
+    const projectile = this.w.idx.projectiles?.[projectileKey];
+    if (!projectile) return false;
+    const point = this._ground(x, y, source);
+    let drew = false;
+    for (const key of new Set([...(projectile.onReached || []), ...(projectile.onHit || [])])) {
+      if (!this.w.ofx.lib.has(key)) continue;
+      if (this.w.playOn(key, point, { flipFrom: source || undefined, important: true })) drew = true;
+    }
+    return drew;
+  }
+
+  /** The note is simulated by the kit; the original projectile prefab follows that exact path. */
+  _mujicaNote(x, y, extra) {
+    if (!extra.noteId || !Number.isFinite(x) || !Number.isFinite(y)) return false;
+    const source = this.w.view(extra.id);
+    const skinMap = this.w.idx.mujicaSkinMaps?.[source?.info?.skin];
+    const projectileKey = skinMap?.projectiles?.[extra.projectile] || extra.projectile;
+    const projectile = this.w.idx.projectiles?.[projectileKey];
+    if (!projectile || !this.w.ofx.lib.has(projectile.main)) return false;
+    const id = String(extra.noteId), now = this.w.ofx.time;
+    const previous = this.mujicaNotes.get(id);
+    if (extra.state === 'end') {
+      if (previous) { previous.h.stop(); this.mujicaNotes.delete(id); }
+      return true;
+    }
+    if (extra.state === 'hit') {
+      // A piano note keeps flying for its penetration window; only 'end' removes it.
+      const point = this._ground(x, y, source);
+      for (const key of projectile.onHit || projectile.onReached || []) this.w.playOn(key, point, { flipFrom: source || undefined, important: true });
+      return true;
+    }
+    const z = this._ground(x, y, source).z + 0.25;
+    const dx = previous ? x - previous.st.x : Number(extra.tx) - x;
+    const dy = previous ? y - previous.st.y : Number(extra.ty) - y;
+    const yaw = Number.isFinite(dx) && Number.isFinite(dy) && (dx || dy) ? Math.atan2(dy, dx) : previous?.st.yaw || 0;
+    if (previous && previous.h.alive) {
+      Object.assign(previous.st, { x, y, z, yaw });
+      previous.until = now + 1;
+      return true;
+    }
+    const st = { x, y, z, yaw };
+    const track = (effect) => {
+      effect.anchor[0] = st.x - 10; effect.anchor[1] = st.y - 9; effect.anchor[2] = -st.z;
+      effect.yaw = st.yaw;
+      effect.mountRot = null;
+    };
+    const h = this.w.playOn(projectile.main, { id: 'fx:point', x, y, z, facing: -1 }, { track, loop: true, important: true });
+    if (!h) return false;
+    this.mujicaNotes.set(id, { st, h, until: now + 1 });
+    return true;
   }
 
   /** An FX_BINDINGS `attack` entry: that plan attack's rows on the owner now, its hits on the damage that follows. */
@@ -1392,6 +1459,10 @@ export class SkillFx {
     const out = new Set();
     const proj = (pk) => { const p = pk && idx.projectiles?.[pk]; if (p) for (const k of p.effects || []) out.add(String(k).toLowerCase()); };
     for (const v of views) {
+      if (this.w.unitOf(v)?.mujicaNotes) {
+        const skin = idx.mujicaSkinMaps?.[v.info?.skin];
+        for (const pk of Object.keys(idx.projectiles || {}).filter(k => k.startsWith('projectile_chr_oblvns') && !k.includes('@'))) proj(skin?.projectiles?.[pk] || pk);
+      }
       // an enemy's areas (ENEMY_FX_BINDINGS: its zones' prefabs, its aura's buff effects on the units in it)
       for (const k of enemyBindingKeys(idx, this.w.unitKeyOf(v))) out.add(k);
       const U = this.of(v);
@@ -1419,6 +1490,9 @@ export class SkillFx {
 
   /** Battle reset: forget every unit (the effects themselves are cleared by OfficialFx.clear). */
   clear() {
+    for (const n of this.mujicaNotes.values()) n.h.stop();
+    this.mujicaNotes.clear();
+    this.mujicaFever.clear();
     this.units.clear();
     this.tloops.clear();
     this.marks = [];

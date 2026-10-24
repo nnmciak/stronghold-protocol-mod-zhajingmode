@@ -59,6 +59,7 @@ export class PlayerViews {
       if (e.counter != null) v.counter = e.counter;
       // 惊变阶段: the picked 惊变 cards — the 已选惊变 panel reads these apart from the ordinary 机变 effects
       if (e.jibian) { v.jibian = true; if (e.rarity) v.rarity = e.rarity; if (e.flavor) v.flavor = e.flavor; }
+      if (e.iconBond) v.iconBond = e.iconBond;
       out.push(v);
     }
     for (const b of this.bounties) {

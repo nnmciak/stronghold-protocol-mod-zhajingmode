@@ -8,6 +8,9 @@
 export const FX_KINDS = Object.freeze({
   // blasts
   aoe: { a: 'blast', c: 0xffb35c }, explode: { a: 'blast', c: 0xff7a33 }, explosion: { a: 'blast', c: 0xff7a33 },
+  // Amoris fallback when original effects are disabled/unavailable: always the
+  // struck ground tile, with her base glow colour (the costume tint is in simfx).
+  mujicaImpact: { a: 'blast', c: 0xff7676, pt: true },
   // ★ 2026-10-17：结城理二天赋「S.E.E.S.队长」的总攻击（op-makoto.js allOutAttack）。
   //   官方特效 makoto_talent_finish_01 / makoto_talent_start_01 在 index.json 里**没有被任何 ability/use 引用**，
   //   计划表里没有它们、引擎永远不会播；kit 原来只发 'aoe'（→ 上面的通用橙色 blast）。

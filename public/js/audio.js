@@ -489,6 +489,31 @@ function isAudioResponse(res) {
   const type = res.headers?.get?.('content-type');
   return !type || /^\s*audio\//i.test(type);
 }
+const MUJICA_AUDIO_IDS = new Set(['char_4182_oblvns', 'char_4183_mortis', 'char_4184_dolris', 'char_4185_amoris', 'char_4186_tmoris']);
+/** Original audio_data event names. null is an intentionally silent generic event. */
+export function mujicaBankForUnit(id, kind, index = 0, active = false, form = null) {
+  if (!MUJICA_AUDIO_IDS.has(id) || !['attack', 'hit', 'skill'].includes(kind)) return undefined;
+  const code = id.replace(/^char_\d+_/, '');
+  if (kind === 'skill') {
+    if (code === 'oblvns') return index === 0 ? 'battle.ON_ABILITY_START.skchr_oblvns_1'
+      : index === 1 ? `battle.ON_SKILL_START.skchr_oblvns_2.${form === 'oblvns_s2_b' ? 1 : 2}`
+      : 'battle.ON_CUSTOM_TRIGGER.skchr_oblvns_3[start]';
+    if (code === 'mortis' || code === 'amoris') return `battle.ON_CUSTOM_TRIGGER.${code}_skill_start_${index + 1}`;
+    if (code === 'dolris') return `battle.ON_CUSTOM_TRIGGER.dolris_s_${index + 1}_start`;
+    return index === 0 ? 'battle.ON_ABILITY_START.skchr_tmoris_1' : 'battle.ON_CUSTOM_TRIGGER.tmoris_skill_2_start';
+  }
+  if (code === 'oblvns') return kind === 'hit' ? null : active && index === 2
+    ? 'battle.ON_ABILITY_START.char_4182_oblvns.attack.4.1' : 'battle.ON_ABILITY_ON.char_4182_oblvns.attack.0.1';
+  // Nyamu's individual drum impacts and Uika's S2 pulses arrive at their precise kit timestamps.
+  if (code === 'amoris' || code === 'dolris') return null;
+  if (code === 'mortis') {
+    if (kind === 'attack' && active && index === 1) return null;
+    return `battle.ON_ABILITY_${kind === 'attack' ? 'ON' : 'HIT'}.char_4183_mortis.attack${active && index === 1 ? '.3' : ''}`;
+  }
+  if (kind === 'attack' && active && index === 0) return null;
+  return `battle.ON_ABILITY_${kind === 'attack' ? 'ON' : 'HIT'}.char_4186_tmoris.attack.${active && index === 1 ? 1 : 0}`;
+}
+
 export class AudioManager {
   /**
    * @param {{ getManifest?: () => any, win?: any }} [opts]
@@ -610,6 +635,7 @@ export class AudioManager {
         if (p && typeof p.then === 'function') p.then(() => { if (this.ctx?.state === 'running') this._dropUnlock(); }, () => {});
       }
       if (this.wantBgm) { const k = this.wantBgm; this.wantBgm = null; this.playBgm(k); }
+      if (this.mujicaStates?.size) this.setMujicaFever(null);
     } catch (err) {
       this._warn('ctx', err);
       this.ctx = null;
@@ -823,7 +849,7 @@ export class AudioManager {
       gain.connect(this.bgmGain);
       const t0 = ctx.currentTime + 0.05;
       gain.gain.setValueAtTime(0, t0);
-      gain.gain.linearRampToValueAtTime(1, t0 + FADE_S);
+      gain.gain.linearRampToValueAtTime(this.mujicaMusicUrl && !this.mujicaMusicFinished ? 0 : 1, t0 + FADE_S);
       const nodes = [];
       let loopAt = t0;
       if (intro) {
@@ -1083,6 +1109,10 @@ export class AudioManager {
    */
   unit(defId, kind, unitId, skillIndex) {
     try {
+      const tracked = this.units.get(unitId);
+      const active = !!tracked?.skillOn || (kind !== 'skill' && Number.isInteger(skillIndex));
+      const bank = mujicaBankForUnit(defId, kind, skillIndex ?? tracked?.skillIndex ?? 0, active, tracked?.form);
+      if (bank !== undefined) return bank ? this._playMujicaBank(bank, `${unitId}:${kind}`, kind === 'skill' ? 0.8 : 0.55) : true;
       const u = this.getManifest()?.audio?.sfx?.units?.[defId];
       // DESIGN §16: the equipped skill's own ON_SKILL_START sound (`skills[index]`) when the manifest has it
       const own = kind === 'skill' && Number.isInteger(skillIndex) && u?.skills ? u.skills[skillIndex] : null;
@@ -1216,8 +1246,64 @@ export class AudioManager {
 
   // ---- battle events ------------------------------------------------------------------------------------------
 
+  /** Original Fever music uses the music bus and replaces the current battlefield BGM. */
+  setMujicaFever(state) {
+    this.mujicaStates ??= new Map();
+    if (state?.playerId != null) this.mujicaStates.set(state.playerId, state);
+    const feverRunning = [...this.mujicaStates.values()].some((s) => s.active);
+    if (!feverRunning) { this.mujicaMusicEpoch = null; this.mujicaMusicFinished = false; }
+    const active = [...this.mujicaStates.values()].filter((s) => s.active && s.performing !== false);
+    const choice = active.some((s) => s.vocal) ? 'vocal' : 'instrumental';
+    const url = active.length ? this.getManifest()?.audio?.mujicaFever?.[choice] : null;
+    if (!url && feverRunning && this.mujicaMusicUrl) this.mujicaMusicFinished = true;
+    if (url && (!this.ctx || !this.bgmGain)) return; // keep state until the first user gesture unlocks audio
+    if (this.mujicaMusicUrl === url) return;
+    this.mujicaMusicUrl = url;
+    const generation = this.mujicaMusicGeneration = (this.mujicaMusicGeneration || 0) + 1;
+    try { this.mujicaMusic?.stop(); } catch { /* already ended */ }
+    this.mujicaMusic = null;
+    if (this.ctx && this.bgm?.gain) this.bgm.gain.gain.setTargetAtTime(url && !this.mujicaMusicFinished ? 0 : 1, this.ctx.currentTime, 0.12);
+    if (!url || !this.ctx || !this.bgmGain || this.mujicaMusicFinished) return;
+    if (this.mujicaMusicEpoch == null) this.mujicaMusicEpoch = this.ctx.currentTime;
+    this._buffer(url).then((buffer) => {
+      if (generation !== this.mujicaMusicGeneration || !this.ctx) return;
+      if (!buffer) {
+        this.mujicaMusicUrl = null;
+        if (this.bgm?.gain) this.bgm.gain.gain.setTargetAtTime(1, this.ctx.currentTime, 0.12);
+        return;
+      }
+      const source = this.ctx.createBufferSource();
+      const offset = Math.max(0, this.ctx.currentTime - this.mujicaMusicEpoch);
+      if (offset >= buffer.duration) {
+        this.mujicaMusicFinished = true;
+        if (this.bgm?.gain) this.bgm.gain.gain.setTargetAtTime(1, this.ctx.currentTime, 0.12);
+        return;
+      }
+      source.buffer = buffer; source.loop = false;
+      source.connect(this.bgmGain);
+      source.onended = () => {
+        try { source.disconnect(); } catch { /* disconnected */ }
+        if (generation !== this.mujicaMusicGeneration || this.mujicaMusic !== source) return;
+        this.mujicaMusic = null;
+        this.mujicaMusicFinished = true;
+        if (this.ctx && this.bgm?.gain) this.bgm.gain.gain.setTargetAtTime(1, this.ctx.currentTime, 0.12);
+      };
+      this.mujicaMusic = source;
+      // Instrumental and vocal recordings share a timeline; changing the mix must not restart the song.
+      source.start(0, offset);
+    }).catch((err) => {
+      if (generation === this.mujicaMusicGeneration) {
+        this.mujicaMusicUrl = null;
+        if (this.ctx && this.bgm?.gain) this.bgm.gain.gain.setTargetAtTime(1, this.ctx.currentTime, 0.12);
+      }
+      this._warn('mujica-fever', err);
+    });
+  }
+
   /** Reset the unit map for a new field (m.field.units = UnitInfo[]). */
   setFieldUnits(units) {
+    this.mujicaStates?.clear();
+    this.setMujicaFever(null);
     this.units.clear();
     this.lastAttacker.clear();
     this.consumed.clear();
@@ -1240,12 +1326,39 @@ export class AudioManager {
     if (typeof url === 'string') this._play(url, { volume, limited: true, unitKey });
   }
 
+  _playMujicaBank(bank, unitKey, volume = 0.55) {
+    const manifest = this.getManifest()?.audio;
+    const rows = manifest?.mujicaBankDefs?.[bank];
+    if (Array.isArray(rows) && rows.length) {
+      const total = rows.reduce((sum, row) => sum + Math.max(0, Number(row.weight) || 0), 0);
+      let pick = this.random() * total, selected = rows[rows.length - 1];
+      for (const row of rows) { pick -= Math.max(0, Number(row.weight) || 0); if (pick < 0) { selected = row; break; } }
+      if (selected.url) {
+        const lo = Number(selected.minPitch) || 1, hi = Number(selected.maxPitch) || lo;
+        const gainLo = Number.isFinite(selected.minVolume) ? selected.minVolume : 1;
+        const gainHi = Number.isFinite(selected.maxVolume) ? selected.maxVolume : gainLo;
+        this._play(selected.url, { volume: volume * (gainLo + (gainHi - gainLo) * this.random()),
+          rate: lo + (hi - lo) * this.random(), limited: true, unitKey });
+      }
+      return true;
+    }
+    const values = manifest?.mujicaBanks?.[bank];
+    const url = Array.isArray(values) ? values[Math.min(values.length - 1, Math.floor(this.random() * values.length))] : values;
+    if (typeof url !== 'string') return false;
+    this._playUnitUrl(url, unitKey, volume);
+    return true;
+  }
+
   /**
    * React to `b.ev` tuples (DESIGN §8.2).
    * @param {any[]} ev
    */
   handleBattleEvents(ev) {
-    if (!this.ctx || !Array.isArray(ev)) return;
+    if (!Array.isArray(ev)) return;
+    if (!this.ctx) {
+      for (const e of ev) if (Array.isArray(e) && e[0] === 'fx' && e[1] === 'mujicaFever') this.setMujicaFever(e[4]);
+      return;
+    }
     try {
       const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
       for (const e of ev) {
@@ -1257,19 +1370,27 @@ export class AudioManager {
           if (CHAIN_KINDS.has(e[3])) { this.lastAttacker.delete(e[2]); continue; }
           const src = this.units.get(e[1]);
           if (!src) continue;
+          // The action's sound is separate from a note's spawn/impact or a timed drum strike.
+          if (src.def === 'char_4182_oblvns' || src.def === 'char_4185_amoris') {
+            this.unit(src.def, 'attack', e[1], src.skillOn ? src.skillIndex : undefined);
+            continue;
+          }
           // only a hostile attack authors the target's next impact (a heal — an ally aiming at an ally — never does)
           const tgt = this.units.get(e[2]);
-          if (tgt && tgt.side !== src.side) this.lastAttacker.set(e[2], { def: src.def, at: now });
-          if (!this.unit(src.def, 'attack', e[1]) && src.side === 'enemy') this.battle('enemyHit', { unitKey: `${e[1]}:atk`, volume: 0.35 });
+          if (tgt && tgt.side !== src.side) this.lastAttacker.set(e[2], { def: src.def, at: now,
+            ...(MUJICA_AUDIO_IDS.has(src.def) ? { sourceId: e[1], skillIndex: src.skillOn ? src.skillIndex : undefined } : {}) });
+          if (!this.unit(src.def, 'attack', e[1], MUJICA_AUDIO_IDS.has(src.def) && src.skillOn ? src.skillIndex : undefined) && src.side === 'enemy') this.battle('enemyHit', { unitKey: `${e[1]}:atk`, volume: 0.35 });
         } else if (kind === 'dmg') {
           const by = this.lastAttacker.get(e[1]);
           if (!by || !IMPACT_TYPES.has(e[3])) continue;
           this.lastAttacker.delete(e[1]); // one impact per attack
-          if (now - by.at <= IMPACT_WINDOW_MS) this.unit(by.def, 'hit', `h${e[1]}`);
+          if (now - by.at <= IMPACT_WINDOW_MS) this.unit(by.def, 'hit', by.sourceId ?? `h${e[1]}`, by.skillIndex);
         } else if (kind === 'heal') {
           this.battle('heal', { unitKey: `heal:${e[1]}`, volume: 0.35 });
-        } else if (kind === 'skill' && e[2]) {
+        } else if (kind === 'skill') {
           const u = this.units.get(e[1]);
+          if (u) u.skillOn = !!e[2];
+          if (!e[2]) continue;
           if (u) {
             this.unit(u.def, 'skill', e[1], u.skillIndex ?? undefined);
             // 作战中N: the equipped skill's own slot (0-based; 作战中4 is the fallback of a 4th slot)
@@ -1323,6 +1444,29 @@ export class AudioManager {
           if (!unitSoundPlays(mix, this.random())) continue;
           this._playUnitUrl(url, own ? `${e[1]}:born` : 'deploy', own ? unitGain(0.8, mix) : 0.5);
         } else if (kind === 'fx') {
+          if (e[1] === 'mujicaFever') { this.setMujicaFever(e[4]); continue; }
+          if (e[1] === 'mujicaSound') {
+            const ex = e[4], u = this.units.get(ex?.id);
+            if (u && MUJICA_AUDIO_IDS.has(u.def) && typeof ex.bank === 'string') this._playMujicaBank(ex.bank, `mujica:${ex.id}:${ex.bank}`);
+            continue;
+          }
+          if (e[1] === 'setForm') {
+            const ex = e[4], u = this.units.get(ex?.id);
+            if (u && MUJICA_AUDIO_IDS.has(u.def)) {
+              if (u.def === 'char_4183_mortis' && ex.form === 'doll' && u.form !== 'doll') this._playMujicaBank('battle.ON_CUSTOM_TRIGGER.mortis_switch_black_fog_audio', `${ex.id}:doll`);
+              u.form = ex.form;
+            }
+          }
+          if (e[1] === 'mujicaNote') {
+            const ex = e[4];
+            if (!ex || !['spawn', 'hit'].includes(ex.state)) continue;
+            const event = ex.state === 'spawn' ? 'BORN' : 'HIT';
+            let bank = `battle.ON_PROJECTILE_${event}.${ex.projectile}`;
+            if (ex.state === 'hit' && /^projectile_chr_oblvns_s1(?:_[1-8])?$/.test(ex.projectile))
+              bank = 'battle.ON_CUSTOM_TRIGGER.projectile_chr_oblvns_s1_hit';
+            this._playMujicaBank(bank, `mujica:${ex.id}:${ex.state}:${ex.projectile}`);
+            continue;
+          }
           // a summon used up by its own effect (香槟炸弹 exploding: `consumed`): its impact sound now, no death sound
           const ex = e[4];
           if (!ex || typeof ex !== 'object' || !ex.consumed || ex.id == null) continue;

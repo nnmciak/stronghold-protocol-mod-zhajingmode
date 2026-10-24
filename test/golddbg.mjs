@@ -1,0 +1,11 @@
+﻿import { Match } from '../server/match/Match.js';
+import { getData } from '../server/data.js';
+import { getDefaultRegistry } from '../server/match/effectsMeta.js';
+const m=new Match({roomCode:'T',mode:'solo',difficulty:'ZHAJING',modeId:'mode_single_zhajing',seed:3,data:getData(),registry:getDefaultRegistry(),seats:[{seat:0,playerId:'p1',name:'t',isBot:false,connected:true}],send:()=>true,broadcast:()=>{},onEnd:()=>{}});
+m.phase='PREP'; m.round=1;
+const ps=m.players.get('p1');
+const elite=ps.newPiece('chess','chess_zj_amoris_b');
+console.log('piece.id', elite.id, '| gd.isGolden', m.gd.isGolden(elite.id), '| chess.isGolden', m.gd.chess(elite.id)?.isGolden);
+const base=ps.newPiece('chess','chess_zj_amoris_a');
+console.log('base piece.id', base.id, '| gd.isGolden', m.gd.isGolden(base.id));
+m.dispose();

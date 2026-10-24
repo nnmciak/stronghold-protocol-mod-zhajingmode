@@ -1,4 +1,4 @@
-/* ==========================================================================================
+﻿/* ==========================================================================================
    screens/game-panels.css — rich text, unit thumbnails & glyphs (gameComponents.js), detail panel,
    bond popup, enemy / match-info drawer, 机变 overlay.
    ========================================================================================== */
@@ -411,6 +411,14 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
 .spov__grid { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: .2rem; }
 .spov__grid--3 { grid-template-columns: repeat(3, minmax(0, 4.3rem)); grid-template-rows: minmax(0, 4.6rem); justify-content: center; align-content: start; gap: .36rem; margin-top: .3rem; }
 .spov__grid--3 .spcard__icon { width: 1.3rem; height: 1.3rem; }
+/* These three cards include both a set-bonus row and a flavour line; let their
+   row grow with the complete text, including the refresh button below it. */
+.spov--mujica-cards .spov__inner { overflow-y: auto; }
+.spov--mujica-cards .spov__grid--3 { flex: 0 0 auto; grid-template-rows: auto; padding: .06rem 0 .1rem; }
+.spov--mujica-cards .spcardwrap { min-height: 4.6rem; }
+.spov--mujica-cards .spcardwrap > .spcard { flex: 1 0 auto; }
+.spov--mujica-cards .spcard__desc { display: block; -webkit-line-clamp: unset; }
+.spov--mujica-cards .spcard__flavor { flex: none; }
 /* The official card (research 06 §11.5; the official 悬赏 / 机密商店 / 战术 screenshots): a framed icon at the top-left
    with the bold name beside it, the effect text under both across the card, left-aligned; the tier chip on the icon's
    corner, the taker's round avatar at the top-right (user playtest #6 item 6: the centred icon + name used to push the
@@ -745,6 +753,10 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
 .ejb[data-rarity="epic"] .ejb__rarity { color: var(--gold); }
 .ejb[data-rarity="legend"] .ejb__card { border-color: var(--red-premium); box-shadow: 0 0 calc(.6 * var(--t)) rgba(255, 84, 84, .28), inset 0 0 calc(.5 * var(--t)) rgba(255, 84, 84, .12); }
 .ejb[data-rarity="legend"] .ejb__rarity { color: var(--red-premium); }
+.ejb[data-rarity="hidden"] .ejb__card { border-color: #22e0d0; box-shadow: 0 0 calc(.6 * var(--t)) rgba(255, 77, 109, .38), inset 0 0 calc(.4 * var(--t)) rgba(34, 224, 208, .12); }
+.ejb[data-rarity="hidden"] .ejb__rarity { color: #ff4d6d; }
+.ejb__stage.is-multi { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: calc(.12 * var(--t)); }
+.ejb__stage.is-multi .ejb__card { flex: 1 1 calc(33% - calc(.12 * var(--t))); min-width: 0; }
 /* 阶段一 闪烁：卡片在两种亮度间跳变，名字带一点动态模糊 */
 .ejb--roll .ejb__card { animation: ejb-flicker .14s steps(2, end) infinite; }
 .ejb--roll .ejb__name { filter: blur(.4px); }
@@ -794,10 +806,20 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
   background: rgba(255, 255, 255, .03); border: 1px solid var(--line-3); border-left-width: calc(.04 * var(--t));
 }
 .jbc__top { display: flex; align-items: baseline; gap: calc(.08 * var(--t)); }
+.jbc__icon { display: grid; place-items: center; flex: none; align-self: center; width: calc(.48 * var(--t)); height: calc(.48 * var(--t)); background: #101614; }
+.jbc__icon img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .jbc__name { font-size: calc(.18 * var(--t)); font-weight: 700; line-height: 1.25; color: var(--text-hi); }
 .jbc__rarity { margin-left: auto; flex: none; font-size: calc(.11 * var(--t)); letter-spacing: .16em; padding: calc(.01 * var(--t)) calc(.06 * var(--t)); border: 1px solid currentColor; }
 .jbc__desc { font-size: calc(.14 * var(--t)); line-height: 1.55; color: var(--text-md); }
 .jbc__flavor { font-size: calc(.12 * var(--t)); line-height: 1.5; color: var(--text-dim); font-style: italic; white-space: pre-line; }
+
+/* Only the glyph is inverted: its black card background stays black. */
+.spcard__icon.jibian-art--white-glyph,
+.jbc__icon.jibian-art--white-glyph,
+.effect.jibian-art--white-glyph { background: #080b0a; }
+.spcard__icon.jibian-art--white-glyph img,
+.jbc__icon.jibian-art--white-glyph img,
+.effect.jibian-art--white-glyph img { filter: brightness(0) invert(1); object-fit: contain; }
 
 /* 友方：普通蓝 / 史诗紫 / 传说金 */
 .jbc[data-rarity="normal"] { border-left-color: #3fb6ff; }
@@ -806,6 +828,8 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
 .jbc[data-rarity="rare"] .jbc__rarity { color: #5b8cff; }
 .jbc[data-rarity="epic"] { border-left-color: #b47cff; background: rgba(180, 124, 255, .07); }
 .jbc[data-rarity="epic"] .jbc__rarity { color: #b47cff; }
+.jbc[data-rarity="hidden"] { border-left-color: #22e0d0; background: linear-gradient(90deg, rgba(34, 224, 208, .12), rgba(255, 77, 109, .08)); }
+.jbc[data-rarity="hidden"] .jbc__rarity { color: #ff4d6d; }
 .jbc[data-rarity="legend"] { border-left-color: var(--gold); background: rgba(255, 198, 0, .08); box-shadow: inset 0 0 calc(.3 * var(--t)) rgba(255, 198, 0, .07); }
 .jbc[data-rarity="legend"] .jbc__rarity { color: var(--gold); }
 /* 敌方：普通暗红 / 史诗亮橙 / 传说亮红 */

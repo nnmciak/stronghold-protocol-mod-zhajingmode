@@ -6,7 +6,7 @@
 
 import { PHASE, ERR } from '../../../shared/constants.js';
 import { buildNormalWave, buildBossWave, weightedPick } from '../waves.js';
-import { matchJibianPlan } from '../../sim/content/ejibian.js';
+import { matchJibianPlan, applyHiddenMatchCards } from '../../sim/content/ejibian.js';
 import { jibianCard } from '../choices.js';
 import { pairPlayers } from '../finalAssault.js';
 import { botPickBand, aiBandPick } from '../bot.js';
@@ -479,6 +479,80 @@ export class MatchPhases {
     // the deadline, so a timed phase is what every seat waits out
     this.setDeadline((ej.flickerMs + ej.resultMs) / 1000, () => {
       if (this.phase === PHASE.ENEMY_JIBIAN) this.afterEnemyJibian();
+    }, { silent: this.soloUntimed });
+    this.markPublic();
+    for (const ps of this.order) this.markPrivate(ps);
+    this.flush(true);
+  }
+
+  /**
+   * ★ 2026-10-24（owner）：「隐秘惊变」—— 隐秘核心战开始前的专属揭示阶段，与普通敌方惊变（ENEMY_JIBIAN）分开。
+   * 规则：**保底**先抽一张「隐秘」稀有度的 boss 专属卡（config enemyJibian.hidden.pool），
+   *       再按普通权重抽一张普通池的卡；两张都追加进 enemyJibianCards，对隐秘核心战生效。
+   * 池子为空时（还没写隐秘卡）只抽普通那张；两张都抽不到就直接进隐秘核心。
+   */
+  enterHiddenJibian(hidden) {
+    const ej = typeof this.gd.enemyJibian === 'function' ? this.gd.enemyJibian() : null;
+    if (!ej) { this.startFinalAssault(true); return; }
+    const taken = new Set(this.enemyJibianCards || []);
+    const picked = [];
+    const hiddenPool = hidden && Array.isArray(hidden.pool) ? hidden.pool.filter((c) => c && c.effectId) : [];
+    const normalPool = Array.isArray(ej.pool) ? ej.pool.filter((c) => c && c.effectId) : [];
+    /** 抽一张（allowHidden: 7.99% 走隐秘池）；结果进 taken，避免同一张重复 */
+    const drawOne = (allowHidden, forceHidden = false) => {
+      // forceHidden：隐秘阶段开头那张是【保底】隐秘；7.99% 只用于「潘多拉·敌」追加的抽卡
+      const useHidden = !!(allowHidden && hiddenPool.length && (forceHidden || this.rngDraft() < 0.0799));
+      const source = useHidden ? hiddenPool : normalPool;
+      if (!source.length) return null;
+      let pool = source.filter((c) => !taken.has(c.effectId || c.id));
+      if (!pool.length) pool = source;
+      let list = pool;
+      let rarity = useHidden ? 'hidden' : null;
+      if (!useHidden) {
+        rarity = weightedPick(this.rngDraft, ej.rarityWeights);
+        const ofRarity = pool.filter((c) => c && c.rarity === rarity);
+        if (ofRarity.length) list = ofRarity;
+      }
+      const spec = list[Math.floor(this.rngDraft() * list.length)];
+      if (!spec) return null;
+      const card = jibianCard(this.gd, spec, spec.rarity || rarity || 'normal');
+      taken.add(card.id);
+      return card;
+    };
+    if (hiddenPool.length) { const c = drawOne(true, true); if (c) picked.push(c); }
+    { const c = drawOne(false); if (c) picked.push(c); }
+    // ★ 2026-10-24（owner）：「潘多拉·敌」—— 抽到后再随机 3 张敌方惊变（每张 7.99% 是隐秘惊变）。
+    //   展开是递归的（潘多拉自己也可能被抽到），所以用队列 + 次数上限防跑飞。
+    const PANDORA = 'ejibian_hidden_pandora';
+    const expanded = new Set();
+    const queue = picked.slice();
+    for (let guard = 0; queue.length && guard < 40; guard++) {
+      const c = queue.shift();
+      if (!c || c.id !== PANDORA || expanded.has(c.id)) continue;
+      expanded.add(c.id);
+      for (let i = 0; i < 3; i++) {
+        const extra = drawOne(true);
+        if (!extra) break;
+        picked.push(extra);
+        queue.push(extra);
+      }
+    }
+    if (!picked.length) { this.startFinalAssault(true); return; }
+    this.enemyJibianCards = [...(this.enemyJibianCards || []), ...picked.map((c) => c.id)]
+      .filter((x) => typeof x === 'string' && x);
+    // 隐秘惊变里「抽到即改玩家层数」的两张（响指 / 诛伏赐死）在这里结算
+    try { applyHiddenMatchCards(this, picked.map((c) => c.id)); } catch { /* 不影响揭示流程 */ }
+    this.hiddenJibian = {
+      hidden: true,
+      label: (hidden && hidden.label) || '隐秘惊变',
+      cards: picked,
+      round: this.round,
+    };
+    this.phase = PHASE.HIDDEN_JIBIAN;
+    const flickerMs = Number(hidden && hidden.flickerMs) || Number(ej.flickerMs) || 2200;
+    const resultMs = Number(hidden && hidden.resultMs) || Number(ej.resultMs) || 1800;
+    this.setDeadline((flickerMs + resultMs) / 1000, () => {
+      if (this.phase === PHASE.HIDDEN_JIBIAN) this.startFinalAssault(true);
     }, { silent: this.soloUntimed });
     this.markPublic();
     for (const ps of this.order) this.markPrivate(ps);

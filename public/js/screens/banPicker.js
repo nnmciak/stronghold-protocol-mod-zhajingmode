@@ -1,4 +1,4 @@
-// screens/banPicker.js — 卡池预选: 自选要 ban 的盟约, per difficulty, with the 大盟约 「特别关心 ❤」 mark.
+﻿// screens/banPicker.js — 卡池预选: 自选要 ban 的盟约, per difficulty, with the 大盟约 「特别关心 ❤」 mark.
 //
 // WHY IT EXISTS. The 100-seat variant gives every player a pool of its own (server/match/player/rules.js INDEPENDENT
 // POOL: the full original copy count of every non-banned base chess), so the player's own 盟约 ban list decides what
@@ -16,7 +16,7 @@ import { html, MicroLabel, Icon, Button } from '../ui/components.js';
 import { data } from '../data.js';
 import { banEntryOf } from '../ui/loadoutModel.js';
 import { roomBanDiff } from '../ui/loadoutSync.js';
-import { BANPICK_DIFFICULTIES, banQuota, banPickStats, toggleBan, toggleFavorite } from '../../../shared/banPick.js';
+import { BANPICK_DIFFICULTIES, BANNABLE_ZERO_WEIGHT, banQuota, banPickStats, toggleBan, toggleFavorite } from '../../../shared/banPick.js';
 import { DIFFICULTY_NAMES } from '../../../shared/constants.js';
 import { t, N_ } from '../../../shared/i18n.js';
 
@@ -26,14 +26,16 @@ const cx = (...p) => p.flat().filter(Boolean).join(' ');
 const DIFF_SHORT = Object.freeze({ FUNNY: N_('标准'), NORMAL: N_('险境'), HARD: N_('绝境'), ABYSS: N_('终极'), ZHAJING: N_('炸惊') });
 
 /** Every 盟约 the data knows, split into 大盟约 and 小盟约 with weight > 0 (only those are bannable). */
-export function banPickerBonds() {
-  const list = data.list('bonds') || [];
+export function banPickerBonds(difficulty = 'FUNNY') {
+  const list = (data.list('bonds') || []).filter((b) => !b?.zjOnly || difficulty === 'ZHAJING');
   const sort = (a, b) => (a.bondOrder ?? 0) - (b.bondOrder ?? 0) || String(a.name).localeCompare(String(b.name), 'zh');
   const core = list.filter((b) => b && b.isCore).sort(sort);
-  const addon = list.filter((b) => b && !b.isCore && Number(b.weight) > 0).sort(sort);
+  // ★ 2026-10-23（owner）：企鹅物流 / 岁 / 医师 虽是 weight 0（不参与随机抽取），也开放成可 ban
+  const bannableAddon = (b) => b && !b.isCore && (Number(b.weight) > 0 || BANNABLE_ZERO_WEIGHT.has(b.bondId));
+  const addon = list.filter(bannableAddon).sort(sort);
   // a weight-0 盟约 is never bannable and never drawn as a random fill — shown greyed so the player knows why
   // ★ 2026-10-18：核心盟约**不看 weight**（S.E.E.S 是 weight 0 的核心盟约）—— 灰名单必须排除 isCore，否则会同时出现在大盟约和灰名单里。
-  const inert = list.filter((b) => b && !b.isCore && Number(b.weight) <= 0).sort(sort);
+  const inert = list.filter((b) => b && !b.isCore && Number(b.weight) <= 0 && !BANNABLE_ZERO_WEIGHT.has(b.bondId)).sort(sort);
   return { core, addon, inert };
 }
 
@@ -70,7 +72,7 @@ function BondChip({ bond, kind, on, fav, disabled, onToggle, onFav, locked }) {
  *   store snapshot; `onSet` takes one difficulty's entry, `onDiff` switches the edited difficulty
  */
 export function BanPicker({ m, st, onSet, onDiff, onClose = null }) {
-  const { core, addon, inert } = banPickerBonds();
+  const { core, addon, inert } = banPickerBonds(roomBanDiff(st, st.bansDiff));
   const bondOf = (id) => data.lookup('bonds', id) || null;
   const diffs = BANPICK_DIFFICULTIES;
   // 用户反馈（终极房）：房间存在时页签必须跟随房间难度，否则显示/编辑的是另一份清单

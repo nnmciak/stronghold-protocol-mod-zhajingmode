@@ -108,6 +108,11 @@ export function zjBondView(bonds, { merge = true } = {}) {
   if (!bonds || typeof bonds !== 'object') return bonds;
   let out = null;
   for (const [id, rec] of Object.entries(bonds)) {
+    if (rec?.zjOnly === true && !merge) {
+      if (!out) out = { ...bonds };
+      delete out[id];
+      continue;
+    }
     if (!rec || !rec.zj || typeof rec.zj !== 'object') continue;
     if (!out) out = { ...bonds };
     out[id] = merge ? zjBondRecord(rec, rec.zj) : stripZj(rec);

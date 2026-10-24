@@ -74,7 +74,7 @@ export const COSMETIC_EVENTS = new Set(['atk', 'dmg', 'heal', 'fx', 'layer', 'bo
  * watched field after a hidden tab and on a field entered late (user report #5 after 0.1.0) — the fourth place the client
  * keeps it, with battle/runner.js keepsState and screens/game.js keepEarly.
  */
-export const isCosmeticEvent = (ev) => Array.isArray(ev) && COSMETIC_EVENTS.has(ev[0]) && fxForm(ev) === undefined;
+export const isCosmeticEvent = (ev) => Array.isArray(ev) && COSMETIC_EVENTS.has(ev[0]) && fxForm(ev) === undefined && ev[1] !== 'mujicaFever';
 
 /**
  * Game time (s) of a b.snap / b.ev payload, or NaN. On the wire every frame is `{ t: '<type>', … }`, so the server

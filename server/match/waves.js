@@ -238,6 +238,21 @@ export function roundPick(gd, rng, factionsOrSetup, round) {
 }
 
 /** Enemy scale mods for round r (bosses excluded by the caller). */
+/** 悬赏怪池：choices.json `cards.bounty` 里所有可出场的敌人 key（去重、跳过 draftExcluded）。 */
+export function bountyEnemyKeys(gd) {
+  const list = gd && gd.choices && gd.choices.cards && Array.isArray(gd.choices.cards.bounty) ? gd.choices.cards.bounty : [];
+  const out = [];
+  const seen = new Set();
+  for (const c of list) {
+    if (!c || typeof c.enemyKey !== 'string' || seen.has(c.enemyKey)) continue;
+    if (c.draft === false || c.draftExcluded === true) continue;
+    if (!gd.enemy(c.enemyKey)) continue;
+    seen.add(c.enemyKey);
+    out.push(c.enemyKey);
+  }
+  return out;
+}
+
 export function scaleFor(gd, r) {
   return gd.enemyScale(r);
 }
@@ -539,12 +554,13 @@ function templateSpawns(gd, tpl, round, pick, rng = null, plan = null) {
   //   一起冲过来），玩家要的是「每个 spawn 各复制一份」（3 只 → 先 3 只、过一会儿再来 3 只）。
   //   现在：`countMul` 的【整数部分】= 复制份数（整波原样顺延，time 平移一个波次跨度），
   //   【小数部分】仍留给下面的数量微调（1.2 ⇒ 不复制，只 +20%）。
-  const cmRaw = scale && scale.countMul != null ? scale.countMul : 1;
+  // ★ 2026-10-24（owner 敌方惊变「丧尸围城」）：plan.countMul（出怪量 ×2）也要走【整数部分 = 复制份数】这条，
+  //   即"每个 spawn 复制一份、时间线不变"，而不是把总数乘进随机几组（那是"同一批怪变多"）。
+  const planMul = plan && plan.countMul ? plan.countMul : 1;
+  const cmRaw = (scale && scale.countMul != null ? scale.countMul : 1) * planMul;
   const cmReps = Math.max(1, Math.floor(cmRaw));       // 复制份数（含原本那一份）
   const cmFrac = Math.max(0, cmRaw - cmReps + 1);      // 留给数量微调的因子（1.2 → 1.2；2.0 → 1.0）
-  const mul = (typeof gd.enemyCountMul === 'number' ? gd.enemyCountMul : 1)
-    * cmFrac
-    * (plan && plan.countMul ? plan.countMul : 1);
+  const mul = (typeof gd.enemyCountMul === 'number' ? gd.enemyCountMul : 1) * cmFrac;
   // ★ 复制一波，但【时间线与原来完全一致】。（用户 2026-10-15：「我想的出怪量翻倍但是要和原有的
   //   出怪所需时间一致」—— 上一版让第二波从第一波【结束的时刻】开始，整波时长直接翻倍，那是错的。）
   //   现在复制品**不平移 time / interval**：原来 t=0/1/2 各出 1 只，现在 t=0/1/2 各出 2 只，共 6 只，
@@ -759,6 +775,25 @@ export function buildBossWave(gd, rng, factions, round, { bossId, solo, plan = n
   const jp = plan || (jibian ? matchJibianPlan(rng, round, jibian) : null);
   const pick = roundPick(gd, rng, factions, round);
   const { spawns, actions } = templateSpawns(gd, tpl, round, pick, rng, jp);
+  // ★ 2026-10-23（owner）敌方惊变「全军出击」：boss 战里生成的小怪全部换成随机悬赏怪（领袖保留）。
+  if (jibian && cardsOf({ flags: { enemyJibian: jibian } }).has('ejibian_quanjunchuji')) {
+    const keys = bountyEnemyKeys(gd);
+    if (keys.length) {
+      const scale = scaleFor(gd, round);
+      const routes = Array.isArray(tpl.routes) ? tpl.routes : [];
+      for (const sp of spawns) {
+        const e = gd.enemy(sp.enemyKey);
+        const keep = sp.tag === 'boss' || !!(sp.preview && sp.preview.boss) || sp.enemyKey === bossId
+          || (e && String(e.rank || '').toUpperCase() === 'BOSS');
+        if (keep) continue;
+        const key = keys[Math.max(0, Math.min(keys.length - 1, Math.floor(rng() * keys.length)))];
+        sp.enemyKey = key;
+        sp.mods = { ...(sp.mods || {}), ...roundMods(scale), slot: classOf(gd, key) };
+        sp.preview = previewInfo(gd, key, routes[sp.routeIndex] || null, false);
+        sp.tag = 'bounty';
+      }
+    }
+  }
   // ★ BOSS / 隐秘核心轮的「天堂制造」：boss 轮的时限本来是 Infinity（打不完不结束，只有 120s 倒计时），
   //   所以按**出怪表自己的时间轴**减 40s（游戏秒 80）—— 不减的话杀到第 13 回合才抽到这张卡会"毫无感觉"。
   //   压缩同样按比例，出怪一个不少、只是整体提前。

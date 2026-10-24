@@ -248,4 +248,8 @@ export function registerMeta(registry) {
       }
     },
   });
+
+  // ★ 2026-10-23（owner）：「<首次获得祐天寺若麦时>获得一个谜の假面」的**发放逻辑在 mujicaBond.js** 的
+  //   registry.bond(MUJICA_BOND, {...}) 里 —— 本文件也注册过 bond:mujicaShip，后注册会覆盖先注册，
+  //   放这里会被 mujicaBond 的 onRefresh 顶掉（已实测）。此处只留说明，不重复注册。
 }

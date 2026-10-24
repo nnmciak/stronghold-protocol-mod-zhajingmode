@@ -76,7 +76,14 @@ export function chessPortraitUrl(m, chess, opts) {
  */
 export function isOfficialSkinArt(m, chess, opts) {
   const url = chessPortraitUrl(m, chess, opts);
-  return !!url && url.indexOf('/skin_portrait_shop/') >= 0;
+  if (!url) return false;
+  const charId = str(chess?.charId) || str(chess?.assets?.portrait)?.replace(/_[12]$/, '');
+  const skin = obj(obj(obj(m)?.chars)?.[charId])?.skins?.[str(opts?.skin)];
+  // Original 180×360 skin portraits use the same half-body framing as default art.
+  // Their source folder is skin_portrait, so folder-only detection treated them as
+  // full-card custom crops and enlarged faces with object-fit:cover.
+  return url.indexOf('/skin_portrait_shop/') >= 0
+    || (!!str(skin?.portrait) && skin.portraitLayout === 'half-body');
 }
 
 /** Skill icon of a chess record (manifest `skills[iconId]`, else the empty skill sprite). */

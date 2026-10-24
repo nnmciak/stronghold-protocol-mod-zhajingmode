@@ -1400,11 +1400,13 @@ function airTile(battle, playerId, taken) {
  * 自身攻击力、生命值增加召唤自身的玩家场地上的所有【炎】盟约干员攻击力、生命值的30%（最终加算）". atkMul (9 炎: ×1.5,
  * [ASSUMED] on the whole ATK) and dmgTakenMul (9 炎: 0.1) are applied as a persistent buff. Returns the spawned units.
  */
-export function spawnYanyou(battle, playerId, { atk, hp, atkMul = 1, dmgTakenMul = 1, count = 1 } = {}) {
+export function spawnYanyou(battle, playerId, { atk, hp, atkMul = 1, dmgTakenMul = 1, count = 1, limit = null } = {}) {
   const rec = battle.data.rawToken?.(TOKEN_IDS.yanyou) ?? battle.data.rawEnemy?.(TOKEN_IDS.yanyou) ?? null;
   if (!rec) return [];
   const def = yanyouFallbackDef(battle);
-  const n = Math.max(0, Math.min(Math.floor(num(count, 1)), Math.max(1, Math.floor(num(rec.deployLimit ?? rec.stats?.deployLimit, 2)))));
+  // ★ 2026-10-24（owner 惊变「龙的传人」）：调用方可指定部署上限（默认仍是记录的 deployLimit / 2）
+  const cap = Number.isFinite(limit) ? Math.max(1, Math.floor(limit)) : Math.max(1, Math.floor(num(rec.deployLimit ?? rec.stats?.deployLimit, 2)));
+  const n = Math.max(0, Math.min(Math.floor(num(count, 1)), cap));
   const out = [];
   const taken = new Set();
   const base = rec.stats || {};

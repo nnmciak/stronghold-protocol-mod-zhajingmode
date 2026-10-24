@@ -19,18 +19,20 @@
 import { useEffect, useState } from '../../vendor/hooks.module.js';
 import { html, Icon, TierChip, Countdown, MicroLabel, Button } from './components.js';
 import { Img, RichText, PlayerAvatar, GIcon } from './gameComponents.js';
-import { itemIconUrl, enemyIconUrl, uiUrl, bondIconUrl, assetsItemIconUrl } from './assetUrls.js';
+import { itemIconUrl, enemyIconUrl, uiUrl, assetsItemIconUrl } from './assetUrls.js';
 import { richTextPlain } from './richText.js';
 import { sortedPlayers } from './gameLogic.js';
 import { data } from '../data.js';
 import { t, tName } from '../../../shared/i18n.js';
 import { sentText } from './lang.js';
+import { resolveJibianArt } from './jibianArt.js';
 
 const cx = (...p) => p.flat().filter(Boolean).join(' ');
 
 /** 规则5: the 惊变 card rarities (the rarity is rolled first, then a card of it is drawn). */
-export const RARITY_NAMES = { normal: '普通', rare: '稀有', epic: '史诗', legend: '传说' };
+export const RARITY_NAMES = { normal: '普通', rare: '稀有', epic: '史诗', legend: '传说', hidden: '隐秘' };
 const rarityLabel = (r) => (r && RARITY_NAMES[r] ? t(RARITY_NAMES[r]) : null);
+const MUJICA_CARD_IDS = new Set(['jibian_yinhezhanjian', 'jibian_yiwangnvshen', 'jibian_duoshouyeshou']);
 
 const bare = (t) => String(t || '').replace(/\s+/g, '');
 
@@ -67,13 +69,14 @@ export function resolveSpCard(card, family) {
   const kind = card.kind === 'item' || item ? 'item' : card.kind === 'bounty' || bounty || family === 'bounty' ? 'bounty' : 'tactic';
   const enemyKey = card.enemyKey || bounty?.enemyKey || eff?.params?.enemy_id || null;
   const team = card.team ?? tactic?.team ?? (eff?.decoIconId === 'icon_team_buff');
+  const art = resolveJibianArt(m, card);
   let icon = null;
   if (item) icon = itemIconUrl(m, item);
   else if (kind === 'bounty' && enemyKey) icon = enemyIconUrl(m, enemyKey);
   else if ((card.tacticKind || tactic?.kind) === 'terrain') icon = uiUrl(m, 'buffIcon/icon_stage_buff');
   else if ((card.tacticKind || tactic?.kind) === 'enemyDebuff') icon = uiUrl(m, 'buffIcon/icon_enemy_debuff');
   // 盟约惊变 (用户 2026-10-12): 卡面带对应盟约的头像，替换原来所有惊变卡共用的 icon_player_buff
-  else if (card.bond) icon = bondIconUrl(m, card.bond);
+  else if (art.bondId) icon = art.icon;
   else {
     // 惊变 logo (2026-10-13): a 惊变 pool entry (config modes[*].jibian.pool → server cardView `id`) has no items.json
     // record and no bond, but the manifest registers one `items` key per card that has its own art. Checked LAST, so
@@ -88,6 +91,7 @@ export function resolveSpCard(card, family) {
     desc: cardText(card, item?.descRaw || eff?.descRaw || '', rawRich) || item?.desc || eff?.desc || bounty?.desc || tactic?.desc || '',
     tier: Number.isFinite(card.tier) ? card.tier : item?.tier ?? bounty?.tier ?? null,
     icon,
+    whiteGlyph: art.whiteGlyph,
     team: !!team,
     coin: card.coin ?? bounty?.coin ?? eff?.enemyPrice ?? null,
     // 规则5: a 惊变 card's rarity (rolled before the card), shown as a tag on the card
@@ -205,6 +209,8 @@ export function ChoiceView({ pub, sp, myId, solo, busyIdx = null, total = null, 
   const timed = !sp.untimed || turnDeadline > 0;
   const armedCardRec = armed != null ? sp.cards.find((c) => c && c.idx === armed) : null;
   const armedName = armedCardRec ? resolveSpCard(armedCardRec, sp.family).name : null;
+  const mujicaCards = sp.family === 'jibian' && sp.cards.length <= 3
+    && sp.cards.some(c => MUJICA_CARD_IDS.has(c.effectId || c.id));
   // a press anywhere but a card or the confirm button drops the selection
   const onDown = (e) => {
     if (armed == null) return;
@@ -212,7 +218,7 @@ export function ChoiceView({ pub, sp, myId, solo, busyIdx = null, total = null, 
     if (t && typeof t.closest === 'function' && t.closest('.spcard, .spcardwrap, .spcard__rerollbtn, .spov__confirm, .spov__reroll, .spov__rerollbar')) return;
     onDisarm();
   };
-  return html`<div class=${cx('spov', armed != null && 'has-armed')} role="dialog" aria-label=${t('机变阶段')} onPointerDown=${onDown}>
+  return html`<div class=${cx('spov', armed != null && 'has-armed', mujicaCards && 'spov--mujica-cards')} role="dialog" aria-label=${t('机变阶段')} onPointerDown=${onDown}>
     <div class="spov__veil" aria-hidden="true"></div>
     <div class="spov__inner">
       <header class="spov__head">
@@ -262,7 +268,7 @@ export function ChoiceView({ pub, sp, myId, solo, busyIdx = null, total = null, 
               aria-label=${isArmed ? t('{name}，已选中，再次点击确认', { name: r.name }) : takerName ? t('{name}，{takerName}已选择', { name: r.name, takerName }) : r.name} title=${`${r.name}\n${richTextPlain(r.desc)}`}>
             <span class="spcard__glow" aria-hidden="true"></span>
             <span class="spcard__head">
-              <span class="spcard__icon"><${Img} src=${r.icon} fallback=${html`<${GIcon} name=${r.kind === 'bounty' ? 'target' : 'bolt'} />`} /></span>
+              <span class=${cx('spcard__icon', r.whiteGlyph && 'jibian-art--white-glyph')}><${Img} src=${r.icon} fallback=${html`<${GIcon} name=${r.kind === 'bounty' ? 'target' : 'bolt'} />`} /></span>
               <span class="spcard__title">
                 <b class="spcard__name">${r.name}</b>
                 ${r.team || (r.kind === 'bounty' && r.coin) || r.rarity ? html`<span class="spcard__tags">

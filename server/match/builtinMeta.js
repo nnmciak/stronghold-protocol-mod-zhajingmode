@@ -122,7 +122,16 @@ const ITEM_HANDLERS = {
     onEquip(ctx, ev) { ctx.addPendingFunds(int(paramsOf(ctx, ev.item).count, 2)); },
   },
   equip_destory_deployment_cnt_change: {
-    onEquip(ctx, ev) { ctx.setDeployCapAtLeast(int(paramsOf(ctx, ev.item).count, 9)); },
+    onEquip(ctx, ev) {
+      const n = int(paramsOf(ctx, ev.item).count, 9);
+      // ★ 2026-10-23（owner）：炸惊模拟下人事部文档改为「可部署人数 +1」（相对加法，不再把上限设成 9）。
+      //   普通模式保持原语义（基线抬到 n，和人事部文件夹的 +2 叠加）。
+      if (/zhajing/i.test(String((ctx && ctx.modeId) || ''))) {
+        ctx.addDeployCap(1);
+        return;
+      }
+      ctx.setDeployCapAtLeast(n);
+    },
   },
   use_equip_upgrade_char: {
     onEquip(ctx, ev) {

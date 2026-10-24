@@ -178,9 +178,9 @@ export class FxLibrary {
 
   has(key) { return this.pluginFx?.descriptors.has(String(key || '').toLowerCase()) || !!this.url('fx/prefabs', String(key || '').toLowerCase()); }
 
-  async _json(url) {
+  async _json(url, init) {
     if (!url || !this.fetch) return null;
-    const res = await this.fetch(url);
+    const res = await this.fetch(url, init);
     if (!res || !res.ok) throw new Error(`fx ${res ? res.status : 'no response'} ${url}`);
     return res.json();
   }
@@ -188,7 +188,10 @@ export class FxLibrary {
   /** index.json (null without one); its version tells mounts.js whether skins still need skinShift. */
   index() {
     if (this._index) return this._index;
-    this._index = this.init().then(() => this._json(this.url('fx', 'index')).catch(() => null)).then((j) => {
+    // Local patches update these metadata files at stable URLs. Revalidate their
+    // ETags even when an older response advertised a day-long asset cache; the
+    // prefab, mesh and texture payloads keep their normal cache policy.
+    this._index = this.init().then(() => this._json(this.url('fx', 'index'), { cache: 'no-cache' }).catch(() => null)).then((j) => {
       setIndexVersion(j?.version);
       if (Object.keys(this.assets?.manifest?.fx || {}).length) { this.pluginFx = mergePluginFx(j, this.assets.manifest.fx); return this.pluginFx.index; }
       return j;
@@ -199,7 +202,7 @@ export class FxLibrary {
   /** textures.json entries (wrap / filter / mips by texture key). */
   texInfo() {
     if (this._texInfo) return this._texInfo;
-    this._texInfo = this.init().then(() => this._json(this.url('fx', 'textures'))).then((j) => (isObj(j?.textures) ? j.textures : {})).catch(() => ({}));
+    this._texInfo = this.init().then(() => this._json(this.url('fx', 'textures'), { cache: 'no-cache' })).then((j) => (isObj(j?.textures) ? j.textures : {})).catch(() => ({}));
     return this._texInfo;
   }
 

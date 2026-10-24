@@ -111,12 +111,25 @@ class GroupDeflater {
   /** 与 ws 自己的输出逐字节比对（每个参数组只做一次）。对照拿不到就不拦（自检只是保险）。 */
   _selfCheck(buf, mine, real, cb) {
     if (!real || typeof real.compress !== 'function') { cb(true); return; }
+    // The live compressor belongs to ws.Sender's serial queue. Calling it here
+    // races with a private frame already being sent on that socket. Compare with
+    // a separate instance using the same negotiated parameters instead.
+    let reference = null;
+    let finished = false;
+    const finish = (same) => {
+      if (finished) return;
+      finished = true;
+      try { reference?.cleanup(); } catch { /* comparison is best-effort */ }
+      cb(same);
+    };
     try {
-      real.compress(buf, true, (err, theirs) => {
-        if (err || !theirs) { cb(true); return; }
-        cb(Buffer.compare(Buffer.from(theirs), Buffer.from(mine)) === 0);
+      reference = new real.constructor({ ...real._options });
+      reference.params = { ...real.params };
+      reference.compress(buf, true, (err, theirs) => {
+        if (err || !theirs) { finish(true); return; }
+        finish(Buffer.compare(Buffer.from(theirs), Buffer.from(mine)) === 0);
       });
-    } catch { cb(true); }
+    } catch { finish(true); }
   }
 }
 

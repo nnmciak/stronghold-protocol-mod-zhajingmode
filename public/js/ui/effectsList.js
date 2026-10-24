@@ -8,6 +8,7 @@ import { effectIconUrl } from './assetUrls.js';
 import { data } from '../data.js';
 import { t, tName, N_ } from '../../../shared/i18n.js';
 import { sentText } from './lang.js';
+import { resolveJibianArt } from './jibianArt.js';
 
 const KIND = { band: N_('策略'), choice: N_('机变'), team: N_('团队增益'), item: N_('道具'), garrison: N_('特质') };
 
@@ -54,8 +55,8 @@ export function EffectsList({ effects }) {
         <b>${tName(e.name) || t('效果')}</b><span class="efftip__kind">${t(KIND[e.iconKind] || '')}${e.counterText ? ` · ${bountyCounterText(e)}` : e.counter != null ? ` · ${e.counter}` : ''}</span>
         <${RichText} as="p" text=${effectDesc(e)} />
       </div>`}>
-      <span class=${`effect effect--${e.iconKind || 'x'}`}>
-        <${Img} src=${effectIconUrl(m, e)} fallback=${html`<${GIcon} name="bolt" />`} />
+      <span class=${`effect effect--${e.iconKind || 'x'}${e.jibian && resolveJibianArt(m, e).whiteGlyph ? ' jibian-art--white-glyph' : ''}`}>
+        <${Img} src=${(e.jibian && resolveJibianArt(m, e).icon) || effectIconUrl(m, e)} fallback=${html`<${GIcon} name="bolt" />`} />
         ${e.counter != null && e.counter !== '' ? html`<b class="effect__n num">${e.counter}</b>` : null}
       </span>
     <//>`)}

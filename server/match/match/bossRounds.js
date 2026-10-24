@@ -39,6 +39,13 @@ const BOSS_LP_PER_GS = 1;
 
 export class MatchBoss {
   startFinalAssault(hidden) {
+    // ★ 2026-10-24（owner）：「隐秘惊变」—— 隐秘核心战开始前先走自己的揭示阶段（每局一次），
+    //   揭示结束后再回到这里真正开局（_hiddenJibianDone 防止递归）。
+    if (hidden && !this._hiddenJibianDone) {
+      const ej = typeof this.gd.enemyJibian === 'function' ? this.gd.enemyJibian() : null;
+      const hj = ej && ej.hidden;
+      if (hj && hj.enabled === true) { this._hiddenJibianDone = true; this.enterHiddenJibian(hj); return; }
+    }
     const alive = this.alivePlayers();
     if (!alive.length) { this.finish({ victory: false, reason: 'eliminated' }); return; }
     this.phase = hidden ? PHASE.HIDDEN_CORE : PHASE.FINAL_ASSAULT;
@@ -52,7 +59,7 @@ export class MatchBoss {
     // the pool's own per-player tally, one pool per boss round. stats.bossDamage (the result's 领袖伤害) adds up both
     // rounds, so it would credit the Final Assault's damage to the hidden leader ("隐藏boss还没打就出了50%播报").
     const hitSteps = new Map();
-    const pool = new SharedBossPool(bossPoolHp(this.gd, bossId, alive.length), {
+    const pool = new SharedBossPool(bossPoolHp(this.gd, bossId, alive.length, { hidden }), {
       onHit: (pid, dmg) => {
         const ps = this.players.get(pid);
         if (!ps) return;

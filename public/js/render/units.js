@@ -363,6 +363,19 @@ const dollRoles = (idle, die, attack = null) => Object.freeze({
   idle, deploy: idle, die, attack: attack ? Object.freeze({ begin: null, loop: attack, end: null }) : null, attackDown: null, skill: null,
 });
 export const FORMS = Object.freeze({
+  char_4182_oblvns: Object.freeze({
+    oblvns_s2_a: Object.freeze({ enter: 'Skill_2_Start', change: 'Skill_2_Trans_A', roles: Object.freeze({
+      ...clipSet('Skill_2_Idle_A', 'Skill_2_Idle_A', 'Die', 'Skill_2_Loop_A'),
+      skill: Object.freeze({ begin: null, loop: 'Skill_2_Loop_A', end: null, via: 'attack', index: 1, idle: 'Skill_2_Idle_A' }),
+    }) }),
+    oblvns_s2_b: Object.freeze({ enter: 'Skill_2_Start', change: 'Skill_2_Trans_B', roles: Object.freeze({
+      ...clipSet('Skill_2_Idle_B', 'Skill_2_Idle_B', 'Die', 'Skill_2_Loop_B'),
+      skill: Object.freeze({ begin: null, loop: 'Skill_2_Loop_B', end: null, via: 'attack', index: 1, idle: 'Skill_2_Idle_B' }),
+    }) }),
+  }),
+  char_4183_mortis: Object.freeze({
+    doll: Object.freeze({ change: 'Doll_Switchin', leave: 'Doll_SwitchOut', roles: dollRoles('Doll_Idle', 'Doll_Die') }),
+  }),
   char_4217_makoto: Object.freeze({
     doll1: Object.freeze({
       change: 'Doll_Skill_1_SwitchIn', leave: 'Doll_Skill_1_SwitchOut',
@@ -786,7 +799,8 @@ export class UnitView {
     if (next && typeof f.roles.die === 'string') next = { ...next, die: f.roles.die };
     // an fx handed out late (render/app.js: a stall, a hidden tab) skips a change clip that would already have ended
     const late = fx && Number(fx.late) > 0 ? Number(fx.late) : 0;
-    const change = f && f.change && !(late > 0 && late >= (this.actor.dur?.(f.change) ?? Infinity)) ? f.change : null;
+    const transition = f && ((!prev && f.enter) || f.change);
+    const change = transition && !(late > 0 && late >= (this.actor.dur?.(transition) ?? Infinity)) ? transition : null;
     if (f) this.actor.setForm(f.roles, change, f.end && dur > 0 ? { clip: f.end, in: dur, roles: next } : null);
     else if (prev) this.actor.setForm(null, prev.leave && !(late > 0 && late >= (this.actor.dur?.(prev.leave) ?? Infinity)) ? prev.leave : null);
   }
@@ -1306,7 +1320,8 @@ export class UnitView {
         const was = this.actor.clipOn;
         this.actor.setClipping(clip);
         clipFlip = was !== this.actor.clipOn;
-        if (clip && this.ctx.impostors) interval = Math.max(1, interval);
+        // Non-eye masks (e.g. Mortis's mirror) remain enabled even when the eyelid budget is off.
+        if (this.actor.clipOn && this.ctx.impostors) interval = Math.max(1, interval);
       }
       // a pose that cannot change (a knocked-out operator lying in its held Die pose, a frozen model) is neither re-posed
       // nor redrawn — it would draw the same pixels again; the actor's clock still runs

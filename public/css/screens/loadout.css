@@ -181,6 +181,7 @@
 .lo-card__name { font-size: max(.17rem, 12px); font-weight: 700; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lo-card__bonds { display: flex; flex-wrap: wrap; gap: max(.04rem, 3px); min-height: max(.16rem, 12px); }
 .lo-card__bond, .lo-card__bonds .lo-bond__dot { width: max(.18rem, 13px); height: max(.18rem, 13px); object-fit: contain; }
+.lo-card__bond { filter: brightness(0) invert(1); }
 .lo-card__flag { position: absolute; right: 0; top: 0; z-index: 1; width: max(.16rem, 10px); height: max(.16rem, 10px); background: linear-gradient(225deg, var(--mint-400) 50%, transparent 50%); pointer-events: none; }
 /* 0.2.0 补位: a chess marked 未持有 on the 干员持有 tab — its stand-in fights with a fixed skill and no 潜能 / 练度; the choices
    here apply once it is owned again */
@@ -273,7 +274,7 @@
 .lo-sep { width: 1px; height: .16rem; background: var(--line-3); margin: 0 .04rem; }
 .lo-dhead__bonds { display: flex; flex-wrap: wrap; gap: .05rem; margin-top: .02rem; }
 .lo-bond { display: inline-flex; align-items: center; gap: .04rem; padding: .01rem .08rem .01rem .04rem; font-size: max(.13rem, 9px); color: var(--text-md); background: rgba(255, 255, 255, .04); border: 1px solid var(--line); }
-.lo-bond__icon { width: max(.18rem, 12px); height: max(.18rem, 12px); object-fit: contain; }
+.lo-bond__icon { width: max(.18rem, 12px); height: max(.18rem, 12px); object-fit: contain; filter: brightness(0) invert(1); }
 .lo-bond__dot { width: .1rem; height: .1rem; border-radius: 50%; background: var(--mint-700); }
 .lo-dhead__reset { position: absolute; right: .12rem; top: .12rem; }
 
@@ -985,7 +986,8 @@
 .lo-op__name { max-width: 100%; font-size: max(.17rem, 11px); font-weight: 800; color: var(--text-hi); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lo-op__bonds { grid-row: 3; grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 3px; min-height: max(.26rem, 16px); padding-top: 2px; }
 .lo-op__bond { display: grid; place-items: center; width: max(.26rem, 16px); height: max(.26rem, 16px); border-radius: 50%; background: rgba(0, 0, 0, .55); border: 1px solid rgba(255, 255, 255, .22); }
-.lo-op__bond img { width: 70%; height: 70%; object-fit: contain; }
+/* Keep the disc outside the filtered image so converting dark ink never lightens its black background. */
+.lo-op__bond img { width: 100%; height: 100%; object-fit: contain; filter: brightness(0) invert(1); }
 .lo-op.is-standin .lo-op__art img { filter: saturate(.5); }
 /* 快速配置: a column of choices beside the card */
 .lo-op__quick { flex: none; width: var(--qw); --q: calc(var(--qw) - max(.12rem, 8px)); --qg: max(.06rem, 4px);

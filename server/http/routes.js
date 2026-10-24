@@ -75,6 +75,8 @@ function cpuSample() {
 export function healthReport({ startedAt, network, registry, lobby, assetIndex = null, views = null }) {
   return {
     ok: true, version: PROTOCOL_VERSION, app: APP_VERSION, uptimeSec: Math.round((Date.now() - startedAt) / 1000),
+    // ★ 2026-10-22（owner）：本服名字（SP_SERVER_NAME，如 "1服"），/healthz-all 汇总时用它显示节点名。
+    name: serverName(),
     // the runtime the server is serving right now (public/js/ui/buildGuard.js): a page whose own build is
     // older than this reloads itself, so a deploy reaches clients that never reload
     build: buildTag(),
@@ -83,6 +85,8 @@ export function healthReport({ startedAt, network, registry, lobby, assetIndex =
     cheat: cheatEnabled(),
     noRoom: noRoomEnabled(),
     sockets: network.connectionCount, sessions: registry.size, ...lobby.stats(),
+    // ★ 2026-10-22（owner）：外部人数监控默认读 `online`（旧版读 `sockets`）——补上，等于当前在线的真人总数。
+    online: (() => { try { return lobby.stats().humans || 0; } catch { return 0; } })(),
     // CPU / 内存 / 负载:连续调用两次即可算出这段区间的 CPU 占用(回答"AI 占多少性能")
     perf: cpuSample(),
     // 广播账本(用户 2026-10-13):回答"广播到底占多少" —— 帧数/收件人数/压前压后字节都是累计值,
@@ -94,6 +98,76 @@ export function healthReport({ startedAt, network, registry, lobby, assetIndex =
     // ★ 2026-10-14：内容哈希索引的状态（0.2.6 assetIndex.js / assetViews.js）——
     // off / building / ready（含文件数、字节数、以及两个清单视图的哈希）。
     assetHashes: assetIndex ? { ...assetIndex.stats(), views: views ? views.stats() : null } : null,
+  };
+}
+
+const HEALTH_CACHE_MS = 5000;
+const healthCache = new Map();     // base → { at, data }
+const healthInflight = new Map();  // base → Promise<object>
+
+/** 取对端 /healthz（缓存 5s + 合并并发；失败时把上一次成功的结果再用 15s）。 */
+async function fetchPeerHealth(base, log) {
+  const now = Date.now();
+  const hit = healthCache.get(base);
+  if (hit && now - hit.at < HEALTH_CACHE_MS) return hit.data;
+  const running = healthInflight.get(base);
+  if (running) return running;
+  const job = (async () => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), PEER_TIMEOUT_MS);
+    const pick = (v) => (Number.isFinite(Number(v)) ? Math.max(0, Math.trunc(Number(v))) : 0);
+    try {
+      const r = await fetch(`${base}/healthz`, { signal: ctrl.signal, headers: { Accept: 'application/json' } });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const text = await r.text();
+      if (text.length > 64 * 1024) throw new Error('healthz too large');
+      const j = JSON.parse(text);
+      const data = {
+        ok: !!(j && j.ok), name: typeof (j && j.name) === 'string' ? j.name : '',
+        humans: pick(j && j.humans), bots: pick(j && j.bots), rooms: pick(j && j.rooms),
+        matches: pick(j && j.matches), spectators: pick(j && j.spectators),
+      };
+      healthCache.set(base, { at: Date.now(), data });
+      return data;
+    } catch (e) {
+      log.warn?.(`[federation] 对端 /healthz 失败 · peer health failed: ${base}: ${e.message}`);
+      if (hit && Date.now() - hit.at < 15000) return hit.data;
+      return { ok: false, name: '', humans: 0, bots: 0, rooms: 0, matches: 0, spectators: 0 };
+    } finally {
+      clearTimeout(timer);
+      healthInflight.delete(base);
+    }
+  })();
+  healthInflight.set(base, job);
+  return job;
+}
+
+/**
+ * GET /healthz-all —— 三台节点合并的健康/人数汇总。
+ * 本服的数字取 healthReport()，其余节点按 SP_FEDERATION_PEERS 逐个拉 /healthz 再求和。
+ * 下游监控只要认 humans 一个字段就能拿到总人数；nodes 里是各节点明细（哪台挂了 ok=false）。
+ */
+async function aggregateHealth(health, log) {
+  const self = healthReport(health);
+  const nodes = [{
+    name: serverName() || 'self', url: '', ok: !!self.ok,
+    humans: self.humans || 0, bots: self.bots || 0, rooms: self.rooms || 0,
+    matches: self.matches || 0, spectators: self.spectators || 0,
+  }];
+  const peers = federationPeers();
+  const results = await Promise.all(peers.map((base) => fetchPeerHealth(base, log).then((d) => ({ base, ...d }))));
+  for (const r of results) {
+    nodes.push({
+      name: r.name || r.base.replace(/^https?:\/\//, ''), url: r.base, ok: !!r.ok,
+      humans: r.humans, bots: r.bots, rooms: r.rooms, matches: r.matches, spectators: r.spectators,
+    });
+  }
+  const sum = (k) => nodes.reduce((a, n) => a + (Number(n[k]) || 0), 0);
+  return {
+    ok: nodes.some((n) => n.ok), name: serverName(),
+    humans: sum('humans'), online: sum('humans'), bots: sum('bots'), rooms: sum('rooms'),
+    matches: sum('matches'), spectators: sum('spectators'),
+    nodes, at: Date.now(),
   };
 }
 
@@ -311,6 +385,12 @@ export function createRequestHandler({ serveStatic, health, log, lobby = null })
     }
     if (parts.rawPath === '/healthz') {
       sendJson(req, res, 200, healthReport(health));
+      return;
+    }
+    // ★ 2026-10-22（owner）：三台节点合并的人数/房间汇总（给外部监控用）。
+    //   本服 + SP_FEDERATION_PEERS 里每台的 /healthz 求和；5 秒缓存，不会把对端打爆。
+    if (parts.rawPath === '/healthz-all' || parts.rawPath === '/healthz/all') {
+      sendJson(req, res, 200, await aggregateHealth(health, log));
       return;
     }
     // The title screen's public feed: how many people are online and which rooms are open. The client has no session

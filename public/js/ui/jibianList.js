@@ -36,17 +36,18 @@ import { useEffect, useReducer, useState } from '../../vendor/hooks.module.js';
 import { html, Icon } from './components.js';
 import { Img, RichText, GIcon, BondGlyph } from './gameComponents.js';
 import { data, getMode } from '../data.js';
-import { uiUrl, assetsItemIconUrl } from './assetUrls.js';
+import { uiUrl } from './assetUrls.js';
 import { RARITY_NAMES } from './choiceOverlay.js';
 import { isZjNow, loadoutStore } from './loadoutSync.js';
 import { modeIdFor } from '../../../shared/constants.js';
 import { store, useStore } from '../store.js';
 import { t, tName } from '../../../shared/i18n.js';
+import { resolveJibianArt } from './jibianArt.js';
 
 const cx = (...p) => p.flat().filter(Boolean).join(' ');
 
 /** The order the groups are listed in: 普通 first, 传说 last (the pool's own rarity ladder). */
-const RARITY_ORDER = Object.freeze(['normal', 'rare', 'epic', 'legend']);
+const RARITY_ORDER = Object.freeze(['normal', 'rare', 'epic', 'legend', 'hidden']);
 /** The project's rarity label for a pool entry (ui/choiceOverlay.js RARITY_NAMES), 普通 when the data has no rarity. */
 const rarityName = (r) => RARITY_NAMES[r] || RARITY_NAMES.normal;
 
@@ -73,7 +74,12 @@ export function jibianModeId() {
  */
 export function jibianGroups(modeId = jibianModeId(), source = 'ally') {
   const mode = getMode(modeId);
-  const pool = source === 'enemy' ? mode?.enemyJibian?.pool : mode?.jibian?.pool;
+  // ★ 2026-10-24（owner）：敌方一览要把「隐秘」池也列出来（隐秘核心前才抽得到的那 9 张）
+  const enemyPool = mode?.enemyJibian
+    ? [...(Array.isArray(mode.enemyJibian.pool) ? mode.enemyJibian.pool : []),
+       ...(Array.isArray(mode.enemyJibian.hidden?.pool) ? mode.enemyJibian.hidden.pool : [])]
+    : null;
+  const pool = source === 'enemy' ? enemyPool : mode?.jibian?.pool;
   const seen = new Map();
   for (const e of Array.isArray(pool) ? pool : []) {
     if (!e || typeof e !== 'object') continue;
@@ -87,11 +93,14 @@ export function jibianGroups(modeId = jibianModeId(), source = 'ally') {
 /** One card of the list: art (its own icon, else the shared 惊变 glyph), name, 稀有度, description and flavour. */
 function JibianRow({ e, m }) {
   const rarity = RARITY_NAMES[e.rarity] ? e.rarity : 'normal';
+  const art = resolveJibianArt(m, e);
   return html`<div class="jbl__row jbc" data-rarity=${rarity} data-effect=${e.effectId || ''}>
-    <span class=${cx('jbl__icon', e.bond && 'jbl__icon--bond')}>
-      ${e.bond
-        ? html`<${BondGlyph} bondId=${e.bond} />`
-        : html`<${Img} src=${assetsItemIconUrl(m, e.effectId) || uiUrl(m, 'buffIcon/icon_player_buff')} fallback=${html`<${GIcon} name="bolt" />`} />`}
+    <span class=${cx('jbl__icon', art.bondId && 'jbl__icon--bond', art.whiteGlyph && 'jibian-art--white-glyph')}>
+      ${art.icon
+        // ★ 2026-10-23：有**自己的图**就优先用它（黑闪这种 bond 本身没图标的卡，之前会被羁绊图标挡住 → 只剩问号）
+        ? html`<${Img} src=${art.icon} fallback=${html`<${GIcon} name="bolt" />`} />`
+        // 没有自己的图（含"羁绊本身没有图标"的卡，如 集中一点）→ 和「羁绊之力」一样用通用惊变图标
+        : html`<${Img} src=${uiUrl(m, 'buffIcon/icon_player_buff')} fallback=${html`<${GIcon} name="bolt" />`} />`}
     </span>
     <span class="jbl__main">
       <span class="jbl__top">

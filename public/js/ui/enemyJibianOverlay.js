@@ -27,7 +27,10 @@ export function EnemyJibianOverlay({ ej }) {
   const flickerMs = Math.max(0, Number(ej?.flickerMs) || 0);
   const resultMs = Math.max(0, Number(ej?.resultMs) || 0);
   const card = ej?.card || null;
-  const pool = Array.isArray(ej?.pool) && ej.pool.length ? ej.pool : (card ? [card] : []);
+  // ★ 2026-10-24（owner）：隐秘惊变一次给两张（保底隐秘 + 普通池一张），用 cards 数组送过来
+  const cards = Array.isArray(ej?.cards) && ej.cards.length ? ej.cards : (card ? [card] : []);
+  const label = ej?.label || t('敌方惊变');
+  const pool = Array.isArray(ej?.pool) && ej.pool.length ? ej.pool : (cards.length ? cards : []);
   const [elapsed, setElapsed] = useState(0);
   const [idx, setIdx] = useState(0);
   const t0 = useRef(0);
@@ -59,21 +62,23 @@ export function EnemyJibianOverlay({ ej }) {
   const total = flickerMs + resultMs;
   const pct = total > 0 ? Math.min(100, (elapsed / total) * 100) : 100;
 
+  const renderCard = (c, extra = '') => html`<div class=${cx('ejb__card', extra)}>
+      ${c?.rarity ? html`<span class="ejb__rarity">${t(RARITY_NAMES[c.rarity] || c.rarity)}</span>` : null}
+      <div class="ejb__name">${c?.name || t('惊变')}</div>
+      ${c?.desc ? html`<div class="ejb__desc"><${RichText} text=${c.desc} /></div>` : null}
+      ${c?.flavor ? html`<div class="ejb__flavor">${c.flavor}</div>` : null}
+    </div>`;
+  const many = !rolling && cards.length > 1;
   return html`<div class=${cx('ejb', rolling ? 'ejb--roll' : 'ejb--result')} data-rarity=${rarity || 'normal'}
-    role="dialog" aria-modal="true" aria-label=${t('敌方惊变')} aria-live="polite">
+    role="dialog" aria-modal="true" aria-label=${label} aria-live="polite">
     <div class="ejb__scrim"></div>
     <div class="ejb__inner">
       <div class="ejb__head">
-        <span class="ejb__tag"><${GIcon} name="skull" />${t('敌方惊变')}</span>
-        <span class="ejb__micro">ENEMY MUTATION</span>
+        <span class="ejb__tag"><${GIcon} name="skull" />${label}</span>
+        <span class="ejb__micro">${ej?.hidden ? 'HIDDEN MUTATION' : 'ENEMY MUTATION'}</span>
       </div>
-      <div class="ejb__stage">
-        <div class=${cx('ejb__card', rolling ? 'is-roll' : 'is-zoom')}>
-          ${rarity ? html`<span class="ejb__rarity">${t(RARITY_NAMES[rarity] || '普通')}</span>` : null}
-          <div class="ejb__name">${shown?.name || t('惊变')}</div>
-          ${shown?.desc ? html`<div class="ejb__desc"><${RichText} text=${shown.desc} /></div>` : null}
-          ${shown?.flavor ? html`<div class="ejb__flavor">${shown.flavor}</div>` : null}
-        </div>
+      <div class=${cx('ejb__stage', many && 'is-multi')}>
+        ${rolling ? renderCard(shown, 'is-roll') : cards.map((c) => renderCard(c, 'is-zoom'))}
       </div>
       <div class="ejb__bar"><i style=${{ width: `${pct}%` }}></i></div>
       <div class="ejb__foot">${rolling ? t('正在抽取敌方惊变…') : t('敌方惊变已生效 · 持续全局')}</div>

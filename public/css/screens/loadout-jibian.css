@@ -59,6 +59,8 @@
 .jbl__icon--bond .bglyph { width: 70%; height: 70%; }
 .jbl__icon--bond .bglyph img { filter: none; }
 .jbl__icon--bond { background: #101614; }
+.jbl__icon.jibian-art--white-glyph { background: #080b0a; }
+.jbl__icon.jibian-art--white-glyph .bglyph img { filter: brightness(0) invert(1); object-fit: contain; }
 
 /* 敌方惊变按钮（2026-10-14）：红色的「敌方惊变」——内容是 modes[<id>].enemyJibian.pool
    （规则14：第 1 / 第 6 回合各抽一张，两张同时生效叠加）。红色与「惊变一览」区分；

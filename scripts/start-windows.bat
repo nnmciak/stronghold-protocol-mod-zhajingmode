@@ -8,6 +8,9 @@ setlocal EnableExtensions
 title 卫戍协议：盟约 - Stronghold Protocol
 cd /d "%~dp0.."
 
+rem Prefer the optional bundled Windows runtime; update-only installs use their existing Node.
+if exist "%~dp0..\runtime\win-x64\node.exe" set "PATH=%~dp0..\runtime\win-x64;%PATH%"
+
 where node >nul 2>nul
 if errorlevel 1 goto :nonode
 node -e "process.exit(Math.max(0, Math.sign(22 - parseInt(process.versions.node))))"

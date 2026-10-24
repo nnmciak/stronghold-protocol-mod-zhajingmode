@@ -477,6 +477,8 @@ export function jibianCard(gd, c, rarity = null, bonds = null) {
     flavor: c.flavor || (eff && eff.flavor) || null,
     // 盟约惊变 (用户 2026-10-12): 卡面图标用对应盟约的头像（config pool `bond` → ui/choiceOverlay.js bondIconUrl）
     bond: c.bond || null,
+    // Presentation-only glyph: does not impose a gameplay bond restriction.
+    iconBond: c.iconBond || null,
     // 惊变羁绊：卡面底部显示「羁绊名 已有/阈值」（owner 2026-10-19 的 UI 要求）
     bonds: Array.isArray(bonds) && bonds.length ? bonds : null,
   };
@@ -588,6 +590,7 @@ export function cardView(c) {
   if (c.rarity) v.rarity = c.rarity; // 规则5: the 惊变 card's rarity (rolled before the card itself)
   if (c.flavor) v.flavor = c.flavor; // 惊变: the grey flavour line
   if (c.bond) v.bond = c.bond;       // 盟约惊变: 卡面图标用这个盟约的头像 (jibianCard → choiceOverlay)
+  if (c.iconBond) v.iconBond = c.iconBond;
   if (Array.isArray(c.bonds) && c.bonds.length) v.bonds = c.bonds;
   if (c.rerolled) v.rerolled = true;   // ★ 2026-10-19 刷新改为每卡一次   // ★ 2026-10-19 惊变羁绊：卡面底部「羁绊名 已有/阈值」
   return v;
@@ -643,11 +646,35 @@ function jibianGrantForBond(m, ps, before) {
       if (a.def.id === 'roguelike_fan') {
         try {
           const owned = ownedJibianIds(ps);
-          const pool = a.def.members.filter((id) => !owned.has(id));
+          // ★ 2026-10-23（owner）：「羁绊之力」属于所有羁绊，但不能被这张羁绊的奖励抽出来
+          //   （否则它自己又会给所有羁绊 +1 人，滚雪球）。
+          const pool = a.def.members.filter((id) => id !== 'jibian_jibangzhili' && !owned.has(id));
           const tierIdx = a.def.tiers.indexOf(a.tier) + 1;   // 1 或 2
           for (let k = 0; k < Math.max(1, tierIdx) && pool.length; k++) {
             const pick = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
-            applyDefault(m, ps, { kind: 'jibian', id: pick, effectId: pick, family: 'jibian', rarity: null, flavor: null, note: null });
+            // ★ 2026-10-22（owner）：带上卡面数据（name/desc/rarity/flavor）。
+            //   原来只传 id，effectsView 的兜底 `name: e.name || e.id` 会把内部 id（如 jibian_xxx#4）
+            //   直接显示在「已选惊变」卡面上，品质也退化成普通。
+            let full = null;
+            try {
+              const jb = typeof m.gd.jibian === 'function' ? m.gd.jibian() : null;
+              const c = jb && Array.isArray(jb.pool)
+                ? jb.pool.find((x) => x && (x.effectId === pick || x.id === pick || x.key === pick))
+                : null;
+              if (c) full = jibianCard(m.gd, c);
+            } catch { /* 拿不到就用裸 id */ }
+            const card = full
+              ? { ...full, kind: 'jibian', id: pick, effectId: pick, family: 'jibian' }
+              : { kind: 'jibian', id: pick, effectId: pick, family: 'jibian', name: pick, rarity: null, flavor: null, note: null };
+            applyDefault(m, ps, card);
+            // ★ 2026-10-23（owner 反馈「投资未来不生效」）：羁绊奖励发的卡也要跑一次 onChoicePick，
+            //   否则「投资未来」这种**即时**效果通过「集成战略爱好者」发出来时永远不会种下计数器。
+            //   口径与 applyCard 一致：跳过 choice:<id> 键，只跑该玩家 refs 上的钩子。
+            try {
+              const ev = { card: { ...card }, family: 'jibian', picker: ps.playerId, forTeammate: false };
+              m.dispatch(ps, 'onChoicePick', ev, { skipKey: `choice:${card.id}` });
+              ps.recompute();
+            } catch { /* 即时效果失败不影响发卡 */ }
           }
         } catch { /* 发惊变失败不影响抽卡 */ }
       }
@@ -683,7 +710,8 @@ function applyDefault(m, ps, card) {
   if (card.kind === 'jibian') {
     addRef(ps, card, null, `jibian:${card.id}`, {
       battle: true,
-      extra: { jibian: true, rarity: card.rarity ?? null, flavor: card.flavor ?? null, note: card.note ?? null },
+      extra: { jibian: true, rarity: card.rarity ?? null, flavor: card.flavor ?? null, note: card.note ?? null,
+        ...(card.iconBond ? { iconBond: card.iconBond } : {}) },
     });
     return;
   }

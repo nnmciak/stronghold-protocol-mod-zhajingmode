@@ -1,4 +1,4 @@
-// render/vfx/wiring.js — the battle's events → official effects, generated from index.json (DESIGN §33.12): every
+﻿// render/vfx/wiring.js — the battle's events → official effects, generated from index.json (DESIGN §33.12): every
 // unit's normal attack (its mode `Default`, or the mode its skill switches to while the skill is on — the skill plan's
 // `modeName`, else `S<n>` for skill n; a mode's facing variant for the unit's facing) casts its `cast` effects at their
 // spawn location or FollowMountPoint's point on the unit (a point a BoneFollower keeps on a Spine bone — the muzzle, a
@@ -255,12 +255,104 @@ export class FxWiring {
     return !!this.idx;
   }
 
+  /**
+   * ★ 2026-10-23：本局在场的单位穿了带特效的时装时，按需克隆一份 unit 记录（只改运行时内存里这份，
+   * 不写进 index.json）——把 prefab / projectile / skill 键换成带 `<tag>` 后缀的变体（存在才换）。
+   * 这样索引里不会多出 196 条 unit，不会把预加载/显存撑爆，原皮特效不受影响。
+   */
+  /** 基础 unit key + 皮肤标签 → 皮肤 unit key（按需克隆一次；失败返回 null）。 */
+  _skinFor(k, tag) {
+    if (!k || !tag || !this.idx?.units) return null;
+    const baseK = String(k).includes('@') ? String(k).slice(0, String(k).indexOf('@')) : String(k);
+    // ★ 2026-10-23：k 可能是带模型后缀的 unit（char_172_svrash_2），只要索引里有就直接当底
+    const base = this.idx.units[baseK] || this.idx.units[String(baseK).replace(/_\d+$/, '')] || null;
+    if (!base) return null;
+    const skinId = baseK + '@' + tag;
+    if (!this.idx.units[skinId]) {
+      const clone = this._skinUnit(base, tag);
+      if (!clone) return null;
+      clone.skin = skinId;
+      clone.skinBase = baseK;
+      // 诊断：克隆是否真的换了 key（false = 本机 index 里没有该皮肤的变体 prefab）
+      try {
+        clone.__changed = JSON.stringify(base) !== JSON.stringify(clone);
+        const g = (typeof window !== 'undefined') ? (window.__skinClone = window.__skinClone || 0) : 0;
+        if (g < 30) { if (typeof window !== 'undefined') window.__skinClone = g + 1; console.info('[fx] skin clone', skinId, '| changed', clone.__changed, '| prefabs', Object.keys(this.idx.prefabs || {}).length); }
+      } catch { /* ignore */ }
+      this.idx.units[skinId] = clone;
+    }
+    return skinId;
+  }
+
+  _skinUnit(base, tag) {
+    const P = this.idx.prefabs || {}, R = this.idx.projectiles || {}, S = this.idx.skills || {};
+    const map = (v) => {
+      if (typeof v === 'string') {
+        const k = v + '_' + tag;
+        if (Object.hasOwn(P, k) || Object.hasOwn(R, k) || Object.hasOwn(S, k)) return k;
+        return v;
+      }
+      if (Array.isArray(v)) return v.map(map);
+      if (v && typeof v === 'object') {
+        const out = {};
+        for (const [k2, v2] of Object.entries(v)) out[k2] = map(v2);
+        return out;
+      }
+      return v;
+    };
+    // ★ 2026-10-23（自检定位）：远程干员的普通攻击特效不在 unit 的 modes[].attack 里，而在
+    //   **projectiles[projectileKey]** 记录里（modes[0].attack 只有 projectileKey）。只克隆 unit 的话，
+    //   攻击仍走本体 projectile → 播放本体 prefab（实测：svrash_attack_01_hit 不带 _snow#1）。
+    //   先把 unit 引用到的 projectile 记录也克隆成「projectile_svrash_snow#1」，再映射 unit 的引用。
+    const stringsIn = (obj, out) => {
+      if (typeof obj === 'string') { if (Object.hasOwn(R, obj)) out.add(obj); return out; }
+      if (Array.isArray(obj)) { for (const x of obj) stringsIn(x, out); return out; }
+      if (obj && typeof obj === 'object') { for (const v of Object.values(obj)) stringsIn(v, out); }
+      return out;
+    };
+    const cloneProj = (key, seen) => {
+      if (!key || !Object.hasOwn(R, key)) return;
+      const nk = key + '_' + tag;
+      if (Object.hasOwn(R, nk) || seen.has(nk)) return;
+      seen.add(nk);
+      const raw = JSON.parse(JSON.stringify(R[key]));
+      for (const ref of stringsIn(R[key], new Set())) cloneProj(ref, seen);
+      R[nk] = map(raw);
+    };
+    for (const ref of stringsIn(base, new Set())) cloneProj(ref, new Set());
+    return map(JSON.parse(JSON.stringify(base)));
+  }
+
   /** The index unit key of a view (by its info), cached per battle id; null when index.json does not list it. */
   unitKeyOf(v) {
     if (!v || !this.idx) return null;
     const id = v.info?.id ?? v.id;
     let k = this.keyCache.get(id);
-    if (k === undefined) {
+    // ★ 2026-10-23（实测）：同一个 battle id 的**首次**解析可能没有 skin（缓存了本体），后来才有 ——
+    //   命中缓存时也要拿「身份→皮肤标签」表升级一次，否则攻击永远播本体。
+    if (k !== undefined) {
+      // ★ 同一份 index 被多个 wiring 实例共享（备战预览 / 战斗）：标签表挂在 index 上，实例之间共享
+      const tags = this.skinTags || (this.skinTags = (this.idx.__skinTags || (this.idx.__skinTags = new Map())));
+      const stem = typeof k === 'string' ? k.replace(/_\d+$/, '') : null;
+      let t = (typeof k === 'string' && (tags.get(k) || (stem && tags.get(stem)))) || tags.get(id) || null;
+      if (!t && stem) { for (const [key, val] of tags) { if (key === stem || key.replace(/_\d+$/, '') === stem) { t = val; break; } } }
+      if (t && typeof k === 'string' && k && !k.includes('@')) {
+        const skinId = this._skinFor(k, t);
+        if (skinId && skinId !== k) { this.keyCache.set(id, skinId); return skinId; }
+      }
+      // 诊断：有皮肤标签表、但这个 unit 仍解析成本体 → 记一条，供 window.__skinMiss 查看
+      if (typeof k === 'string' && k && !k.includes('@') && this.skinTags.size) {
+        try {
+          const dbg = (typeof window !== 'undefined') ? (window.__skinMiss = window.__skinMiss || []) : null;
+          if (dbg && dbg.length < 40 && !dbg.some((x) => x.id === id)) {
+            dbg.push({ id, k, infoId: v.info?.id, vId: v.id, spine: v.info?.spine, skin: v.info?.skin, tags: [...this.skinTags.keys()].slice(0, 8) });
+            console.info('[fx] skin miss', id, k, '| tags', [...this.skinTags.keys()].slice(0, 6).join(','));
+          }
+        } catch { /* ignore */ }
+      }
+      return k;
+    }
+    {
       k = null;
       // (a point on the ground — a kit fx's tile, SkillFx — has no info and no unit)
       const cands = this.opts.unitKey && v.info ? [].concat(this.opts.unitKey(v.info) || []) : [];
@@ -272,11 +364,45 @@ export class FxWiring {
         if (Object.hasOwn(this.idx.units || {}, rec.fx.unit)) cands.unshift(rec.fx.unit);
       }
       cands.push(v.info?.spine, v.info?.defId);
+      if (this.idx.mujicaSkinMaps?.[v.info?.skin]) cands.unshift(v.info.skin);
       for (const c of cands) {
         if (!c) continue;
         if (this.idx.units[c]) { k = c; break; }
         const base = String(c).replace(/_\d+$/, '');
         if (base !== c && this.idx.units[base]) { k = base; break; }
+      }
+      // ★ 2026-10-23：本局的皮肤变体（按需生成，见 _skinUnit）。
+      //   info.skin 有两种可能：皮肤 id（char_x@tag#n）或模型 stem（char_x_tag_n）；
+      //   后者用 index.skins[stem].fx（包里的标签）反查。取不到标签就完全走本体。
+      // ★ 2026-10-23（实测修复）：预加载时的 info 带 skin，**战斗中的视图 info 不一定带** —— 所以把
+      //   「身份 → 皮肤标签」记下来（info.id / v.id / spine / defId / 基础 unit key 都记），后面没有 skin 的调用照样能命中。
+      const tags = this.skinTags || (this.skinTags = (this.idx.__skinTags || (this.idx.__skinTags = new Map())));
+      const idsOf = [v.info?.id, v.id, v.info?.spine, v.info?.defId].filter((x) => typeof x === 'string' && x);
+      let tag = null;
+      const skin = v.info?.skin;
+      if (typeof skin === 'string' && skin) {
+        if (skin.includes('@')) tag = skin.slice(skin.indexOf('@') + 1);
+        else if (this.idx.skins?.[skin]?.fx) tag = String(this.idx.skins[skin].fx);
+      }
+      if (!tag) for (const i of idsOf) { const t = tags.get(i); if (t) { tag = t; break; } }
+      if (!tag && k) tag = tags.get(k) || null;
+      if (!tag) {
+        const spine = v.info?.spine;
+        if (typeof spine === 'string' && this.idx.skins?.[spine]?.fx) tag = String(this.idx.skins[spine].fx);
+      }
+      if (tag) {
+        for (const i of idsOf) tags.set(i, tag);
+        if (k) { tags.set(k, tag); tags.set(String(k).replace(/_\d+$/, ''), tag); }
+      }
+      if (k && tag) {
+        const skinId = this._skinFor(k, tag);
+        if (skinId) k = skinId;
+        try {
+          const st = (typeof window !== 'undefined') ? (window.__skinFx = window.__skinFx || { tags: [], units: [] }) : null;
+          if (st && !st.tags.includes(tag)) st.tags.push(tag);
+          if (st && !st.units.includes(skinId)) st.units.push(skinId);
+          console.info('[fx] skin unit', skinId, '(tag ' + tag + ')');
+        } catch { /* console-less */ }
       }
       this.keyCache.set(id, k);
     }
@@ -345,7 +471,7 @@ export class FxWiring {
           if (e.hookEffectAfterFirstAttack) keys.add(e.hookEffectAfterFirstAttack);
         }
       }
-      for (const pk of [a.projectileKey, ...(a.extraProjectileKeys || [])]) {
+      for (const pk of [a.projectileKey, a.additionalProjectile, ...(a.additionalProjectiles || []), ...(a.extraProjectileKeys || [])]) {
         const p = pk && this.idx.projectiles[lc(pk)];
         if (p) for (const k of p.effects || []) keys.add(k);
       }
@@ -398,6 +524,16 @@ export class FxWiring {
   mode(u, v, skillOn) {
     const modes = u?.modes || [];
     if (!modes.length) return null;
+    if (u?.mujicaNotes) {
+      const form = this.formOf(v);
+      if (form === 'oblvns_s2_a' || form === 'oblvns_s2_b') {
+        const organ = form === 'oblvns_s2_b';
+        const fever = this.skills.mujicaFever.get(v.info?.ownerId);
+        const wanted = organ ? (fever ? 'S2_Fever_Mag' : 'S2_AttackSpeed') : (fever ? 'S2_Fever' : 'S2_Atk');
+        const mode = modes.find(m => m.name === wanted);
+        if (mode) return mode;
+      }
+    }
     const st = this.skills.state(v, skillOn);
     const sn = Number.isInteger(v?.info?.skillIndex) ? `S${v.info.skillIndex + 1}` : null;
     const name = st.plan ? st.plan.modeName : sn;
@@ -757,6 +893,14 @@ export class FxWiring {
     const list = pickAttacks(a, { heal, ranged: !!kind && kind !== 'none', blocked: !!((src.flags | 0) & UF.BLOCKED) }, seedOf(id, nth), 0, nth, mem);
     const set = { cast: [], castTarget: [], inputTarget: [], hit: [], groups: null, hitOpts: null, projectileKey: null, shot: null, shotClass: null };
     const modeIdx = (u?.modes || []).indexOf(m);
+    // 诊断（window.__atkDbg=1 才打印）：这一刀用的 unit key + 第一条 hit 的 prefab
+    try {
+      { 
+        const h0 = list[0]?.hit?.[0];
+        const n = (typeof window !== 'undefined') ? (window.__atkLog = window.__atkLog || 0) : 0;
+        if (n < 15) { if (typeof window !== 'undefined') window.__atkLog = n + 1; console.info('[atk]', src.id ?? src.info?.id, '| unit', this.unitKeyOf(src), '| skin', u?.skin || '-', '| hit0', h0 ? JSON.stringify(h0.effects || h0.prefab || h0).slice(0, 120) : 'none'); }
+      }
+    } catch { /* ignore */ }
     for (const x of list) {
       const ems = Array.isArray(x.emitters) ? x.emitters : [];
       const ok = (r) => this._rowOk(r, ems[r?.emitter], src, nth, modeIdx);
@@ -810,9 +954,10 @@ export class FxWiring {
    */
   castStart(src, tgt, kind, info = {}) {
     if (!this.ofx.active || !src || !this.idx || CHAIN.has(kind)) return false;
+    const u = this.unitOf(src);
+    if (u?.skin?.split('@')[0] === 'char_4185_amoris' && tgt === src) tgt = null;
     kind = this._combatKind(src, tgt, kind, info.skillOn);
     const sk = this.skills.attackFx(src, tgt, kind, info.skillOn);
-    const u = this.unitOf(src);
     const nth = this.attackN.get(src.id ?? src.info?.id) || 0;
     const set = sk?.replace ? null : this._attackSet(u, this.mode(u, src, info.skillOn), src, tgt, kind, nth);
     // a funnel shot's casts on its floating unit (耶拉's token) start with the owner's wind-up
@@ -838,8 +983,12 @@ export class FxWiring {
    */
   attack(src, tgt, kind, time, wound = false) {
     if (!this.ofx.active || !src || !this.idx) return false;
-    kind = this._combatKind(src, tgt, kind);
     const u = this.unitOf(src);
+    const tileStrike = u?.skin?.split('@')[0] === 'char_4185_amoris';
+    // The sim uses the attacker's id as its empty-target animation sentinel.
+    // Treat that as a tile attack, never as a heal aimed at herself.
+    if (tileStrike && tgt === src) tgt = null;
+    kind = this._combatKind(src, tgt, kind);
     const sk = this.skills.attackFx(src, tgt, kind);
     const id = src.id ?? src.info?.id;
     // one attack on several targets is one 'atk' per target in one tick: the attacker casts once (its target rows play
@@ -858,6 +1007,12 @@ export class FxWiring {
     if (a) this._casts(a, src, tgt, phase, { owner: !again });
     if (sk) { this.skills.casts(sk, src, tgt, phase, { owner: !again }); if (!again) this.skills.attacked(sk); }
     if (!again) this.attackN.set(id, nth + 1);
+    // Sakiko's freely moving notes are driven by mujicaNote events, including
+    // retargeting and piercing. Keep the original cast effects without a second,
+    // fixed source-to-target projectile travelling beside the simulated note.
+    // Amoris likewise sends every individual hammer impact at its actual tile
+    // and strike time. Do not add a target-dependent projectile or its follow-ups.
+    if (u?.mujicaNotes || tileStrike) return true;
     // the hit rows wait for the damage (each target hit: HitEffectOptions); useOwnerToTargetDirection turns the hit
     // along the blow
     const keysOf = (rows) => rows.flatMap((e) => this._rowKeys(e, src, nth).map((k) => ({ k, along: !!e.useOwnerToTargetDirection })));

@@ -167,6 +167,8 @@ export class GameData {
     this.shopItemsByTier = {};
     for (const [id, it] of Object.entries(this._items)) {
       if (!isShopItem(it)) continue;
+      // ★ 2026-10-23（owner）：炸惊专属装备（S.E.E.S 袖章、谜の假面）不出现在普通/终极商店
+      if (it.zjOnly === true && !zhajing) continue;
       (this.shopItemsByTier[it.tier] ||= []).push(id);
     }
     for (const k of Object.keys(this.shopItemsByTier)) this.shopItemsByTier[k].sort();
@@ -201,13 +203,15 @@ export class GameData {
    * @param {number} [aliveCount] alive players at the Final Assault / Hidden Core start (co-op)
    * @returns {number}
    */
-  bossPoolHp(bossId, aliveCount) {
+  bossPoolHp(bossId, aliveCount, opts = {}) {
     const boss = this.boss(bossId);
     const diff = this.bloodPointDiff();
     let base = boss && boss.bloodPoint && Number.isFinite(boss.bloodPoint[diff]) ? boss.bloodPoint[diff] : null;
     if (base == null && boss && boss.bloodPoint) base = Object.values(boss.bloodPoint).find((v) => Number.isFinite(v)) ?? null;
     if (base == null) base = 500000;
-    return Math.max(1, Math.round(base * this.bossPoolHpMul * this.bossPoolShare(aliveCount)));
+    // ★ 2026-10-23（owner）：隐秘核心的 Boss 血量单独翻倍（mode.hiddenBossHpMul，默认 2）。
+    const hiddenMul = opts && opts.hidden ? Math.max(0, Number((this.mode && this.mode.hiddenBossHpMul) ?? 2) || 2) : 1;
+    return Math.max(1, Math.round(base * this.bossPoolHpMul * this.bossPoolShare(aliveCount) * hiddenMul));
   }
 
   /**
@@ -271,6 +275,15 @@ export class GameData {
   garrison(id) { return own(this.raw.garrisons, id); }
   effect(id) { return own(this.raw.effects, id); }
   enemy(key) { return own(this.raw.enemies, key); }
+
+  /** 所有领袖（rank BOSS）的敌人 key —— 惊变「傀儡把戏」换 boss 时用（battle flags 里下发）。 */
+  get bossKeys() {
+    const out = [];
+    for (const [key, rec] of Object.entries((this.raw && this.raw.enemies) || {})) {
+      if (rec && String(rec.rank || '').toUpperCase() === 'BOSS') out.push(key);
+    }
+    return out.sort();
+  }
   wave(id) { return own(this.raw.waves, id); }
   stage(id) { return own(this.raw.stages, id); }
   boss(id) { return own(this.raw.bosses, id); }
@@ -662,6 +675,16 @@ export class GameData {
     const rounds = Array.isArray(j.rounds)
       ? [...new Set(j.rounds.map((n) => Math.trunc(numOr(n, 0))).filter((n) => n >= 1))].sort((a, b) => a - b)
       : [];
+    // ★ 2026-10-24（owner）：隐秘惊变（隐秘核心战前的专属阶段，保底一张「隐秘」稀有度卡）。
+    //   注意这里是**清洗后的视图**，config 里新加的字段必须在这里显式透传，否则 phases/bossRounds 读不到。
+    const hiddenRaw = j.hidden && typeof j.hidden === 'object' ? j.hidden : null;
+    const hidden = hiddenRaw ? {
+      enabled: hiddenRaw.enabled !== false,
+      label: typeof hiddenRaw.label === 'string' && hiddenRaw.label ? hiddenRaw.label : '隐秘惊变',
+      pool: Array.isArray(hiddenRaw.pool) ? hiddenRaw.pool.filter((c) => c && typeof c === 'object') : [],
+      flickerMs: Math.max(0, Math.trunc(numOr(hiddenRaw.flickerMs, numOr(j.flickerMs, 3000)))),
+      resultMs: Math.max(0, Math.trunc(numOr(hiddenRaw.resultMs, numOr(j.resultMs, 3000)))),
+    } : null;
     return {
       round,
       rounds: rounds.length ? rounds : [round],
@@ -669,6 +692,7 @@ export class GameData {
       pool,
       flickerMs: Math.max(0, Math.trunc(numOr(j.flickerMs, 3000))),
       resultMs: Math.max(0, Math.trunc(numOr(j.resultMs, 3000))),
+      hidden,
     };
   }
 
@@ -816,6 +840,8 @@ export class GameData {
     //   普通模式没写这两个字段 → out 里不带它们 → damage.js / units.js 回落到原来的全局上限 ✓ 行为不变。
     if (Number.isFinite(this.mode && this.mode.damageCap)) out.damageCap = this.mode.damageCap;
     if (Number.isFinite(this.mode && this.mode.aspdCap)) out.aspdCap = this.mode.aspdCap;
+    // ★ 2026-10-24：傀儡把戏要在战场里随机换 boss —— 把领袖 key 表随 flags 下发
+    if (this.zhajing && Array.isArray(this.bossKeys) && this.bossKeys.length) out.bossKeys = this.bossKeys;
     return out;
   }
   get unite() {

@@ -7,6 +7,7 @@
 //   bondHintsFor(cardId, ownedIds) → [{ name, have, need, tiers, tier, effect }]
 
 const BONDS = [
+  { id: 'ave_mujica', name: '开始吧，今夜的假面舞会', tiers: [2, 3], members: ['jibian_yinhezhanjian', 'jibian_yiwangnvshen', 'jibian_duoshouyeshou'], effect: '一档（2）：【颂乐人偶】干员开启技能进入Fever状态所需的Fever上限减半（450→225）；Fever期间所有干员获得所有【颂乐人偶】成员攻击力总和30%的鼓舞效果。二档（3）：所需的Fever上限减少至50；鼓舞效果提升至50%。' },
   { id: 'dmg2dmg', name: '伤害转伤害', tiers: [2], members: ['jibian_wulizhuanmofa', 'jibian_mofazhuanwuli'], effect: '你的干员造成的所有伤害变为真实伤害，攻击力+50%。' },
   { id: 'steady', name: '脚踏实地', tiers: [2, 3], members: ['jibian_jingzhun', 'jibian_xunjie', 'jibian_lingqiao', 'jibian_touziren', 'jibian_jianshou'], effect: '你的附属盟约层数叠加时获得的层数增加100%。（二档200%）' },
   { id: 'glory', name: '重振荣光', tiers: [2, 3], members: ['jibian_hongsongqishituan', 'jibian_qishijingji', 'jibian_laobadao'], effect: '你的【卡西米尔】干员攻击距离+1，攻击力+100%。（二档翻倍）' },
@@ -21,7 +22,7 @@ const BONDS = [
   { id: 'true_investor', name: '真·投资人', tiers: [4], members: ['jibian_touziren', 'jibian_touziweilai', 'jibian_shenmishangdian', 'jibian_gaoluzhipiao', 'jibian_banteng', 'jibian_juanzeng', 'jibian_panduolamohe', 'jibian_malubian', 'jibian_jinjiuzhibei', 'jibian_rencaishichang'], effect: '返还触发前消耗的所有资金，并使每个【获得时】效果翻倍。' },
   { id: 'toopainful', name: '因为太怕痛就全点防御力了', tiers: [2, 3], members: ['jibian_zheshe', 'jibian_jianshou', 'jibian_daoqiangburu', 'jibian_fushi'], effect: '一档：防御力和法术抗性增加70%；二档：被你干员阻挡的敌人每秒受到最大生命值10%的真实伤害。' },
   { id: 'glorious_evo', name: '光荣进化', tiers: [2], members: ['jibian_jiarudaqun', 'jibian_chuncuideqiangda', 'jibian_moguiyu'], effect: '你的【阿戈尔】干员基础数值提升300%。' },
-  { id: 'layers_fan', name: '层数厨', tiers: [3], members: ['jibian_cengshudaluan', 'jibian_daozhuanqu', 'jibian_325799', 'jibian_diecengshou'], effect: '你的所有盟约层数叠加时获得的层数翻倍。' },
+  { id: 'layers_fan', name: '层数厨', tiers: [3], members: ['jibian_cengshudaluan', 'jibian_daozhuanqu', 'jibian_325799', 'jibian_diecengshou', 'jibian_jizhongyidian'], effect: '你的所有盟约层数叠加时获得的层数翻倍。' },
 ].map((b) => Object.freeze({
   id: b.id,
   name: b.name,
@@ -35,9 +36,13 @@ export function jibianBonds() {
   return BONDS;
 }
 
+/** ★ 2026-10-23：「羁绊之力」属于所有羁绊（没有自己的效果，只提供人数）。 */
+export const WILD_CARD = 'jibian_jibangzhili';
+
 /** 这张卡属于哪些羁绊。 */
 export function bondsOfCard(cardId) {
   const id = String(cardId || '');
+  if (id === WILD_CARD) return BONDS.slice();
   return BONDS.filter((b) => b.members.includes(id));
 }
 
@@ -65,10 +70,12 @@ export function ownedJibianIdsOf(ps) {
 /** 已拥有的卡 → 已激活的羁绊（只返回达到最低阈值的）。 */
 export function activeBonds(ownedIds) {
   const owned = ownedIds instanceof Set ? ownedIds : new Set(ownedIds || []);
+  const wild = owned.has(WILD_CARD);   // 「羁绊之力」给每个羁绊 +1 人
   const out = [];
   for (const def of BONDS) {
     let have = 0;
     for (const m of def.members) if (owned.has(m)) have++;
+    if (wild) have += 1;
     if (!have) continue;
     let tier = 0;
     for (const t of def.tiers) if (have >= t) tier = Math.max(tier, t);
@@ -82,9 +89,11 @@ export function bondHintsFor(cardId, ownedIds) {
   const defs = bondsOfCard(cardId);
   if (!defs.length) return [];
   const owned = ownedIds instanceof Set ? ownedIds : new Set(ownedIds || []);
+  const wild = owned.has(WILD_CARD) && String(cardId || '') !== WILD_CARD;
   return defs.map((def) => {
     let have = 0;
     for (const m of def.members) if (owned.has(m)) have++;
+    if (wild) have += 1;
     return {
       name: def.name,
       have,
