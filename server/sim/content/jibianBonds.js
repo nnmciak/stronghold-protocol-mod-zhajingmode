@@ -14,7 +14,7 @@ const BONDS = [
   { id: 'empathy', name: '共感', tiers: [2], members: ['jibian_huolibuzu', 'jibian_meiguozidan', 'jibian_chunyinzidan', 'jibian_wocongshanzhonglai'], effect: '把场上所有干员的攻击力变成整备阶段结束时场上攻击力最高干员的攻击力。' },
   { id: 'siracusa_wrath', name: '叙拉古人的愤怒', tiers: [2], members: ['jibian_lala', 'jibian_geigei'], effect: '你立刻获得精锐的荒芜拉普兰德和缄默德克萨斯。' },
   { id: 'freeship', name: '包邮', tiers: [2, 3], members: ['jibian_jisusongda_normal', 'jibian_jisusongda_rare', 'jibian_jisusongda_epic'], effect: '你在购买5阶干员时不再需要消耗资金。（二档增加6阶）' },
-  { id: 'roguelike_fan', name: '集成战略爱好者', tiers: [2, 4], members: ['jibian_gaoluzhipiao', 'jibian_banteng', 'jibian_zhuiji', 'jibian_wenmingdecunxu', 'jibian_shiguangzhimo', 'jibian_jinjiuzhibei'], effect: '你随机获得一个未获得过的藏品类惊变。' },
+  { id: 'roguelike_fan', name: '集成战略爱好者', tiers: [2, 4], members: ['jibian_gaoluzhipiao', 'jibian_banteng', 'jibian_zhuiji', 'jibian_wenmingdecunxu', 'jibian_shiguangzhimo', 'jibian_jinjiuzhibei', 'jibian_chouminglu'], effect: '你随机获得一个未获得过的藏品类惊变。' },
   { id: 'cheat', name: '出老千', tiers: [2], members: ['jibian_daluandou', 'jibian_xuedingedemao', 'jibian_shenmishangdian', 'jibian_gaoluzhipiao', 'jibian_erjiguan'], effect: '你的部分惊变效果改变。' },
   { id: 'modern_strongest', name: '现代最强', tiers: [3], members: ['jibian_liuyan', 'jibian_wuxiaxian', 'jibian_qingpaibeibu'], effect: '你的所有干员释放技能不再需要技力，攻击力+1000%，攻击速度+360，攻击距离+2。' },
   { id: 'army_alert', name: '惊动军方', tiers: [2], members: ['jibian_yanrenhuifei', 'jibian_yanguoyouji', 'jibian_chixiaojianfa'], effect: '你立刻获得一个精锐望。' },

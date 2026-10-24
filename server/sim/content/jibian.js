@@ -525,6 +525,28 @@ export function install(battle) {
     for (const [pid, ids] of picks) installJibianBonds(battle, new Set(ids.keys()), pid);
   } catch { /* 不能因为羁绊把对局搞崩 */ }
 
+  // 仇名录（稀有，owner 2026-10-25）：我方干员攻击力 +2%，每击倒一名敌人永久额外 +0.2%
+  if (has('jibian_chouminglu')) {
+    const KEY = 'jibian:chouminglu';
+    const kills = new Map();
+    const nOf = (pid) => count(pid, 'jibian_chouminglu');
+    const apply = (u) => {
+      if (!u || u.side !== 'ally' || u.kind !== 'op' || u.ownerId == null) return;
+      const n = nOf(u.ownerId);
+      if (!(n > 0)) return;
+      const atkPct = 0.02 * n + 0.002 * (kills.get(u.ownerId) || 0) * n;
+      try { battle.addBuff(u, { key: KEY, mods: { atkPct }, refresh: 'replace', persist: true, allowDead: true }); } catch { /* 不影响对局 */ }
+    };
+    battle.on('battleStart', () => { for (const u of battle.allies()) apply(u); }, { priority: 10 });
+    battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
+    battle.on('kill', (ctx) => {
+      const k = ctx && ctx.killer;
+      if (!k || k.side !== 'ally' || k.ownerId == null || !(nOf(k.ownerId) > 0)) return;
+      kills.set(k.ownerId, (kills.get(k.ownerId) || 0) + 1);
+      for (const u of battle.allies()) if (u && u.ownerId === k.ownerId) apply(u);
+    });
+  }
+
   // 火力不足恐惧症：我方干员开技能 → 子弹数翻倍（见 doubleAmmoForJibian 的注释）
   if (has('jibian_huolibuzu')) {
     battle.on('skillStart', ({ unit, skill }) => { doubleAmmoForJibian(battle, unit, skill); }, { priority: -20 });
