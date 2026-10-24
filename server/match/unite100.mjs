@@ -220,12 +220,14 @@ export function takeUnhandled(gd, plan, result) {
   // another player's survivors (observed: a receiver's plan listed seats of a different squad).
   const relayLeakers = new Set();
   let settled = 0;
+  /** pid → 无法转交（没有可 relay 的模板）的漏怪数：这些必须直接结算，不能指望阶段2 */
+  const settledBy = new Map();
   for (const [pid, n] of unhandled) {
     const got = Math.max(0, Math.floor(Number(n) || 0));
     if (!(got > 0)) continue;
     relayLeakers.add(pid);
     const templates = (safePlan.leaked || []).filter((l) => l.sourcePlayerId === pid && canRelay(gd, l));
-    if (!templates.length) { settled += got; continue; }   // nothing relayable (unknown keys): settle directly
+    if (!templates.length) { settled += got; settledBy.set(pid, (settledBy.get(pid) || 0) + got); continue; }   // nothing relayable (unknown keys): settle directly
     for (let i = 0; i < got; i++) {
       const t = templates[i % templates.length];
       // `bounty` MUST travel: relayLeak's default is null, and waves.js is the only reader of a leak's bounty, so
@@ -243,6 +245,7 @@ export function takeUnhandled(gd, plan, result) {
     plan: { squad: safePlan.squad, helpers: safePlan.helpers || [], leakers, leaked, notReentered: new Map(), relayFrom: safePlan.squad },
     relayable: leaked.length,
     settled,
+    settledBy,
     leakers: [...relayLeakers],
   };
 }

@@ -145,6 +145,8 @@ export class MatchUnite {
       const res = (byPlan && byPlan.has(p)) ? byPlan.get(p) : (results[i] || null);
       return { plan: p, result: res, unhandled: takeUnhandled(this.gd, p, res) };
     });
+    const settledBy = new Map();
+    for (const p of phase1) for (const [pid, n] of (p.unhandled.settledBy || [])) settledBy.set(pid, (settledBy.get(pid) || 0) + n);
     const anyUnhandled = phase1.some((p) => p.unhandled.relayable > 0);
     const relays = anyUnhandled ? planRelayBySquad(this, phase1, this.lastResults) : [];
     if (!relays.length) { this.settle(plan, result); return; }
@@ -153,7 +155,7 @@ export class MatchUnite {
     // its own field, and the phase settles when that round finishes (see _finishRelayBattlefield). `sourcePlayerId`
     // travels with every relayed enemy (relayLeak), so a leak that gets through again is still billed to the player who
     // originally let it past — exactly as the atomic path does.
-    if (this.gd.unite.relayBattlefield) { this._enterRelayBattlefield(plan, result, relays); return; }
+    if (this.gd.unite.relayBattlefield) { this._enterRelayBattlefield(plan, result, relays, settledBy); return; }
 
     // Atomic fallback: the helpers are credited with defending without a field. Their remaining strength decides how
     // much they stop (the same `standing`-first strength that picked them). What they cannot stop is added straight back
@@ -191,7 +193,7 @@ export class MatchUnite {
    * @param {object|null} result the combined phase-1 result
    * @param {Array<{ to: number, plan: object }>} relays
    */
-  _enterRelayBattlefield(plan, result, relays) {
+  _enterRelayBattlefield(plan, result, relays, settledBy = null) {
 
     // ONE relay battlefield for the whole room (owner's rule): every squad's leftovers go to the same two helpers, which
     // fight them together. `planRelayBySquad` already merged them and picked the helpers, so this only has to drop a
@@ -205,7 +207,7 @@ export class MatchUnite {
     if (!list.length) { this.settle(plan, result); return; }
     // Remember what phase 1 produced: if the relay cannot be fought (or the round is interrupted) settlement still has
     // to bill phase 1's leaks, not lose them.
-    this._phase1Settle = { plan, result };
+    this._phase1Settle = { plan, result, settledBy: settledBy instanceof Map ? settledBy : new Map() };
     this.relayPlans = list;
     this._relayToken = (this._relayToken || 0) + 1;
     const token = this._relayToken;
@@ -226,12 +228,69 @@ export class MatchUnite {
    * leak kept its `sourcePlayerId`. Phase 1's outcome is merged back in so its leaks can never be lost.
    */
   _finishRelayBattlefield(plan, result, plans, results) {
-    const p1 = this._phase1Settle || { plan, result: null };
-    const merged = combineUniteResults(
-      [p1.plan, ...plans],
-      [p1.result, ...results],
+    const p1 = this._phase1Settle || { plan, result: null, settledBy: null };
+    const settledBy = p1.settledBy instanceof Map ? p1.settledBy : new Map();
+    const p1Plan = p1.plan && typeof p1.plan === 'object' ? p1.plan : null;
+    const p1Result = p1.result || null;
+    const relayPlans = (Array.isArray(plans) ? plans : []).filter(Boolean);
+    const relayResults = Array.isArray(results) ? results : [];
+    // 统计（层数 / 资金 / 击杀 / 伤害）要**合并**阶段1 与阶段2 —— 玩家反馈「第二次协防时第一次叠的层消失」
+    // 就是这里原来按 pid 直接覆盖造成的。
+    const mergeStats = (into, r) => {
+      if (!r || !r.perPlayer) return into;
+      for (const [pid, pp] of Object.entries(r.perPlayer)) {
+        if (!pp) continue;
+        const cur = into[pid] || (into[pid] = {
+          killed: 0, total: 0, leaked: [], perfect: true, layerGains: {}, coins: 0,
+          damageDealt: 0, bossDamage: 0, healingDone: 0, deaths: 0, unitsEnd: [], unitStats: [],
+        });
+        for (const k of ['killed', 'total', 'coins', 'damageDealt', 'bossDamage', 'healingDone', 'deaths']) {
+          cur[k] = Number(cur[k] || 0) + (Number(pp[k]) || 0);
+        }
+        for (const [bid, n] of Object.entries(pp.layerGains || {})) {
+          if (Number.isFinite(n) && n > 0) cur.layerGains[bid] = (cur.layerGains[bid] || 0) + Math.floor(n);
+        }
+        if (pp.perfect === false) cur.perfect = false;
+      }
+      return into;
+    };
+    const perPlayer = {};
+    mergeStats(perPlayer, p1Result);
+    for (const r of relayResults) mergeStats(perPlayer, r);
+    // ★ 计费只看**阶段2**的漏怪：阶段1 漏出去的怪已经被 relay 接手、在阶段2 里又打了一次；
+    //   如果再把阶段1 的 leaked 算进来，就会出现「跨队兜底成功却仍然扣血」。
+    //   阶段1 里「没有可转交模板」的（settledBy）和「没能重新进场」的（notReentered）才直接结算。
+    const billedLeaks = {};
+    for (const r of relayResults) {
+      if (!r || !r.perPlayer) continue;
+      for (const [pid, pp] of Object.entries(r.perPlayer)) {
+        if (!pp || !Array.isArray(pp.leaked)) continue;
+        (billedLeaks[pid] || (billedLeaks[pid] = [])).push(...pp.leaked);
+      }
+    }
+    for (const [pid, cur] of Object.entries(perPlayer)) cur.leaked = billedLeaks[pid] || [];
+    for (const [pid, arr] of Object.entries(billedLeaks)) {
+      if (!perPlayer[pid]) perPlayer[pid] = { killed: 0, total: 0, leaked: arr, perfect: arr.length === 0, layerGains: {}, coins: 0, damageDealt: 0, bossDamage: 0, healingDone: 0, deaths: 0, unitsEnd: [], unitStats: [] };
+    }
+    // 阶段1 的漏怪玩家全部进 leakers —— settle() 用「是否 leaker」来决定按联防幸存数还是按自己那场的漏怪扣血，
+    // 漏掉他们就会在阶段2 结算时按自己那场的漏怪**重复扣一次**。
+    const leakers = [];
+    for (const lk of [...((p1Plan && p1Plan.leakers) || []), ...relayPlans.flatMap((p) => p.leakers || [])]) {
+      if (lk && !leakers.some((x) => x.playerId === lk.playerId)) leakers.push(lk);
+    }
+    const helpers = [];
+    for (const h of [...((p1Plan && p1Plan.helpers) || []), ...relayPlans.flatMap((p) => p.helpers || [])]) {
+      if (h && !helpers.some((x) => x.playerId === h.playerId)) helpers.push(h);
+    }
+    const notReentered = new Map((p1Plan && p1Plan.notReentered) || []);
+    for (const [pid, n] of settledBy) notReentered.set(pid, (notReentered.get(pid) || 0) + n);
+    const unspawned = [];
+    for (const r of relayResults) if (r && Array.isArray(r.unspawned)) unspawned.push(...r.unspawned);
+    const synthetic = !!((p1Result && p1Result.synthetic) || relayResults.some((r) => r && r.synthetic));
+    this.settle(
+      { helpers, leakers, leaked: relayPlans.flatMap((p) => p.leaked || []), notReentered, combined: 1 + relayPlans.length },
+      { perPlayer, unspawned, synthetic },
     );
-    this.settle(merged.plan, merged.result);
   }
 
   /**
