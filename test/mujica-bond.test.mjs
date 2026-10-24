@@ -108,12 +108,12 @@ test('Sakiko start Fever is capped and every full three stored layers adds 2% at
   near(u.s.aspd, u.base.aspd, 'inactive core still grants no core attack speed');
 });
 
-test('each sixth real shop refresh gives a member no higher than the shop; count persists between rounds', t => {
+test('each tenth real shop refresh gives a member no higher than the shop; count persists between rounds', t => {
   for (const shopLevel of [1,2,3,4,5,6]) {
     const { m, ps, put } = match(t);
     put('oblvns'); put('mortis');
     ps.shop.level = shopLevel;
-    for (let i=0;i<5;i++) assert.equal(ps.refresh().ok,true);
+    for (let i=0;i<9;i++) assert.equal(ps.refresh().ok,true);
     assert.equal(ps.allChess().length,2);
     m.round = 2;
     ps.shop.freeRefreshes = 1;

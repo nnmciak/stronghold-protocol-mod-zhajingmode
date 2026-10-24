@@ -96,9 +96,10 @@ export function registerMeta(registry) {
       if (!ctx.gd.zhajing || ev?.trigger || !ctx.bondActive(MUJICA_BOND)) return;
       const key = 'bond:mujica:refreshes';
       const n = ctx.incCounter(key);
-      if (n < 6) return;
+      // ★ 2026-10-25（owner）：每刷新 10 次给一名（原来 6 次）
+      if (n < 10) return;
       const id = ctx.rollChess({ bond: MUJICA_BOND, maxTier: ctx.shopLevel() });
-      if (id && ctx.grantChess(id, { source: 'bond:mujica' })) ctx.setCounter(key, n - 6);
+      if (id && ctx.grantChess(id, { source: 'bond:mujica' })) ctx.setCounter(key, n - 10);
     },
   });
   registry.garrison('MUJICA_AMORIS', {
