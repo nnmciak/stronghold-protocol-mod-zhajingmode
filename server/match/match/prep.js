@@ -16,9 +16,14 @@ export class MatchPrep {
       const ej = typeof this.gd.enemyJibian === 'function' ? this.gd.enemyJibian() : null;
       const hj = ej && ej.hidden;
       if (hj && hj.enabled === true) {
+        // 抽卡/结算任何一步抛错都不能把整局卡在 ROUND_START：出错就当没播，直接走正常整备。
         this._hiddenJibianDone = true;
-        this.enterHiddenJibian(hj, { then: 'prep' });
-        return;
+        try {
+          this.enterHiddenJibian(hj, { then: 'prep' });
+          return;
+        } catch (e) {
+          try { this.reportError('hiddenJibian(enterPrep)', e); } catch { /* 忽略 */ }
+        }
       }
     }
     this.phase = PHASE.PREP;

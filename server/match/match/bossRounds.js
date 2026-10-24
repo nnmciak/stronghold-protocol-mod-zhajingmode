@@ -396,6 +396,9 @@ export class MatchBoss {
     const tick = () => {
       this._dpsHealTimer = null;
       if (this.disposed || !this.bossPool) return;
+      // ★ 只在血池还活着、且这一轮还没结算时回血：pool.hp 已经 0 时再回 10% 会把刚打死的 boss「复活」，
+      //   在 SETTLE 的 3 秒窗口里甚至会让已判定的胜利翻掉。
+      if (this._finalEnding || !(this.bossPool.hp > 0)) return;
       const inc = this.bossPool.maxHp * 0.1;
       if (inc > 0) this.bossPool.hp = Math.min(this.bossPool.maxHp, this.bossPool.hp + inc);
       this._broadcastPool(true);

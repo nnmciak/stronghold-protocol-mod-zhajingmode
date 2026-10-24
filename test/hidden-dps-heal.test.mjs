@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+﻿import assert from 'node:assert/strict';
 import { Match } from '../server/match/Match.js';
 import { getData } from '../server/data.js';
 import { getDefaultRegistry } from '../server/match/effectsMeta.js';
@@ -36,5 +36,13 @@ pool.hp = pool.maxHp * 0.95;
 await wait(650);
 console.log('接近满血再回一次:', Math.round(pool.hp), '<=', Math.round(pool.maxHp));
 assert.ok(pool.hp <= pool.maxHp + 1e-6);
+
+// 血池被打空后不能被回血「复活」（否则 SETTLE 期间可能把已判定的胜利翻掉）
+pool.hp = 0;
+m._finalEnding = null;
+await wait(700);
+console.log('血池归零后再等 50 游戏秒：', Math.round(pool.hp), '（应保持 0）');
+assert.equal(pool.hp, 0, '死的 boss 不能被回血复活');
+
 console.log('PASS');
 m.dispose();
