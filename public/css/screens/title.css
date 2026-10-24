@@ -1,4 +1,4 @@
-/* ==========================================================================================
+﻿/* ==========================================================================================
    screens/title.css — title screen: radar + ridgeline backdrop, dot-matrix emblem, big title,
    nickname console. Pure CSS/SVG art; an optional backdrop image fades in underneath.
    ========================================================================================== */
@@ -757,4 +757,36 @@ html[data-script="alphabetic"] .nodeswitch__label { letter-spacing: 0; }
   .nodeswitch__btn { padding: .05rem .06rem; }
   .nodeswitch__note { display: none; }
   .nodeswitch__hint { font-size: .09rem; }
+}
+
+/* ==========================================================================================================
+   2026-10-24（反馈：手机版登录界面 UI 太大 / 点不到「开始」）
+   竖屏手机上 rem 根字号按 19.2rem 设计宽缩放后只有 ~20px，登录控件跟着缩成 15px 高，手指点不中；
+   而原来 40px 的下限又会让整页比屏幕宽。这里给竖屏手机一套 px 尺寸的登录布局：
+   头像 / 输入框 / 主按钮都放到 44px 以上的可点尺寸，装饰文字让位。
+   ========================================================================================================== */
+@media (orientation: portrait) and (max-width: 640px) {
+  .title-main { width: 100%; max-width: 420px; margin-top: 0; padding: 0 16px 96px; }
+  .emblem { margin-bottom: 10px; }
+  .emblem__svg { width: 40px; height: 44px; }
+  .emblem__bracket { display: none; }
+  .title-en { display: none; }
+  .title-cn { margin-top: 0; font-size: clamp(26px, 8.4vw, 40px); letter-spacing: .02em; line-height: 1.2; }
+  .title-cn__colon { opacity: .7; }
+  .title-tag { margin-top: 8px; max-width: 100%; margin-inline: auto; font-size: 12px; line-height: 1.5; letter-spacing: .02em; text-align: center; overflow-wrap: anywhere; }
+  .title-watermark, .title-foot { display: none; }
+  .title-login { width: 100%; margin-top: 14px; padding: 16px; gap: 12px; }
+  .title-idrow { gap: 10px; align-items: stretch; }
+  .title-avatar { width: 64px; height: 64px; flex: none; }
+  .title-avatar__tag { font-size: 10px; }
+  .title-login .field--lg { min-height: 64px; }
+  .title-login .field__box { min-height: 44px; }
+  .title-login .field__input { height: 40px; font-size: 16px; }
+  .title-login .field__input::placeholder { font-size: 14px; letter-spacing: 0; }
+  .title-login .btn--xl { height: 52px; min-height: 52px; font-size: 17px; letter-spacing: .06em; }
+  .title-conn { flex-wrap: wrap; gap: 8px; font-size: 12px; }
+  .title-conn .btn, .title-conn .fsbtn { min-width: 40px; min-height: 40px; }
+  .title-guide { padding: 0 10px; }
+  .title-assets { right: 12px; bottom: 12px; width: auto; }
+  .roomlist { left: 12px; right: 12px; bottom: 64px; width: auto; max-height: 2.6rem; }
 }

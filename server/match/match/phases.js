@@ -491,9 +491,12 @@ export class MatchPhases {
    *       再按普通权重抽一张普通池的卡；两张都追加进 enemyJibianCards，对隐秘核心战生效。
    * 池子为空时（还没写隐秘卡）只抽普通那张；两张都抽不到就直接进隐秘核心。
    */
-  enterHiddenJibian(hidden) {
+  enterHiddenJibian(hidden, opts = {}) {
+    // ★ 2026-10-24（owner 修正）：这段揭示应该发生在**隐秘核心那一回合的整备开始时**，不是整备结束时。
+    //   opts.then='prep' → 播完回到 enterPrep（带着刚抽到的惊变布阵）；缺省 → 旧行为（进隐秘核心前播）。
+    const after = () => (opts.then === 'prep' ? this.enterPrep() : this.startFinalAssault(true));
     const ej = typeof this.gd.enemyJibian === 'function' ? this.gd.enemyJibian() : null;
-    if (!ej) { this.startFinalAssault(true); return; }
+    if (!ej) { after(); return; }
     const taken = new Set(this.enemyJibianCards || []);
     const picked = [];
     const hiddenPool = hidden && Array.isArray(hidden.pool) ? hidden.pool.filter((c) => c && c.effectId) : [];
@@ -537,7 +540,7 @@ export class MatchPhases {
         queue.push(extra);
       }
     }
-    if (!picked.length) { this.startFinalAssault(true); return; }
+    if (!picked.length) { after(); return; }
     this.enemyJibianCards = [...(this.enemyJibianCards || []), ...picked.map((c) => c.id)]
       .filter((x) => typeof x === 'string' && x);
     // 隐秘惊变里「抽到即改玩家层数」的两张（响指 / 诛伏赐死）在这里结算
@@ -552,7 +555,7 @@ export class MatchPhases {
     const flickerMs = Number(hidden && hidden.flickerMs) || Number(ej.flickerMs) || 2200;
     const resultMs = Number(hidden && hidden.resultMs) || Number(ej.resultMs) || 1800;
     this.setDeadline((flickerMs + resultMs) / 1000, () => {
-      if (this.phase === PHASE.HIDDEN_JIBIAN) this.startFinalAssault(true);
+      if (this.phase === PHASE.HIDDEN_JIBIAN) after();
     }, { silent: this.soloUntimed });
     this.markPublic();
     for (const ps of this.order) this.markPrivate(ps);

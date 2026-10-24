@@ -1,4 +1,4 @@
-/* ==========================================================================================
+﻿/* ==========================================================================================
    theme.css — design tokens, fonts, root scale, base reset, shared backdrops & utilities.
    Look: research 06 §12 (near-black green-grey, mint accents, gold prices, bracket frames).
 
@@ -116,10 +116,10 @@
 
 /* ---- root scale ----------------------------------------------------------------------------- */
 html {
-  font-size: clamp(40px, min(calc(100vw / 19.2), calc(100vh / 10.8)), 240px);
+  font-size: clamp(min(40px, calc(100vw / 19.2), calc(100vh / 10.8)), min(calc(100vw / 19.2), calc(100vh / 10.8)), 240px);
   /* mobile browsers: 100vh is the height with the toolbars hidden — the small viewport (svh; Safari 15.4+, Chrome 108+,
      Firefox 101+) is what is really visible while they show; older browsers keep the line above */
-  font-size: clamp(40px, min(calc(100vw / 19.2), calc(100svh / 10.8)), 240px);
+  font-size: clamp(min(40px, calc(100vw / 19.2), calc(100svh / 10.8)), min(calc(100vw / 19.2), calc(100svh / 10.8)), 240px);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   height: 100%;
@@ -383,6 +383,9 @@ h1, h2, h3, h4, p { margin: 0; }
    a narrow desktop window or a split-view iPad keeps the game */
 @media (orientation: portrait) and (max-width: 1024px) {
   .sp-rotatable .rotate-hint { display: grid; }
+  /* ★ 2026-10-24（反馈：手机版登录界面点不到「开始」）：标题/登录页允许竖屏操作，
+     横屏提示只在对局内出现 —— 手机上先能登录，进了大厅再引导转屏。 */
+  .sp-rotatable:has(.title-screen) .rotate-hint { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

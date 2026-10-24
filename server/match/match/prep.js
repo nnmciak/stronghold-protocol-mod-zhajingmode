@@ -9,6 +9,18 @@ import { DELAYS } from './common.js';
 
 export class MatchPrep {
   enterPrep() {
+    // ★ 2026-10-24（owner 修正）：「隐秘惊变」应当发生在**隐秘核心那一回合的整备开始时**——
+    //   玩家先看清这一局被塞了哪些隐秘惊变，再带着这些信息买人/布阵；播完才真正进入整备本体。
+    //   一局只播一次（_hiddenJibianDone），播完回到本函数时直接走下面的正常流程。
+    if (this.round === this.gd.hiddenRound && !this._hiddenJibianDone) {
+      const ej = typeof this.gd.enemyJibian === 'function' ? this.gd.enemyJibian() : null;
+      const hj = ej && ej.hidden;
+      if (hj && hj.enabled === true) {
+        this._hiddenJibianDone = true;
+        this.enterHiddenJibian(hj, { then: 'prep' });
+        return;
+      }
+    }
     this.phase = PHASE.PREP;
     this.sp = null;
     const alive = this.alivePlayers();
