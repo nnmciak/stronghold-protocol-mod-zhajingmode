@@ -33,7 +33,7 @@ const m2 = mk(22);
 m2.phase = 'PREP'; m2.round = 1;
 m2.enterHiddenJibian({ enabled: true, label: '隐秘惊变', flickerMs: 1, resultMs: 1, pool: [] });
 console.log('空隐秘池 → 张数:', m2.hiddenJibian.cards.length, '|', m2.hiddenJibian.cards.map((c) => c.name).join('、'));
-assert.equal(m2.hiddenJibian.cards.length, 1);
+assert.equal(m2.hiddenJibian.cards.length, 2, '隐秘池为空时退回普通池抽两张');
 
 // 真实配置：10 张隐秘池里抽到潘多拉时，总张数 = 2 + 3（多开几局找一次）
 let sawPandora = false;

@@ -522,8 +522,15 @@ export class MatchPhases {
       taken.add(card.id);
       return card;
     };
-    if (hiddenPool.length) { const c = drawOne(true, true); if (c) picked.push(c); }
-    { const c = drawOne(false); if (c) picked.push(c); }
+    // ★ 2026-10-25（owner）：隐秘阶段改成**抽两张隐秘惊变**（原来 1 张保底隐秘 + 1 张普通权重）。
+    //   隐秘池抽完时退回普通池，避免同一张重复出现。
+    const drawHidden = () => {
+      if (!hiddenPool.length) return drawOne(false);
+      const left = hiddenPool.filter((c) => !taken.has(c.effectId || c.id));
+      if (!left.length) return drawOne(false);
+      return drawOne(true, true);
+    };
+    for (let i = 0; i < 2; i++) { const c = drawHidden(); if (!c) break; picked.push(c); }
     // ★ 2026-10-24（owner）：「潘多拉·敌」—— 抽到后再随机 3 张敌方惊变（每张 7.99% 是隐秘惊变）。
     //   展开是递归的（潘多拉自己也可能被抽到），所以用队列 + 次数上限防跑飞。
     const PANDORA = 'ejibian_hidden_pandora';

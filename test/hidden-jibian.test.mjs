@@ -20,9 +20,9 @@ const cards = m.hiddenJibian?.cards || [];
 console.log('触发 phase:', m.phase, '| 张数:', cards.length, '|', cards.map((c) => c.name + '/' + c.rarity).join(', '));
 console.log('层数（响指抽到就会减半）:', JSON.stringify(ps.layers));
 assert.equal(m.phase, PHASE.HIDDEN_JIBIAN);
-assert.equal(cards.length, 2, '保底隐秘 + 普通各一张');
-assert.ok(cards.some((c) => c.rarity === 'hidden'), '必须包含一张隐秘卡');
-assert.equal(m.enemyJibianCards.length, 2);
+assert.ok(cards.length >= 2 && cards.length <= 5, '两张隐秘（抽到潘多拉会追加 3 张）');
+assert.ok(cards.slice(0, 2).every((c) => c.rarity === 'hidden'), '前两张都应是隐秘卡');
+assert.equal(m.enemyJibianCards.length, cards.length);
 
 // 阶段进行中：视图要带揭露池子（滚动展示用）
 const v = m.publicView();
