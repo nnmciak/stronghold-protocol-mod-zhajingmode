@@ -21,7 +21,7 @@ assert.equal(rec.buffs[0].bb.mult, 2);
 
 // 图标：assets 映射 + 文件存在
 const assets = JSON.parse(fs.readFileSync(new URL('../data/assets.json', import.meta.url), 'utf8'));
-assert.equal(assets.bands[BAND], '/assets/band/band_zj_fuuka.png');
+assert.equal(assets.bands[BAND], '/assets/band/band_zj_fuuka.png?v=3');
 assert.ok(fs.existsSync(new URL('../public/assets/band/band_zj_fuuka.png', import.meta.url)), '图标文件应存在');
 
 // 只出现在炸惊；且排在祀前面
