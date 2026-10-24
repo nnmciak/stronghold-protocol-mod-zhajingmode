@@ -159,7 +159,6 @@ export class PlayerAcquire {
     // 只看结城理；定位完就删这几行。
     if (this.gd.chess(goldenId)?.charId === 'char_4217_makoto') {
       try {
-        process.stderr.write(`[skin-merge] base=${baseId} golden=${goldenId} eliteUid=${elite?.uid} eliteId=${elite?.id} skinOfPiece=${this.skinOfPiece(elite?.id)} skinOfBase=${this.skinOfPiece(baseId)} keys=${Object.keys(this.skins || {}).filter((k) => /makoto|60_5/.test(k)).join('|')}\n`);
       } catch { /* 非 Node 环境忽略 */ }
     }
     // `from` = the merged operator, for 炸惊模拟 规则13's same-盟约 reward roll

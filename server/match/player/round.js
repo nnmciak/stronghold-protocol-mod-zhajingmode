@@ -287,7 +287,6 @@ export class PlayerRound {
         // 只看结城理（char_4217_makoto）；定位完就删这几行。
         if (this.gd.chess(piece.id)?.charId === 'char_4217_makoto') {
           try {
-            process.stderr.write(`[skin-wire] piece=${piece.id} golden=${!!piece.golden} skin=${skin ?? '(null)'} baseId=${this.gd.chess(piece.id)?.baseId} keys=${Object.keys(this.skins || {}).join('|')}\n`);
           } catch { /* 非 Node 环境忽略 */ }
         }
         units.push(u);

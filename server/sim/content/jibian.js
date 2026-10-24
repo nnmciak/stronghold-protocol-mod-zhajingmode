@@ -1,4 +1,4 @@
-// server/sim/content/jibian.js — 炸惊模拟 惊变 (jibian) card content.
+﻿// server/sim/content/jibian.js — 炸惊模拟 惊变 (jibian) card content.
 //
 // WHAT THIS FILE OWNS. 炸惊模拟 规则5/6 gives two SP rounds a phase kind of their own: 惊变阶段 (spPhaseKinds, rounds
 // 1 and 7) deals `jibian.cards` cards from `mode_*_zhajing.jibian.pool` (data/config.json) and 企鹅物流的快递 deals
@@ -1062,7 +1062,7 @@ export function install(battle) {
       if (!u || u.side !== 'ally') return;
       BOND_ATTR(battle, u, 'zheshe', { resFlat: 70 });
     };
-    battle.on('battleStart', () => { for (const u of allies()) apply(u); }, { priority: 20 });
+    battle.on('battleStart', () => { for (const u of battle.allies()) apply(u); }, { priority: 20 });
     battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
   }
 
