@@ -224,6 +224,9 @@ export function install(battle) {
     battle.every(50, () => {
       const boss = liveBoss();
       if (!boss) return;
+      // ★ 2026-10-24：共享血池的 boss 由 Match 侧统一回血（battle._syncBossHp 每跳都会按血池覆盖单位血量，
+      //   在这里 heal 下一帧就被抹掉，表现就是完全不回血）。无血池的普通场景仍走本地治疗。
+      if (boss.bossPool) return;
       const heal = (Number(boss.s && boss.s.maxHp) || 0) * 0.1;
       if (heal > 0) battle.heal(boss, boss, heal, { self: true, tags: ['ejibian'] });
     });

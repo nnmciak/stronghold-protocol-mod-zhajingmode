@@ -75,6 +75,10 @@ export class MatchBoss {
       },
     });
     this.bossPool = pool;
+    // ★ 2026-10-24（反馈：「dps检测器」那把 boss 没有回血）：boss 血量以服务端共享血池为准，
+    //   战斗里的 _syncBossHp 每跳都会用血池覆盖单位血量 —— 所以「每 50 游戏秒回 10%」必须直接写血池，
+    //   否则无论客户端怎么 heal，下一帧就被覆盖，表现就是完全不回血。
+    if ((this.enemyJibianCards || []).includes('ejibian_hidden_dps')) this._startDpsHeal();
     const groups = pairPlayers(alive);
     const reuse = this.bossWaves && this.bossWaves.length === groups.length && this.bossWaves.every((w, i) => w.players.join() === groups[i].map((p) => p.playerId).join());
     this.fields = groups.map((g, i) => {
@@ -380,6 +384,24 @@ export class MatchBoss {
     this._lastPoolKey = key;
     this._lastPoolAt = now;
     this.broadcast(msg);
+  }
+
+  /**
+   * 隐秘惊变「dps检测器」：每 50 游戏秒让 boss 恢复 10% 最大生命。
+   * 必须写**共享血池**（客户端对 boss 单位的一切治疗都会被 _syncBossHp 覆盖），然后立刻广播 b.pool。
+   */
+  _startDpsHeal() {
+    this.cancel(this._dpsHealTimer);
+    const period = Math.max(50, this.scaled(50 * 1000));
+    const tick = () => {
+      this._dpsHealTimer = null;
+      if (this.disposed || !this.bossPool) return;
+      const inc = this.bossPool.maxHp * 0.1;
+      if (inc > 0) this.bossPool.hp = Math.min(this.bossPool.maxHp, this.bossPool.hp + inc);
+      this._broadcastPool(true);
+      this._dpsHealTimer = this.later(period, tick);
+    };
+    this._dpsHealTimer = this.later(period, tick);
   }
 
   /**
