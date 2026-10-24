@@ -299,6 +299,7 @@ const BOND_ATTR = (battle, unit, key, mods) => {
 
 /** 把 14 个羁绊里「战斗侧」的部分装上。@param {any} battle @param {Set<string>} owned 已拥有的惊变 effectId */
 export function installJibianBonds(battle, owned, playerId = null) {
+  try { battle.__jibianBondCalls = (battle.__jibianBondCalls || 0) + 1; battle.__jibianOwned = [...(owned || [])]; } catch { /* dbg */ }
   let act = [];
   try { act = activeBonds(owned); } catch { act = []; }
   if (!act.length) return;
@@ -381,13 +382,30 @@ export function installJibianBonds(battle, owned, playerId = null) {
   }
 
   // 伤害转伤害：所有伤害变真实伤害（近似：无视目标防御与法术抗性）+ 攻击力 +50%
+  try { battle.__dmg2dmgSeen = has('dmg2dmg'); } catch { /* dbg */ }
   if (has('dmg2dmg')) {
+    try { battle.__dmg2dmgHook = true; } catch { /* dbg */ }
+    // ★ 2026-10-25 修（玩家反馈「触发了伤害转伤害但不是真伤」）：原来只写了 `defIgnore/resIgnore` 两个**不存在的 mod 键**
+    //   （引擎是 defIgnoreFlat / resIgnoreFlat，而且忽略防御也不等于真伤 —— 5% 保底和法抗仍在）。现在：
+    //   · 在 `hit`（mitigate 之前，damage.js 里 type 在 hit 之后读取）把本玩家干员造成的物理/法术伤害改成 `type:'true'`；
+    //   · 元素伤害保持元素结算（元素爆发有自己的通道，强转真伤会绕过元素抗性与爆发逻辑）；
+    //   · 攻击力 +50% 仍然用 atkPct（正常加算区）。
     const apply = (u) => {
       if (!mine(u)) return;
-      BOND_ATTR(battle, u, 'truedmg', { defIgnore: 100000, resIgnore: 100000, atkPct: 0.5 });
+      BOND_ATTR(battle, u, 'truedmg', { atkPct: 0.5 });
     };
     battle.on('battleStart', () => { for (const u of allies()) apply(u); }, { priority: 20 });
     battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
+    battle.on('hit', (ctx) => {
+      const dmg = ctx && ctx.dmg;
+      const src = (ctx && (ctx.credit ?? ctx.source)) || null;
+      const t = ctx && ctx.target;
+      try { battle.__dmg2dmgEnter = (battle.__dmg2dmgEnter || 0) + 1; battle.__dmg2dmgCtx = { src: src && src.side, t: t && t.side, type: dmg && dmg.type, mine: src ? mine(src) : null }; } catch { /* dbg */ }
+      if (!dmg || !src || !t || src.side !== 'ally' || t.side !== 'enemy' || !mine(src)) return;
+      if (dmg.type === 'element' || dmg.type === 'elemental' || dmg.type === 'true') return;
+      try { battle.__dmg2dmgRan = (battle.__dmg2dmgRan || 0) + 1; } catch { /* dbg */ }
+      dmg.type = 'true';
+    });
   }
 
   // 因为太怕痛就全点防御力了（owner 2026-10-19）
@@ -1024,6 +1042,8 @@ export function install(battle) {
       }
       // ⑰⑱ 魔法转物理（+30%）/ 物理转魔法 —— 按"原始类型"判。用户 2026-10-12：两张同时在手时**不互抵** ——
       // 一律输出「增强后的物理伤害」并保留 +30%（魔法转物理优先），物理转魔法只在没拿魔法转物理时才生效。
+      // ★ 2026-10-25：羁绊「伤害转伤害」已把这次伤害改成真伤时，这两张卡不要再把它转回物理/法术。
+      if (dmg.type === 'true') return;
       const origType = dmg.type;
       const nA2P = n('jibian_mofazhuanwuli');
       const nP2A = n('jibian_wulizhuanmofa');
