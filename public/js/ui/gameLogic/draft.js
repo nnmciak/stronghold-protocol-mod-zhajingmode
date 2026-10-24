@@ -73,6 +73,10 @@ export function normalizeSp(sp, players = []) {
     name: typeof sp.name === 'string' && sp.name ? sp.name : null,
     desc: typeof sp.desc === 'string' && sp.desc ? sp.desc : null,
     untimed: !!sp.untimed,
+    // ★ 2026-10-25（owner：惊变阶段倒计时没显示给玩家）：服务端 private 帧里的 sp.turnDeadline /
+    //   sp.turnSeconds 就是本小队这一手的截止时间，原来 normalizeSp 没把它们带出来，ChoiceOverlay 拿到的永远是 0。
+    turnDeadline: Number(sp.turnDeadline) > 0 ? Number(sp.turnDeadline) : 0,
+    turnSeconds: Number(sp.turnSeconds) > 0 ? Number(sp.turnSeconds) : null,
     cards, order, turnPid, pickOf, takenBy, pickedCount: pickOf.size,
   };
 }
