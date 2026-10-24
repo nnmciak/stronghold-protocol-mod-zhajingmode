@@ -384,7 +384,7 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
 .spov { position: absolute; inset: 0 0 0 2.8rem; z-index: 20; }
 .gm.has-sp .gm__bonds, .gm.has-sp .gm__effects { opacity: 0; pointer-events: none; transition: opacity var(--t-med); }
 .spov__veil { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(4, 7, 6, .6) 0, rgba(4, 7, 6, .9) .5rem, rgba(4, 7, 6, .92)); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); border-left: 1px solid var(--line); }
-.spov__inner { position: absolute; left: .3rem; right: .5rem; top: 1.14rem; bottom: .5rem; display: flex; flex-direction: column; gap: .16rem; animation: screen-in var(--t-slow) var(--ease-out); }
+.spov__inner { position: absolute; left: .3rem; right: .5rem; top: 1.14rem; bottom: .5rem; display: flex; flex-direction: column; gap: .16rem; overflow-y: auto; animation: screen-in var(--t-slow) var(--ease-out); }
 .spov__head { display: flex; align-items: flex-end; justify-content: space-between; gap: .3rem; }
 .spov__titles { display: flex; flex-direction: column; gap: .04rem; }
 .spov__title { display: flex; align-items: baseline; gap: .14rem; font-size: calc(.5 * var(--t)); font-weight: 900; letter-spacing: .08em; color: #eafff8; text-shadow: 0 0 .2rem rgba(23, 249, 183, .35); }
@@ -409,7 +409,7 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
 .spov__who.is-done .spov__wstate { color: var(--mint-400); }
 .spov__who.is-cur .spov__wstate { color: var(--gold); }
 .spov__grid { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: .2rem; }
-.spov__grid--3 { grid-template-columns: repeat(3, minmax(0, 4.3rem)); grid-template-rows: minmax(0, 4.6rem); justify-content: center; align-content: start; gap: .36rem; margin-top: .3rem; }
+.spov__grid--3 { grid-template-columns: repeat(3, minmax(0, 4.3rem)); grid-template-rows: auto; justify-content: center; align-content: start; gap: .36rem; margin-top: .3rem; }
 .spov__grid--3 .spcard__icon { width: 1.3rem; height: 1.3rem; }
 /* These three cards include both a set-bonus row and a flavour line; let their
    row grow with the complete text, including the refresh button below it. */
@@ -520,7 +520,7 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
 .spov__reroll:disabled { opacity: .4; cursor: default; }
 .spov__reroll .icon { width: .2rem; height: .2rem; animation: spov-spin 1.1s linear infinite; }
 @keyframes spov-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.spov__rerollcount { font-size: .15rem; color: var(--text-dim); align-self: center; white-space: nowrap; }
+.spov__rerollcount { font-size: max(.15rem, 12px); color: var(--text-dim); align-self: center; white-space: nowrap; }
 /* 2026-10-13（用户）：刷新按钮与「剩余可刷新次数」改到【卡牌正下方】的一条居中栏里（仍然只有一个按钮）。 */
 .spov__rerollbar { display: flex; align-items: center; justify-content: center; gap: .12rem; margin-top: .06rem; }
 .spov__rerollbar .spov__reroll { margin-left: 0; }
@@ -862,13 +862,15 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
 .spcardwrap { display: flex; flex-direction: column; gap: .08rem; min-width: 0; }
 .spcardwrap > .spcard { flex: 1 1 auto; }
 .spcard__rerollbtn {
-  display: inline-flex; align-items: center; justify-content: center; gap: .06rem;
-  padding: .06rem .1rem; border: 1px solid var(--line-2); border-radius: .08rem;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 14px; font-size: max(.16rem, 13px); font-weight: 700;
+  border: 1px solid var(--line-2); border-radius: .08rem;
   background: rgba(8, 11, 10, .78); color: var(--text-md);
   font-size: .16rem; line-height: 1; cursor: pointer;
 }
 .spcard__rerollbtn:hover { border-color: var(--mint-400); color: var(--mint-400); }
-.spcard__rerollbtn .icon { width: .18rem; height: .18rem; animation: spov-spin 1.1s linear infinite; }
+.spcard__rerollbtn .icon { width: max(.18rem, 18px); height: max(.18rem, 18px); animation: spov-spin 1.1s linear infinite; }
+.spcard__rerolltext { letter-spacing: .08em; white-space: nowrap; }
 .spcard__rerollbtn:disabled { opacity: .4; cursor: default; }
 .spcard__rerollbtn:disabled .icon { animation: none; }
 @media (prefers-reduced-motion: reduce) { .spcard__rerollbtn .icon { animation: none; } }
@@ -877,13 +879,14 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
    桌面维持原样（桌面 rem≈100px，图标本来就是 18px）。 */
 @media (pointer: coarse), (max-width: 900px) {
   .spcardwrap { gap: 8px; }
-  .spcard__rerollbtn { min-width: 44px; min-height: 44px; padding: 0 10px; border-radius: 10px; }
-  .spcard__rerollbtn .icon { width: 22px; height: 22px; }
+  .spcard__rerollbtn { min-width: 0; min-height: 48px; padding: 0 8px; gap: 6px; border-radius: 10px; font-size: 13px; white-space: nowrap; }
+  .spcard__rerollbtn .icon { width: 18px; height: 18px; }
+  .spcard__rerolltext { font-size: 13px; white-space: nowrap; }
   .spov__reroll { min-width: 44px; min-height: 44px; }
   .spov__reroll .icon { width: max(.2rem, 20px); height: max(.2rem, 20px); }
 }
 
-.spov__rerollhint { font-size: .15rem; color: var(--text-dim); align-self: center; }
+.spov__rerollhint { font-size: max(.15rem, 12px); color: var(--text-dim); align-self: center; }
 
 /* 用户 2026-10-11：炸惊模拟规则面板（大厅难度卡片 + 房间顶部栏两个入口共用） */
 .gm__rulesbar { position: absolute; top: .1rem; right: .1rem; z-index: 6; }

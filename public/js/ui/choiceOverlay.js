@@ -290,7 +290,7 @@ export function ChoiceView({ pub, sp, myId, solo, busyIdx = null, total = null, 
             ${canReroll ? html`<button type="button" class="spcard__rerollbtn" data-testid=${`sp-reroll-${card.idx}`}
               aria-label=${t('刷新这张惊变')} title=${t('重投这张惊变（剩余 {n} 次）', { n: sp.rerollLeft })}
               onClick=${(e) => { e.stopPropagation(); if (typeof onReroll === 'function') onReroll(card.idx); }}>
-              <${Icon} name="refresh" /></button>` : null}
+              <${Icon} name="refresh" /><span class="spcard__rerolltext">${t('刷新')}</span></button>` : null}
           </div>`;
         })}
       </div>
