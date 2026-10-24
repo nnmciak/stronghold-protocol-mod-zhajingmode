@@ -34,7 +34,14 @@ export class PlayerViews {
     // Listed ahead of 策略 because they condition the round's enemies, not this player's board.
     const ej = this.m && this.m.enemyJibian;
     const ejCfg = this.gd && typeof this.gd.enemyJibian === 'function' ? this.gd.enemyJibian() : null;
-    const ejPool = ejCfg && Array.isArray(ejCfg.pool) ? ejCfg.pool : [];
+    // ★ 2026-10-24（反馈：已选惊变里出现一张空白的「敌方惊变」）：隐秘池的卡不在 ejCfg.pool 里，
+    //   之前只查普通池 → 隐秘卡查不到名字/描述，只能回落成「敌方惊变 / 普通」。两张池子都要查。
+    const ejPool = ejCfg
+      ? [
+          ...(Array.isArray(ejCfg.pool) ? ejCfg.pool : []),
+          ...(ejCfg.hidden && Array.isArray(ejCfg.hidden.pool) ? ejCfg.hidden.pool : []),
+        ]
+      : [];
     const ids = [];
     for (const id of (this.m && Array.isArray(this.m.enemyJibianCards) ? this.m.enemyJibianCards : [])) {
       if (id && !ids.includes(id)) ids.push(id);   // 同一张重复抽到只列一次（效果本来就只算一次）
