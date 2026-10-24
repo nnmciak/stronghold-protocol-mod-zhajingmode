@@ -230,13 +230,16 @@ export function checkLoadout(entries, getChess) {
     // 「baseId !== id 就判非法」→ 玩家给**精英版**（chess_*_b）配的技能/模组被整条丢掉，
     // 客户端于是发了一份空 loadout，局内自然全是默认值（控制台里连报错都没有，正是这个原因）。
     // 现在把精英副本的 id 归一化到它的 base 上再校验（金色/隐藏/自选仍然拒绝，行为不变）。
+    // ★ 2026-10-25：**永久 DIY 干员记录**（chess_chen3_a/b、惊变发放的白铁那一类：isDiy + 有 charId）也可以配技能/模组。
+    //   自选编队「槽位」记录（chess_char_*_diy*_a/b）的 charId 是 null，仍然拒绝（它们的技能由玩家在本局的 pick 决定）。
+    const diyOperator = (r) => !!(r && r.isDiy && typeof r.charId === 'string' && r.charId);
     let key = id;
     let rec = base;
-    if (rec && !rec.isDiy && rec.baseId && rec.baseId !== id) {
+    if (rec && rec.baseId && rec.baseId !== id && (!rec.isDiy || diyOperator(rec))) {
       const b2 = typeof getChess === 'function' ? getChess(rec.baseId) : null;
-      if (b2 && !b2.isDiy && !b2.isHidden) { key = rec.baseId; rec = b2; }
+      if (b2 && !b2.isHidden && (!b2.isDiy || diyOperator(b2))) { key = rec.baseId; rec = b2; }
     }
-    if (!rec || rec.isGolden || rec.isHidden || rec.isDiy || (rec.baseId && rec.baseId !== key)) {
+    if (!rec || rec.isGolden || rec.isHidden || (rec.isDiy && !diyOperator(rec)) || (rec.baseId && rec.baseId !== key)) {
       return { error: 'BAD_TARGET', detail: `unknown chess ${id}` };
     }
     const golden = rec.goldenId ? getChess(rec.goldenId) || null : null;

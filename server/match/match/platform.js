@@ -123,7 +123,6 @@ export class MatchPlatform {
           const twin = rec ? (rec.isGolden ? rec.baseId : rec.goldenId) : null;
           if (typeof twin === 'string' && twin && !(twin in rest)) rest[twin] = { ...one };
         }
-        console.log('[loadout] in=%s merged=%s', JSON.stringify(loadout), JSON.stringify({ ...base, ...rest }));
         const merged = { ...base, ...rest };
         // setLoadout 是整份替换 + 语义校验（shared/protocol.js checkLoadout）：增量不合法就整体拒绝
         if (!ps.setLoadout(merged)) { res = fail(ERR.BAD_TARGET, 'loadout does not match the game data'); return; }
