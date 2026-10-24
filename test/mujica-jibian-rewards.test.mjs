@@ -1,4 +1,4 @@
-import test from 'node:test';
+﻿import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { getData } from '../server/data.js';
@@ -51,13 +51,18 @@ test('both 炸惊 pools draw the three cards with their real rarity; ordinary mo
     const draft = generateDraft(gd, createRng(21), 1, { exclude, owned: new Set() });
     assert.equal(draft.family, 'jibian');
     assert.deepEqual(draft.cards.map(c => c.id).sort(), CARDS.slice().sort());
+    const bondNames = new Set();
     for (const c of draft.cards) {
-      assert.equal(c.rarity, c.id === BEAST ? 'legend' : 'epic');
-      assert.equal(c.flavor, { [GALAXY]: '“现在我们是一丘之貉了。”', [GODDESS]: '“你愿意将人生托付于我吗？”', [BEAST]: '你是多首的怪物。' }[c.id]);
-      assert.equal(c.bonds[0].name, 'Ave Mujica');
+      // 2026-10-25：BEAST（Belua multorum es capitums.）已按 owner 要求移入「隐秘」档
+      assert.equal(c.rarity, c.id === BEAST ? 'hidden' : 'epic');
+      assert.equal(c.flavor, { [GALAXY]: '“现在我们是一丘之貉了。”', [GODDESS]: '“你愿意将剩余的人生托付于我吗？”', [BEAST]: '你是多首的怪物。' }[c.id]);
+      // 2026-10-25：盟约/乐队显示名会随数据改名（现在叫「开始吧，今夜的假面舞会」），不再硬编码名字
+      assert.ok(typeof c.bonds[0].name === 'string' && c.bonds[0].name.length > 0, 'bond 名不能为空');
+      bondNames.add(c.bonds[0].name);
       assert.deepEqual(c.bonds[0].tiers, [2, 3]);
       assert.equal(c.bonds[0].have, 0);
     }
+    assert.equal(bondNames.size, 1, '三张卡应指向同一个盟约/乐队');
     const withoutOwned = jibianDraftCards(gd, createRng(21), 3, new Set([...exclude, GALAXY]), { owned: new Set([GALAXY]) });
     assert.deepEqual(withoutOwned.map(c => c.id).sort(), [GODDESS, BEAST].sort());
     for (const card of withoutOwned) assert.equal(card.bonds[0].have, 1);

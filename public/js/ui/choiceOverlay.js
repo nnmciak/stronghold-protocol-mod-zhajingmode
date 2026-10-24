@@ -263,7 +263,8 @@ export function ChoiceView({ pub, sp, myId, solo, busyIdx = null, total = null, 
           // ★ 2026-10-19：每张卡各能刷新一次（服务端在新卡上打 rerolled 标记）
           const canReroll = sp.family === 'jibian' && myTurn && !card.takenBy && mine == null && !card.rerolled;
           return html`<div key=${card.idx} class="spcardwrap">
-            <button type="button" class=${cx('spcard', `spcard--${r.kind}`, card.takenBy && 'is-taken', card.takenBy === myId && 'is-mine', can && 'is-pickable', isArmed && 'is-armed', busy && 'is-busy')}
+            <button type="button" data-rarity=${r.rarity || 'normal'}
+              class=${cx('spcard', `spcard--${r.kind}`, card.takenBy && 'is-taken', card.takenBy === myId && 'is-mine', can && 'is-pickable', isArmed && 'is-armed', busy && 'is-busy')}
               aria-busy=${busy ? 'true' : undefined} aria-pressed=${can ? String(isArmed) : undefined} disabled=${!can} onClick=${() => can && onTap(card.idx)}
               aria-label=${isArmed ? t('{name}，已选中，再次点击确认', { name: r.name }) : takerName ? t('{name}，{takerName}已选择', { name: r.name, takerName }) : r.name} title=${`${r.name}\n${richTextPlain(r.desc)}`}>
             <span class="spcard__glow" aria-hidden="true"></span>

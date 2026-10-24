@@ -1,4 +1,4 @@
-// server/match/gamedata.js — typed, defaulted view of data/*.json for the match engine.
+﻿// server/match/gamedata.js — typed, defaulted view of data/*.json for the match engine.
 //
 // Every lookup is an own-property lookup (ids come from client intents) that never throws and returns null for
 // unknown ids. Tunables come from data/config.json with the documented defaults (research 00-INDEX §2–§8) when a
@@ -624,12 +624,14 @@ export class GameData {
     if (!j || typeof j !== 'object') return null;
     const weights = [];
     const w = j.rarityWeights && typeof j.rarityWeights === 'object' ? j.rarityWeights : {};
-    for (const r of ['normal', 'rare', 'epic', 'legend']) {
+    // ★ 2026-10-25（owner）：我方惊变新增「隐秘」档位 —— 权重键与卡面 rarity 都可能出现 'hidden'，
+    //   这里必须把它放行，否则 gd.jibian() 会把隐秘档权重丢掉、抽卡时又回落整池，卡面品质与卡不符。
+    for (const r of ['normal', 'rare', 'epic', 'legend', 'hidden']) {
       const v = Math.max(0, numOr(w[r], 0));
       if (v > 0) weights.push([r, v]);
     }
     const pool = Array.isArray(j.pool) ? j.pool.filter((c) => c && typeof c === 'object') : [];
-    const base = weights.length ? weights : [['normal', 45], ['rare', 25], ['epic', 20], ['legend', 10]];
+    const base = weights.length ? weights : [['normal', 35], ['rare', 30], ['epic', 20], ['legend', 10], ['hidden', 5]];
     return {
       cards: posIntOr(j.cards, 3),
       rerolls: Math.max(0, Math.trunc(numOr(j.rerolls, 1))),

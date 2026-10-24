@@ -514,12 +514,13 @@ export function jibianDraftCards(gd, rng, n, exclude = null, { noCoreBond = fals
   //   直接过滤池子（而不是把 normal/rare 的权重置 0）—— 权重为 0 时 weightedPick 仍可能落到
   //   别的档、再被 `list = ofRarity.length ? ofRarity : pool` 回落成全池，过滤池子才是硬保证。
   //   池子里这两档被抽空时保持"只剩 epic/legend"，不会回落出低品质卡。
-  if (onlyHighRarity) pool = pool.filter((c) => c && (c.rarity === 'epic' || c.rarity === 'legend'));
+  // ★ 2026-10-25：我方惊变新增「隐秘」档 —— 投资未来（只看史诗/传说）也要把隐秘算进高档位
+  if (onlyHighRarity) pool = pool.filter((c) => c && (c.rarity === 'epic' || c.rarity === 'legend' || c.rarity === 'hidden'));
   // 权重也要同步收窄：只过滤池子的话，roll 到 normal/rare 时 ofRarity 为空 → 回落 pool 抽到一张
   // 史诗/传说卡，却被 jibianCard 标上 roll 出来的 normal/rare（规则5 的品质是"先 roll 再取卡"），
   // 卡面品质标签就会和卡本身不符。收窄后 roll 与卡一致。
   const weights = onlyHighRarity
-    ? j.rarityWeights.filter(([r]) => r === 'epic' || r === 'legend')
+    ? j.rarityWeights.filter(([r]) => r === 'epic' || r === 'legend' || r === 'hidden')
     : j.rarityWeights;
   const useWeights = weights.length ? weights : j.rarityWeights;
   const out = [];

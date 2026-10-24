@@ -464,6 +464,12 @@ button.bpop__harmony:hover { border-style: solid; color: #fff; }
 .spcard__tag--rare { background: #2f5fd0; color: #eaf1ff; }
 .spcard__tag--epic { background: #6b46c1; color: #f4eeff; }
 .spcard__tag--legend { background: var(--gold); color: #1d1400; box-shadow: 0 0 .12rem rgb(255 200 80 / 55%); }
+
+/* ★ 2026-10-25（owner）：我方惊变新增「隐秘」档 —— 配色与敌方隐秘一致（青色 #22e0d0 + 红 #ff4d6d）。
+   卡面整体用青色描边 + 红/青双色光晕，品质标签红字青底，和敌方隐秘卡一眼区分。 */
+.spcard__tag--hidden { background: #10272b; color: #ff4d6d; border: 1px solid #22e0d0; box-shadow: 0 0 .12rem rgb(34 224 208 / 45%); }
+.spcard[data-rarity="hidden"] { border-color: #22e0d0; box-shadow: 0 0 calc(.55 * var(--t)) rgba(255, 77, 109, .35), inset 0 0 calc(.45 * var(--t)) rgba(34, 224, 208, .12); }
+.spcard[data-rarity="hidden"] .spcard__glow { background: radial-gradient(60% 60% at 50% 0%, rgba(34, 224, 208, .22), transparent 70%); }
 /* the taker's badge: the round avatar alone at the card's top-right corner, as in the official screenshots (the player's
    name is its tooltip and part of the card's accessible name); a taken card's head keeps clear of it, so a long name
    wraps before the badge instead of running under it (the avatar + name pill of v2.4.1 covered long names once the name
