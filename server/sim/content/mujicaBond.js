@@ -94,12 +94,19 @@ export function registerMeta(registry) {
     },
     onRefresh(ctx, ev) {
       if (!ctx.gd.zhajing || ev?.trigger || !ctx.bondActive(MUJICA_BOND)) return;
+      const EVERY = 10;
       const key = 'bond:mujica:refreshes';
-      const n = ctx.incCounter(key);
-      // ★ 2026-10-25（owner）：每刷新 10 次给一名（原来 6 次）
-      if (n < 10) return;
+      // ★ 修复「满仓时每刷一次都尝试发奖、腾出位置后又连续追发」：
+      //   计数改成 0..EVERY-1 的**周期进度**，并且在发奖副作用（rollChess / grantChess）**之前**结算本周期。
+      //   旧代码只在 grantChess 成功时 n - EVERY —— 满仓 / 卡池为空时计数停在 >=EVERY，之后每次刷新都再试一次。
+      //   取余同时把旧逻辑积压的整周期计数规范掉（不补发）：旧 10/20/100 → 0，下一次合法刷新变 1。
+      const raw = Number(ctx.counter(key));
+      const prev = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 0;
+      const next = (prev % EVERY) + 1;
+      ctx.setCounter(key, next % EVERY);
+      if (next < EVERY) return;
       const id = ctx.rollChess({ bond: MUJICA_BOND, maxTier: ctx.shopLevel() });
-      if (id && ctx.grantChess(id, { source: 'bond:mujica' })) ctx.setCounter(key, n - 10);
+      if (id) ctx.grantChess(id, { source: 'bond:mujica' });   // 满仓 / 返还由 acquireChess 处理，本次机会不积压
     },
   });
   registry.garrison('MUJICA_AMORIS', {
