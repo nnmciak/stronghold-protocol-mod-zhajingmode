@@ -553,12 +553,20 @@ export function applyHiddenMatchCards(match, ids) {
     for (const ps of players) {
       for (const [id, v] of Object.entries((ps && ps.layers) || {})) totals.set(id, (totals.get(id) || 0) + Math.max(0, Number(v) || 0));
     }
-    let best = null, bestV = -1;
-    for (const [id, v] of totals) if (v > bestV) { best = id; bestV = v; }
-    if (best) {
-      for (const ps of players) {
-        if (!ps || !ps.layers || !(Number(ps.layers[best]) > 0)) continue;
-        try { ps.setLayers(best, 0, { reason: 'ejibian' }); } catch { ps.layers[best] = 0; }
+    // ★ 2026-10-24（owner）：「某个盟约」改为**随机抽一个**（原来取全场总和最高的，太恶心）。
+    //   仍然全场同一个盟约；候选只取场上真的有人持有的（总和 > 0）。
+    //   用 deriveSeed(seed, 'hiddenPurge') 的独立随机流：不消耗 rngDraft / rngWaves，同一 seed 可复现。
+    const candidates = [...totals.entries()].filter(([, v]) => v > 0).map(([id]) => id).sort();
+    if (candidates.length) {
+      const rng = match._purgeRng || (match._purgeRng = createRng(deriveSeed(Number.isFinite(match.seed) ? match.seed : 1, 'hiddenPurge')));
+      const r = typeof rng === 'function' ? rng() : Math.random();
+      const idx = Math.min(candidates.length - 1, Math.floor(Math.max(0, Math.min(0.999999, Number(r) || 0)) * candidates.length));
+      const pick = candidates[idx];
+      if (pick) {
+        for (const ps of players) {
+          if (!ps || !ps.layers || !(Number(ps.layers[pick]) > 0)) continue;
+          try { ps.setLayers(pick, 0, { reason: 'ejibian' }); } catch { ps.layers[pick] = 0; }
+        }
       }
     }
   }
