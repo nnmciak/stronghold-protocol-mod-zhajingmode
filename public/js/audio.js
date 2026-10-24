@@ -823,6 +823,13 @@ export class AudioManager {
   playBgm(key) {
     try {
       this.bgmKey = key;   // the LOGICAL key: setVolumes re-plays it when 司凤版大厅BGM is toggled
+      // ★ 2026-10-25：自定义大厅音乐（ui/lobbyMusic.js）接管时，默认大厅 BGM 必须让位 ——
+      //   之前这个钩子只被 lobbyMusic 挂上、audio 从没读过，于是两首同时响（「自定义音乐和大厅音乐重合」）。
+      if (key === 'lobby' && typeof this.lobbyMusicOverride === 'function' && this.lobbyMusicOverride(key)) {
+        if (this.ctx) this._fadeOutBgm();
+        this.wantBgm = null;
+        return;
+      }
       if (!this.ctx) { this.wantBgm = key; return; }
       // 司凤版大厅BGM: swap ONLY the 主菜单 track ('lobby' covers the title screen, the lobby and a room — bgmKeyFor).
       // prep / combat / combat:<i> / unite / boss keep the official tracks.
