@@ -34,6 +34,8 @@ export class BattlePlayers {
       half: mirror || (Number(p.colOffset) || 0) >= 8 ? 'R' : 'L',
       bonds: clone(p.bonds ?? {}),
       bandId: p.bandId ?? null,
+      // ★ 2026-10-25：策略效果可能要读「调度中心等级」（山岸风花·神通法）
+      shopLevel: Number.isInteger(p.shopLevel) ? p.shopLevel : 1,
       playerEffects: clone(p.playerEffects ?? []),
       lpForBoss: p.lpForBoss ?? null,
       dp: this.flags.dpInit,

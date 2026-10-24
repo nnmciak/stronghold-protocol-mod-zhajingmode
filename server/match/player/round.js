@@ -306,6 +306,9 @@ export class PlayerRound {
       // ★ 炸惊模拟「锻造器」(user 2026-10-14)：把已锻造的数值折算成战斗用的扁平值，
       //   战斗侧 content/forge.js 会把它铺到这一玩家的所有干员身上。
       forge: forgeBattleMods(this.forge && this.forge.forged),
+      // ★ 2026-10-25：策略「山岸风花·神通法」按「调度中心等级」加层 —— 战斗侧拿不到 match 的 shop，
+      //   所以把等级随参战数据一起下发（服务端 / 客户端模拟都用这一份输入）。
+      shopLevel: this.shop && Number.isInteger(this.shop.level) ? this.shop.level : 1,
       bandId: this.bandId,
       playerEffects: this.effects.filter((e) => e.battle !== false).map((e) => ({
         id: e.id, key: e.key ?? null, source: e.iconKind ?? null, params: e.params ?? null, counter: e.counter ?? null, data: e.data ?? null,

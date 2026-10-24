@@ -60,6 +60,22 @@ const deployedOps = (battle, pid) => playerOps(battle, pid, { fieldOnly: true })
 
 const BY_KEY = {
 
+  // 山岸风花 神通法（owner 2026-10-25，仅炸惊）：战斗中【S.E.E.S】干员部署时，获得 2×调度中心等级 的【S.E.E.S】层数
+  zj_fuuka_sees_deploy(battle, ps, p, bandId) {
+    const mult = Math.max(0, num(p.mult, 2));
+    const lv = Math.max(0, Math.floor(Number(ps.shopLevel ?? (ps.input && ps.input.shopLevel)) || 0));
+    if (!(mult > 0) || !(lv > 0)) return;
+    const n = Math.floor(lv * mult);
+    const key = keyOf(bandId);
+    battle.on('deploy', (c) => {
+      const u = c && c.unit;
+      if (!isOp(u) || u.ownerId !== ps.playerId) return;
+      if (!unitBonds(u).includes('seesShip')) return;
+      const added = gainLayers(battle, { playerId: ps.playerId, bonds: 'seesShip', n, requireActive: true, source: u, reason: 'band' });
+      if (added > 0) fxOn(battle, 'layer', u, key, bandId, { bond: 'seesShip', n: added });
+    });
+  },
+
   // 祀 长兄如父（owner 2026-10-19，仅炸惊）：重岳发动技能 → 已激活的【炎】【迅捷】各 +layer
   zj_si_skill_layers(battle, ps, p, bandId) {
     const n = Math.max(1, Math.floor(num(p.layer, 1)));
