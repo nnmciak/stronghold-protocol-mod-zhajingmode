@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+﻿import assert from 'node:assert/strict';
 import { makeBattle, enemyRec } from './helpers/battleHarness.js';
 import { Match } from '../server/match/Match.js';
 import { getData } from '../server/data.js';
@@ -48,8 +48,15 @@ const defs = { enemies: { [BOSS]: enemyRec({ key: BOSS, name: '测试BOSS', hp: 
   ps.layers = { yanShip: 12, mujicaShip: 800, swiftShip: 5 };
   applyHiddenMatchCards(m, ['ejibian_hidden_purge', 'ejibian_hidden_snap']);
   console.log('诛伏赐死+响指 | 层数:', JSON.stringify(ps.layers));
-  assert.equal(ps.layers.mujicaShip, 0);
-  assert.equal(ps.layers.yanShip, 6);
+  // ★ 2026-10-24：诛伏赐死改为「随机抽一个盟约清零」（不再固定清全场最高的那个）；响指仍把其余盟约减半。
+  const ids = ['yanShip', 'mujicaShip', 'swiftShip'];
+  const zeroed = ids.filter((id) => ps.layers[id] === 0);
+  assert.equal(zeroed.length, 1, '恰好一个盟约被清零');
+  const half = { yanShip: 6, mujicaShip: 400, swiftShip: 2 };
+  for (const id of ids) {
+    if (id === zeroed[0]) continue;
+    assert.equal(ps.layers[id], half[id], `${id} 应只减半`);
+  }
   m.dispose();
 }
 console.log('PASS');
