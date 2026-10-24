@@ -531,14 +531,20 @@ export class MatchPhases {
       return drawOne(true, true);
     };
     for (let i = 0; i < 2; i++) { const c = drawHidden(); if (!c) break; picked.push(c); }
-    // ★ 2026-10-25（owner）：「潘多拉·敌」= 自身 + 3 张**随机**敌方惊变；隐秘阶段本身已抽两张隐秘，
-    //   其中另一张就是「1 张隐秘」。不再对追加的 3 张各掷 7.99% 隐秘。
+    // ★ 2026-10-24（owner）：「潘多拉·敌」—— 抽到后再随机 3 张敌方惊变（每张 7.99% 是隐秘惊变）。
+    //   展开是递归的（潘多拉自己也可能被抽到），所以用队列 + 次数上限防跑飞。
     const PANDORA = 'ejibian_hidden_pandora';
-    if (picked.some((c) => c && c.id === PANDORA)) {
+    const expanded = new Set();
+    const queue = picked.slice();
+    for (let guard = 0; queue.length && guard < 40; guard++) {
+      const c = queue.shift();
+      if (!c || c.id !== PANDORA || expanded.has(c.id)) continue;
+      expanded.add(c.id);
       for (let i = 0; i < 3; i++) {
-        const extra = drawOne(false);
+        const extra = drawOne(true);
         if (!extra) break;
         picked.push(extra);
+        queue.push(extra);
       }
     }
     if (!picked.length) { after(); return; }
