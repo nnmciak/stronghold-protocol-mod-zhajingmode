@@ -6,7 +6,7 @@ import { jibianDraftCards } from '../server/match/choices.js';
 import { createRng } from '../server/sim/rng.js';
 
 // 2026-10-25（owner）：我方惊变新增「隐秘」档（配色与敌方一致：青 #22e0d0 + 红 #ff4d6d）。
-const HIDDEN = ['jibian_jibangzhili', 'jibian_heishan', 'jibian_liuyan', 'jibian_duoshouyeshou', 'jibian_zhuiji', 'jibian_cengshudaluan', 'jibian_emoxieyue'];
+const HIDDEN = ['jibian_jibangzhili', 'jibian_heishan', 'jibian_liuyan', 'jibian_duoshouyeshou', 'jibian_zhuiji', 'jibian_cengshudaluan', 'jibian_emoxieyue', 'jibian_kuaishou'];
 const WEIGHTS = { normal: 35, rare: 30, epic: 20, legend: 10, hidden: 5 };
 
 // ① 数据：7 张卡都是 hidden，权重写对，两套炸惊模式一致
@@ -20,7 +20,7 @@ for (const mid of ['mode_single_zhajing', 'mode_multi_zhajing']) {
     assert.equal(card.rarity, 'hidden', `${card.name} 应为 hidden`);
   }
   const hidden = j.pool.filter((c) => c.rarity === 'hidden');
-  assert.equal(hidden.length, 7, `${mid} 隐秘卡应为 7 张，实际 ${hidden.length}`);
+  assert.equal(hidden.length, 8, `${mid} 隐秘卡应为 8 张，实际 ${hidden.length}`);
 }
 
 // ② gd.jibian() 必须把 hidden 放行（否则权重被丢掉、抽卡回落整池）

@@ -1268,7 +1268,8 @@ function cardPool(ctx) {
   const modes = (ctx.data && ctx.data.config && ctx.data.config.modes) || {};
   const md = modes[ctx.modeId] || {};
   const pool = md.jibian && Array.isArray(md.jibian.pool) ? md.jibian.pool : [];
-  return pool.filter((c) => c && c.effectId && !c.secondDrawOnly);
+  // ★ 2026-10-25：快手 只在「惊变三选一」里有意义（要同批的另外两张），潘多拉随机开出它等于空白卡，排除。
+  return pool.filter((c) => c && c.effectId && !c.secondDrawOnly && c.effectId !== 'jibian_kuaishou');
 }
 
 /** 玩家的干员 (整备区 / 临时区 / 场上) —— 「随机一名干员」的样本. */
@@ -1653,6 +1654,9 @@ const ON_PICK = {
       if (on) on(ctx);
     }
   },
+
+  /** 快手（隐秘，2026-10-25）：选中时由 spDraft 把同批另外两张一起发下；本卡自身无额外效果. */
+  jibian_kuaishou: () => {},
 
   /** ？！325799？！ — 任务卡, 奖励在 onRoundStart 发. */
   jibian_325799: () => {},

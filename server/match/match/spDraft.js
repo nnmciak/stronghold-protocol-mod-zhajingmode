@@ -474,6 +474,17 @@ export class MatchSpDraft {
     s.picks[ps.playerId] = idx;
     s.taken[idx] = ps.playerId;
     try { applyCard(this, ps, card); } catch (e) { this.reportError(`applyCard ${card.id}`, e); }
+    // ★ 2026-10-25（owner）惊变「快手」（隐秘）：选中后把**同一批的另外两张**也一并拿走 —— "手快全拿了"。
+    //   每人一副独立牌库，所以只影响这名玩家的这一批；同批的槽位标记为已取，避免小队牌库里再被别人选走。
+    if (card.id === 'jibian_kuaishou') {
+      for (let i = 0; i < s.cards.length; i++) {
+        if (i === idx || s.taken[i] != null) continue;
+        const extra = s.cards[i];
+        if (!extra) continue;
+        s.taken[i] = ps.playerId;
+        try { applyCard(this, ps, extra); } catch (e) { this.reportError(`kuaishou ${extra.id}`, e); }
+      }
+    }
     this.markPrivate(ps);
     this.markPublic();
     this.startSpTurn(s);
