@@ -1,4 +1,4 @@
-// server/match/match/settle.js — Match methods: SETTLE (the LP loss — a leaker's 联防 survivors —, stats, bounty coins,
+﻿// server/match/match/settle.js — Match methods: SETTLE (the LP loss — a leaker's 联防 survivors —, stats, bounty coins,
 // the IN_BATTLE layer gains clamped by layerGainRoom, CHAR_DAMAGE tickers, eliminations, the 联防 outcome the SETTLE
 // view carries) and RESULT (finish: m.result to every human still here, onEnd).
 // Installed on Match.prototype by server/match/Match.js (a method container: never instantiated; `this` is the match).
@@ -20,6 +20,23 @@ export class MatchSettle {
     // a 联防 battle that could not run at all (synthetic result) must not wipe the leakers' losses: charge their own leaks
     const uniteRan = !!(plan && uniteResult && !uniteResult.synthetic);
     const survivors = uniteRan ? uniteSurvivors(plan, uniteResult) : null;
+    // ★ 2026-10-24（反馈「兜底了还会掉血」）：留一条可诊断的账目 —— 伤害到底是按联防幸存数算的，
+    //   还是因为结果被标成 synthetic（战场没跑起来）回落到「自己那场的漏怪」。线上排查就看这一行。
+    try {
+      if (plan && plan.leakers) {
+        const detail = {};
+        for (const lk of plan.leakers) {
+          const pid = lk.playerId;
+          const own = this.lastResults.get(pid);
+          detail[pid] = {
+            byUnite: uniteRan ? Math.max(0, survivors.get(pid) || 0) : null,
+            ownLeaks: (own && Array.isArray(own.leaked) ? own.leaked.filter((l) => l && l.counted !== false).length : 0),
+            bounced: plan.notReentered ? (plan.notReentered.get(pid) || 0) : 0,
+          };
+        }
+        this.log.info?.(`[match ${this.roomCode}] R${this.round} 联防结算 uniteRan=${uniteRan} synthetic=${!!(uniteResult && uniteResult.synthetic)} ${JSON.stringify(detail)}`);
+      }
+    } catch { /* 诊断日志不影响结算 */ }
     // The 联防's outcome as data for the SETTLE view (m.public.uniteResult, views.js; GitHub #235, PR #112 by @Convey123):
     // each client pops the official result box from it (ui/gameLogic/phases.js uniteResultBox) — `through` = the leakers'
     // enemies that still got through (uncapped; only decides whether 「全员无伤！」 is true), `losses` = every alive
