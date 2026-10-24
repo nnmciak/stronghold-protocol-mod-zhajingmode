@@ -22,6 +22,7 @@ const BONDS = [
   { id: 'true_investor', name: '真·投资人', tiers: [4], members: ['jibian_touziren', 'jibian_touziweilai', 'jibian_shenmishangdian', 'jibian_gaoluzhipiao', 'jibian_banteng', 'jibian_juanzeng', 'jibian_panduolamohe', 'jibian_malubian', 'jibian_jinjiuzhibei', 'jibian_rencaishichang'], effect: '返还触发前消耗的所有资金，并使每个【获得时】效果翻倍。' },
   { id: 'toopainful', name: '因为太怕痛就全点防御力了', tiers: [2, 3], members: ['jibian_zheshe', 'jibian_jianshou', 'jibian_daoqiangburu', 'jibian_fushi'], effect: '一档：防御力和法术抗性增加70%；二档：被你干员阻挡的敌人每秒受到最大生命值10%的真实伤害。' },
   { id: 'glorious_evo', name: '光荣进化', tiers: [2], members: ['jibian_jiarudaqun', 'jibian_chuncuideqiangda', 'jibian_moguiyu'], effect: '你的【阿戈尔】干员基础数值提升300%。' },
+  { id: 'craftsman', name: '工匠精神', tiers: [2], members: ['jibian_weiduoliyademimi', 'jibian_shuihaiyoumengxiang'], effect: '你的干员每装备1个维式战锤系列武器，会额外获得5%的攻击力加成（最终乘算）。' },
   { id: 'layers_fan', name: '层数厨', tiers: [3], members: ['jibian_cengshudaluan', 'jibian_daozhuanqu', 'jibian_325799', 'jibian_diecengshou', 'jibian_jizhongyidian'], effect: '你的所有盟约层数叠加时获得的层数翻倍。' },
 ].map((b) => Object.freeze({
   id: b.id,

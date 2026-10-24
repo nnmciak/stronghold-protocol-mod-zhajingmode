@@ -137,7 +137,7 @@
 // 敌方惊变 (15, `enemyJibian`, drawn once per match before round 1 — 规则14) is match-wide, not per player, and is
 // applied by the match/wave layer (server/match/*), never by a player EffectRef: nothing here reads `ejibian_*`.
 
-import { directMods, passiveBuff, playerOps, isMember, gainLayers } from './support/index.js';
+import { directMods, passiveBuff, playerOps, isMember, gainLayers, itemsOf, itemKeyOf } from './support/index.js';
 import { bondLayers, activeBondIds } from './support/index.js';
 import { spawnYanyou } from './tokens.js';
 import { activeBonds, ownedJibianIdsOf } from './jibianBonds.js';
@@ -303,6 +303,19 @@ export function installJibianBonds(battle, owned, playerId = null) {
   try { act = activeBonds(owned); } catch { act = []; }
   if (!act.length) return;
   const has = (id) => act.some((a) => a.def.id === id);
+
+  // 工匠精神（owner 2026-10-25）：每装备 1 个维式战锤系列武器 → 攻击力 +5%（最终乘算，走 atkMul）
+  if (has('craftsman')) {
+    const HAMMERS = new Set(['chess_item_1_01_e', 'chess_item_2_03_e', 'chess_item_3_09_e', 'chess_item_3_10_e', 'chess_item_4_09_e']);
+    const apply = (u) => {
+      if (!mine(u)) return;
+      let cnt = 0;
+      for (const id of itemsOf(u)) if (HAMMERS.has(itemKeyOf(id))) cnt++;
+      if (cnt > 0) BOND_ATTR(battle, u, 'craftsman', { atkMul: 1 + 0.05 * cnt });
+    };
+    battle.on('battleStart', () => { for (const u of allies()) apply(u); }, { priority: 20 });
+    battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
+  }
   const tierOf = (id) => { const a = act.find((x) => x.def.id === id); return a ? a.tier : 0; };
   // ★ 2026-10-21（owner）：战场侧的惊变羁绊**只看自己的卡、只作用于自己的单位**。
   //   之前把全队 picks 并成一个集合调用本函数 —— 队友的卡能替你把羁绊凑齐，加成还发给全场。
@@ -1547,6 +1560,10 @@ const ON_PICK = {
   /** 遗忘女神 — 指定精锐祥子；其余处理与普通的干员奖励一致。 */
   jibian_yiwangnvshen: (ctx) => {
     if (ctx.chessRecord('chess_zj_oblvns_b')) ctx.grantChess('chess_zj_oblvns_b', { requirePool: false, fromPool: false });
+  },
+  /** 谁还有梦想（史诗，owner 2026-10-25）：发一名精锐白铁（维多利亚盟约）。 */
+  jibian_shuihaiyoumengxiang: (ctx) => {
+    if (ctx.chessRecord('chess_zj_ironmn_b')) ctx.grantChess('chess_zj_ironmn_b', { requirePool: false, fromPool: false });
   },
   /** 多首野兽 — 发一名精锐若叶睦；特质替换与【调和】盟约由 mujicaBond.js / 数据侧处理。 */
   jibian_duoshouyeshou: (ctx) => {
