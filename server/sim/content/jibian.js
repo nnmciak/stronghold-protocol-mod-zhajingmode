@@ -1851,7 +1851,7 @@ const ON_PICK = {
   jibian_zhuiji: () => {},
 
   /**
-   * ？* /）层数/¥）dgxu (普通, owner 2026-10-16) —「每回合开始时，你的所有已激活的盟约层数会被随机打乱」。
+   * ？* /）层数/¥）dgxu (普通, owner 2026-10-16；2026-10-26 池子扩到全部盟约) —「每回合开始时，你的所有盟约层数会被随机打乱」。
    * 效果在 HOOKS.onRoundStart；抽到的那一回合不洗（抽卡发生在本回合的惊变阶段，"每回合开始"已过）。
    */
   jibian_cengshudaluan: () => {},
@@ -2012,7 +2012,7 @@ const HOOKS = {
     },
   },
 
-  /** ？* /）层数/¥）dgxu — 每回合开始时把所有已激活盟约的层数值随机重排（总和不变，分配被打乱）。 */
+  /** ？* /）层数/¥）dgxu — 每回合开始时把本模式全部盟约的层数值随机重排（总和不变，分配被打乱；未激活/隐藏的也进池）。 */
   jibian_cengshudaluan: {
     onRoundStart(ctx, ev) {
       const r = Number(ev && ev.round) || 1;
@@ -2026,8 +2026,17 @@ const HOOKS = {
       //   原来的无差别洗牌会把可叠加盟约辛苦攒的层数塞给这些盟约 ⇒ 那些层数**白扔**，
       //   而可叠加盟约本该拿到的层数被摊薄。现在不可叠加的保持原值（0）不参与交换，
       //   层数只在真正吃层数的盟约之间重排。
-      const all = bondIds(ctx).filter((id) => ctx.bondActive(id));
-      const ids = all.filter((id) => !ctx.bondNoStack(id));
+      // ★ 2026-10-26（owner）：池子改成「本模式全部盟约」——已激活、未激活、隐藏的都进池。
+      //   例：炎 999 + 奥术 888 已激活，场上 1 名精准、未激活的远见 0 层 → 洗牌后可能是精准 999、远见 888。
+      //   模式外/本局禁用的盟约仍不进池；不可叠加盟约（调和/协防/独行/绝技）依旧排除（层数对它们无效果）。
+      let allowed = null;
+      try {
+        const mode = ctx.gd && typeof ctx.gd.mode === 'function' ? ctx.gd.mode(ctx.modeId) : null;
+        if (mode && (Array.isArray(mode.activeBondIds) || Array.isArray(mode.inactiveBondIds))) {
+          allowed = new Set([...(mode.activeBondIds || []), ...(mode.inactiveBondIds || [])]);
+        }
+      } catch { /* 无 mode 信息时退回全部 */ }
+      const ids = bondIds(ctx).filter((id) => (!allowed || allowed.has(id)) && !ctx.bondNoStack(id));
       if (ids.length < 2) return;
       const vals = ids.map((id) => Number(ctx.layers(id)) || 0);
       // ★ ctx.rng 本身就是 rng（可调用，同时带 .int/.range/.pick/.shuffle 方法），**不是**返回 rng 的函数。

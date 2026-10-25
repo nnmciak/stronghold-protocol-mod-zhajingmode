@@ -108,5 +108,21 @@ console.log('\n=== ⑤ 抽到这张卡的当回合不洗（原有行为保留）
   chk('该回合不洗', s.calls.length === 0, `${s.calls.length} 次`);
 }
 
+console.log('\n=== ⑥ 未激活 / 隐藏的盟约也进洗牌池（2026-10-26 owner）===');
+{
+  // 炎 999 + 奥术 888 已激活；精准 0（有 1 名在场）；远见 0（未激活、隐藏）；卡西米尔 50（本模式外）
+  const layers = { yanShip: 999, aoShu: 888, jinZhun: 0, yuanJian: 0, kasimier: 50 };
+  const active = { yanShip: true, aoShu: true, jinZhun: true };
+  const s = fakeCtx(layers, {}, { active });
+  s.ctx.modeId = 'mode_single_zhajing';
+  s.ctx.gd = { mode: () => ({ activeBondIds: ['yanShip', 'aoShu', 'jinZhun'], inactiveBondIds: ['yuanJian'] }) };
+  handlerOf()(s.ctx, { round: 5 });
+  console.log('     洗牌后: %s', JSON.stringify(s.result()));
+  const ids = s.calls.map((c) => c.id);
+  chk('★ 未激活/隐藏的远见参与洗牌', ids.includes('yuanJian'), ids.join(','));
+  chk('★ 本模式外的卡西米尔不参与（保持 50）', s.result().kasimier === 50, String(s.result().kasimier));
+  chk('★ 池内四者层数总和不变（999+888）', s.result().yanShip + s.result().aoShu + s.result().jinZhun + s.result().yuanJian === 1887);
+}
+
 console.log('\n%s', fail ? `★ ${fail} 项失败 / ${pass} 通过` : `✓ 全部 ${pass} 项通过`);
 process.exit(fail ? 1 : 0);
