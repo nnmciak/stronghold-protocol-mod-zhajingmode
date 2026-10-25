@@ -9,11 +9,11 @@
 
 const KEY = 'uiCollapsed';
 const PANELS = [
-  { id: 'detail',  pos: 'left',   sel: ['.dpanel', '.dpanel--right'], label: '干员详情' },
-  { id: 'effects', pos: 'right',  sel: ['.effects'],                  label: 'EFFECTS 效果列' },
-  { id: 'shopbar', pos: 'bottom', sel: ['.shopbar'],                  label: '商店栏' },
+  // ★ 2026-10-26（owner）：删掉「下面（商店栏）」和「左边（干员详情）」的收起把手；
+  //   右侧 buff 栏（效果列）整块不显示了，它的把手也一并去掉。只保留顶部盟约条的把手。
   { id: 'bonds',   pos: 'top',    sel: ['.bondbar', '.bonds', '.band-bar', '.bond-bar', '.topbar-bonds', '.hz'], label: '盟约条' },
 ];
+const REMOVED = ['detail', 'effects', 'shopbar'];
 
 function loadState() {
   try {
@@ -45,6 +45,17 @@ function apply(panel, on) {
 /** 装上把手（幂等：重复调用只是刷新一遍）。 */
 export function installCollapsePanels(doc = globalThis.document) {
   if (!doc || !doc.body) return;
+  // 已删除面板的收纳状态：清掉 body 类与把手，避免旧 localStorage 把商店栏/详情栏永久藏起来
+  {
+    const old = loadState();
+    let dirty = false;
+    for (const id of REMOVED) {
+      if (old[id] != null) { delete old[id]; dirty = true; }
+      doc.body.classList.remove('collapse-' + id);
+      doc.querySelectorAll?.('.collapseHandle--' + id).forEach((n) => n.remove());
+    }
+    if (dirty) saveState(old);
+  }
   const state = loadState();
   for (const panel of PANELS) {
     const el = panel.sel.map((s) => { try { return doc.querySelector(s); } catch { return null; } }).find(Boolean);

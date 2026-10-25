@@ -81,7 +81,6 @@ import { JibianPanel } from '../ui/jibianPanel.js';
 import { EnemyDrawer } from '../ui/enemyDrawer.js';
 import { Ticker } from '../ui/ticker.js';
 import { EmoteWheel, EmoteDanmaku } from '../ui/emotes.js';
-import { EffectsList } from '../ui/effectsList.js';
 import { CombatHud } from '../ui/combatHud.js';
 import { DpsPanel } from '../ui/dpsPanel.js';
 import { SettingsModal, settingsStore } from '../ui/settings.js';
@@ -1509,8 +1508,6 @@ const sp = phase === PHASE.SP_DRAFT ? normalizeSp(priv?.sp, players) : null;
       <${TeamPanel} pub=${pub} myId=${myId} watching=${watchingNow} onWatch=${watchPlayer} cap=${gd.config?.lpCapPerRound ?? 10} uniteLocal=${uniteLocal}
         self=${Number.isFinite(priv?.lp) ? { lp: priv.lp, pending: liveLpNow.pending, unite: liveLpNow.unite, left: liveLpNow.left } : null}
         observe=${cc ? { canObserve: (p) => observeTarget(p, pub, myId, { observing: watchingOther, ownDone: localDone }), observing: watchingOther, onBack: backHome } : null} />
-
-      <div class="gm__effects"><${EffectsList} effects=${shownEffects} /></div>
 
       ${watchingOther && !combat ? html`<div class="gm__watching" role="status">
         <${GIcon} name="eye" /><span>${tParts('正在查看 {name} 的阵地（只读）', { name: html`<b>${watchedName}</b>` })}</span>

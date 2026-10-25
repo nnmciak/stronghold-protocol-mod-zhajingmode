@@ -33,3 +33,13 @@ test('点空白关闭盟约弹层（0.3.2 移植）', () => {
   assert.match(g, /closest\?\.\('\.bpop, \.bslot, \.dbond'\)/);
   assert.match(g, /setBondOpen\(null\)/);
 });
+
+test('HUD 精简：右侧 buff 栏不显示，下面/左边的收起把手已删除', () => {
+  const g = fs.readFileSync(new URL('../public/js/screens/game.js', import.meta.url), 'utf8');
+  assert.ok(!g.includes('gm__effects'), '效果列容器应已删除');
+  assert.ok(!/import \{ EffectsList \}/.test(g), 'EffectsList 不应再导入');
+  const c = fs.readFileSync(new URL('../public/js/ui/collapsePanels.js', import.meta.url), 'utf8');
+  assert.ok(!c.includes("id: 'detail'") && !c.includes("id: 'shopbar'") && !c.includes("id: 'effects'"), '三个把手应已移除');
+  assert.match(c, /id: 'bonds'/);
+  assert.match(c, /REMOVED = \['detail', 'effects', 'shopbar'\]/);
+});
