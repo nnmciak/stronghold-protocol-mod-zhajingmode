@@ -88,3 +88,10 @@ test('干员调配列表点行内空白选人（0.3.2 #610）', () => {
   assert.match(lo, /onClick=\$\{onRowClick\}/);
   assert.match(lo, /if \(!rowControlHit\(e\)\) onPick/);
 });
+
+test('联防客户端字段卡死看门狗（2026-10-26）', () => {
+  const c = fs.readFileSync(new URL('../server/match/match/clientCombat.js', import.meta.url), 'utf8');
+  assert.match(c, /_armStallWatch\(f\)/);
+  assert.match(c, /stallTimer/);
+  assert.match(c, /if \(f\.kind === 'unite'\) this\._armStallWatch\(f\)/);
+});

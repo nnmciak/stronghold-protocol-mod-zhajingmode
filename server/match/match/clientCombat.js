@@ -41,7 +41,7 @@ export class MatchClientCombat {
 
   _clearFieldTimers(f) {
     if (!f || !f.cc) return;
-    for (const k of ['deadlineTimer', 'doneTimer', 'waitTimer', 'sliceTimer']) if (f[k]) { this.cancel(f[k]); f[k] = null; }
+    for (const k of ['deadlineTimer', 'doneTimer', 'waitTimer', 'sliceTimer', 'stallTimer']) if (f[k]) { this.cancel(f[k]); f[k] = null; }
     f.job = null;
   }
 
@@ -57,7 +57,7 @@ export class MatchClientCombat {
       cc: true, fieldId, kind, players: players.slice(), battleId, spec, battle: null, live: true, done: false,
       mode: null, authority: null, startAt: this.sched.now(), result: null, resultSource: null, timeline: null, endGt: null,
       progress: { gt: 0, killed: 0, total, leaks: 0, done: false }, lastProgressAt: this.sched.now(),
-      bossAcked: 0, bossBy: {}, lpAcked: 0, lpCum: 0, deadlineTimer: null, doneTimer: null, waitTimer: null,
+      bossAcked: 0, bossBy: {}, lpAcked: 0, lpCum: 0, deadlineTimer: null, doneTimer: null, waitTimer: null, stallTimer: null,
       // boss fields: the latest client reports (re-credited as the plausibility budget grows), the server run's
       // CreditPool, humans demoted for an implausible result (never the authority of this field again), a 'cleared'
       // b.result waiting for the budget to credit the pool it emptied (`heldResult`, _onResult)
@@ -235,6 +235,8 @@ export class MatchClientCombat {
     if (f.kind === 'boss' || f.kind === 'hidden') return; // the pool / team LP / silence watchdog end those
     if (this.paused) { f.rearmDeadline = true; return; }
     this._armDeadline(f);
+    // 2026-10-26：联防字段另挂卡死看门狗（打完却没送结果时不再无限等）
+    if (f.kind === 'unite') this._armStallWatch(f);
   }
 
   /** A client field's result deadline: its time limit on the field clock + RESULT_GRACE_MS (then the server takes over). */
