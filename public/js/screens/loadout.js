@@ -573,7 +573,7 @@ function DeckView({ m, list, getChess, st, selId, quick, onPick, onChange, onOps
   };
   if (!groups.length) return html`<div class="lo-deck lo-deck--empty" ref=${deckRef}><p class="lo-empty t-dim">${t('没有符合条件的干员')}</p></div>`;
   return html`<div class=${cx('lo-deck', drawer && 'has-drawer', quick && 'is-quick')} ref=${deckRef} onScroll=${onScroll} onWheel=${onWheel} role="list" aria-label=${t('干员列表')}>
-    ${groups.map((g) => html`<section key=${g.tier} class=${cx('lo-tgroup', `lo-tgroup--t${g.tier}`)} data-tier=${g.tier}>
+    ${groups.map((g, i) => html`<section key=${g.tier} class=${cx('lo-tgroup', `lo-tgroup--t${g.tier}`)} data-tier=${g.tier} style=${{ '--g': i }}>
       <div class=${cx('lo-tmark', `tier--${g.tier}`)} aria-hidden="true">
         <span class="lo-tmark__no">NO.</span>
         <b class="lo-tmark__n">${ROMAN[g.tier]}</b>
@@ -618,7 +618,7 @@ function ItemCodex({ m, items, deckRef, onOpen, onTier }) {
   if (!items.length) return html`<div class="lo-deck lo-deck--empty" ref=${deckRef}><p class="lo-empty t-dim">${t('装备数据载入中…')}</p></div>`;
   let n = -1;
   return html`<div class="lo-deck lo-deck--items" ref=${deckRef} onScroll=${onScroll} onWheel=${onWheel} role="list" aria-label=${t('装备一览')}>
-    ${groups.map((g) => html`<section key=${g.tier} class=${cx('lo-tgroup', `lo-tgroup--t${g.tier}`)} data-tier=${g.tier}>
+    ${groups.map((g, i) => html`<section key=${g.tier} class=${cx('lo-tgroup', `lo-tgroup--t${g.tier}`)} data-tier=${g.tier} style=${{ '--g': i }}>
       <div class=${cx('lo-tmark', `tier--${g.tier}`)} aria-hidden="true">
         <span class="lo-tmark__no">NO.</span><b class="lo-tmark__n">${ROMAN[g.tier]}</b><span class="lo-tmark__cnt num">${g.items.length}</span>
       </div>

@@ -43,7 +43,7 @@ export function install(battle) {
   battle.on('skillStart', ({ unit }) => {
     if (!S.isOp(unit) || !S.isMember(battle, unit, MUJICA_BOND)) return;
     if (rank(battle, unit.ownerId, 3)) S.gainLayers(battle, {
-      playerId: unit.ownerId, bonds: MUJICA_BOND, n: 2, source: unit, reason: 'bond',
+      playerId: unit.ownerId, bonds: MUJICA_BOND, n: 1, source: unit, reason: 'bond',
     });
     if (rank(battle, unit.ownerId, 5)) addFever(battle, unit, 10);
   });

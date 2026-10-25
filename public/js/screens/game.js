@@ -439,6 +439,7 @@ const sp = phase === PHASE.SP_DRAFT ? normalizeSp(priv?.sp, players) : null;
   const staleFieldRef = useRef(null);
   const enteredFieldRef = useRef(null);
   const pressSel = useRef(null);                         // the selected piece when the current field press began
+  const replayRoundRef = useRef(-1);                     // 0.3.2 移植：已重播过入场的回合号
   useEffect(() => {
     if (!view) return;
     if (showPrep) {
@@ -460,6 +461,14 @@ const sp = phase === PHASE.SP_DRAFT ? normalizeSp(priv?.sp, players) : null;
         view.setPrep(priv, { editable, canPlace: (uid, target) => canPlace(live.current.placeCtx, uid, target).ok });
         // stored facings (m.private board `dir`); the piece in the direction step shows the wheel's preview instead
         syncPieceDirs(view, priv, live.current.facing?.uid ?? null);
+        // 0.3.2 移植（PR #416）：每回合开始，场上干员按部署顺序逐个重播入场动画 + 落地音
+        const roundNow = Number(pub?.round) || 0;
+        if (replayRoundRef.current !== roundNow) {
+          replayRoundRef.current = roundNow;
+          const uids = (Array.isArray(priv.board) ? priv.board : [])
+            .map((p) => (p && Number.isInteger(p.uid) ? p.uid : null)).filter((u) => u != null);
+          if (uids.length) view.replayDeploys?.(uids);
+        }
       }
       return;
     }

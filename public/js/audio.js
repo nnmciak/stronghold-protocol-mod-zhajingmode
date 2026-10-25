@@ -903,6 +903,16 @@ export class AudioManager {
 
   // ---- SFX ------------------------------------------------------------------------------------------------
 
+  /** 备战落场音（0.3.2 PR #416）：该单位自己的部署音，走音效通道与音量，每次落地只响一次。 */
+  deployCue(info, key) {
+    try {
+      const url = deploySfxUrl(this.getManifest(), { def: info?.def ?? null, defId: info?.defId ?? null, kind: info?.kind ?? null, side: 'ally' });
+      if (!url) return false;
+      this._play(url, { volume: 0.5, unitKey: 'land:' + (key ?? '') });
+      return true;
+    } catch { return false; }
+  }
+
   _play(url, { volume = 1, rate = 1, limited = false, unitKey = null, exclusive = null, once = null } = {}) {
     if (!this.ctx || !url || this.volumes.muted || this.volumes.sfx <= 0) return;
     const now = typeof performance !== 'undefined' ? performance.now() : Date.now();

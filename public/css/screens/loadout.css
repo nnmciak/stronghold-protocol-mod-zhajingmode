@@ -1197,3 +1197,11 @@
 /* deck 卡里特质条要跨满整行（旧版列表卡是 flex 行，这里补一条） */
 
 .lo-op__trait { grid-column: 1 / -1; }
+
+/* 卡片视图分组转场（0.3.2 移植）：按阶交错淡入 + 右移，底部栏上浮 */
+@keyframes lo-tr-fade { from { opacity: 0; } }
+@keyframes lo-tr-right { from { opacity: 0; transform: translateX(.36rem); } }
+@keyframes lo-tr-rise { from { opacity: 0; transform: translateY(.22rem); } }
+.lo-deck .lo-tgroup { animation: lo-tr-right 440ms cubic-bezier(.16, .84, .3, 1) backwards; animation-delay: calc(240ms + var(--g, 0) * 70ms); }
+.lo-deck .lo-bbar { animation: lo-tr-rise 420ms cubic-bezier(.16, .84, .3, 1) 380ms backwards; }
+@media (prefers-reduced-motion: reduce) { .lo-deck .lo-tgroup, .lo-deck .lo-bbar { animation: none; } }

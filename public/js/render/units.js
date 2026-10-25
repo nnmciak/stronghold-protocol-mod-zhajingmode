@@ -1113,6 +1113,19 @@ export class UnitView {
     if (this.actor) this.actor.deploy();
   }
 
+  /**
+   * 备战落场（0.3.2 PR #416）：重播一次 Start 动作并播放落地音。
+   * render/app.js 的 replayDeploys（回合开始逐人落地）/ 购买 / 移动都会调用；非备战、敌人、阵亡或已在落地中时拒绝。
+   */
+  land() {
+    if (this.destroyed || !this.prep || this.isEnemy || !this.alive) return false;
+    if (globalThis.document?.hidden) return false;
+    if (this._pendingDeployElapsed != null) return false;
+    this.onDeploy();
+    try { this.ctx.audio?.deployCue?.({ def: this.info.spine || this.info.defId, defId: this.info.defId, kind: this.info.kind }, this.id); } catch { /* the sound may fail */ }
+    return true;
+  }
+
   onStatus(key, on) {
     if (typeof key !== 'string') return;
     if (on) this.statuses.add(key); else this.statuses.delete(key);

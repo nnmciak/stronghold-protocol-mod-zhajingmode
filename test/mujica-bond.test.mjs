@@ -1,4 +1,4 @@
-﻿import test from 'node:test';
+import test from 'node:test';
 import assert from 'node:assert/strict';
 import { makeBattle, enemyRec } from './helpers/battleHarness.js';
 import { getData } from '../server/data.js';
@@ -82,11 +82,11 @@ test('2/3/4/5 thresholds apply speed, cast layers, attack and Fever; growth foll
     near(u.s.aspd, u.base.aspd + (count >= 2 ? 33 : 0), `${count}-member ASPD`);
     near(u.s.atk, u.base.atk * (count >= 4 ? 1.32 : 1), `${count}-member attack`);
     assert.equal(u.skill.activate('test', { free: true }), true);
-    assert.equal(h.b.players[0].bonds.mujicaShip.layers, count >= 3 ? 12 : 10);
+    assert.equal(h.b.players[0].bonds.mujicaShip.layers, count >= 3 ? 11 : 10);
     assert.equal(getFever(h.b, u), count >= 5 ? 10 : 0);
     h.step(1);
-    near(u.s.aspd, u.base.aspd + (count >= 2 ? 25 + 0.8 * (count >= 3 ? 12 : 10) : 0), 'dynamic speed');
-    if (count >= 4) near(u.s.atk, u.base.atk * (1.23 + 0.009 * 12), 'dynamic attack');
+    near(u.s.aspd, u.base.aspd + (count >= 2 ? 25 + 0.8 * (count >= 3 ? 11 : 10) : 0), 'dynamic speed');
+    if (count >= 4) near(u.s.atk, u.base.atk * (1.23 + 0.009 * 11), 'dynamic attack');
     assert.deepEqual(h.b.errors, []);
   }
   const normal = battle(['tmoris'], { count: 5, layers: 10, modeId: 'mode_single_normal' });

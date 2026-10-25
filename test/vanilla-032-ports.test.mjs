@@ -95,3 +95,12 @@ test('联防客户端字段卡死看门狗（2026-10-26）', () => {
   assert.match(c, /stallTimer/);
   assert.match(c, /if \(f\.kind === 'unite'\) this\._armStallWatch\(f\)/);
 });
+
+test('备战入场重播 + 落地音（0.3.2 PR #416）', () => {
+  const u = fs.readFileSync(new URL('../public/js/render/units.js', import.meta.url), 'utf8');
+  assert.match(u, /\n  land\(\) \{/);
+  const a = fs.readFileSync(new URL('../public/js/audio.js', import.meta.url), 'utf8');
+  assert.match(a, /deployCue\(info, key\)/);
+  const g = fs.readFileSync(new URL('../public/js/screens/game.js', import.meta.url), 'utf8');
+  assert.match(g, /view\.replayDeploys\?\.\(uids\)/);
+});
