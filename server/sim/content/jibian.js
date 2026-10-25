@@ -2026,15 +2026,14 @@ const HOOKS = {
       //   原来的无差别洗牌会把可叠加盟约辛苦攒的层数塞给这些盟约 ⇒ 那些层数**白扔**，
       //   而可叠加盟约本该拿到的层数被摊薄。现在不可叠加的保持原值（0）不参与交换，
       //   层数只在真正吃层数的盟约之间重排。
-      // ★ 2026-10-26（owner）：池子改成「本模式全部盟约」——已激活、未激活、隐藏的都进池。
+      // ★ 2026-10-26（owner）：池子改成「本模式**可用**的全部盟约」——已激活的、还没激活的（0 层）都进池，
+      //   但「本局禁用」(mode.inactiveBondIds，卡面显示「本局禁用」) 不进池：它们永远无法激活/叠层，塞过去就是白扔。
       //   例：炎 999 + 奥术 888 已激活，场上 1 名精准、未激活的远见 0 层 → 洗牌后可能是精准 999、远见 888。
-      //   模式外/本局禁用的盟约仍不进池；不可叠加盟约（调和/协防/独行/绝技）依旧排除（层数对它们无效果）。
+      //   不可叠加盟约（调和/协防/独行/绝技）依旧排除（层数对它们无效果）。
       let allowed = null;
       try {
         const mode = ctx.gd && typeof ctx.gd.mode === 'function' ? ctx.gd.mode(ctx.modeId) : null;
-        if (mode && (Array.isArray(mode.activeBondIds) || Array.isArray(mode.inactiveBondIds))) {
-          allowed = new Set([...(mode.activeBondIds || []), ...(mode.inactiveBondIds || [])]);
-        }
+        if (mode && Array.isArray(mode.activeBondIds)) allowed = new Set(mode.activeBondIds);
       } catch { /* 无 mode 信息时退回全部 */ }
       const ids = bondIds(ctx).filter((id) => (!allowed || allowed.has(id)) && !ctx.bondNoStack(id));
       if (ids.length < 2) return;
