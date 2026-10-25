@@ -45,3 +45,9 @@ test('HUD：普通模式保留右侧 buff 栏（炸惊隐藏），下面/左边�
   assert.match(c, /id: 'bonds'/);
   assert.match(c, /REMOVED = \['detail', 'shopbar'\]/);
 });
+
+test('商店资金卡不再有内部「收起」按钮（手机上与下回合资金文案重叠）', () => {
+  const sb = fs.readFileSync(new URL('../public/js/ui/shopBar.js', import.meta.url), 'utf8');
+  assert.ok(!sb.includes('funds__collapse'), '内部收起按钮应已删除');
+  assert.ok(!/onCollapse\(true\)/.test(sb));
+});

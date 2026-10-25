@@ -487,7 +487,6 @@ export function ShopBar({ priv, editable, collapsed, onCollapse, onBuy, onLevel,
         </div>
         <span class="funds__label">${t('目前资金')}</span>
         ${next ? html`<span class="funds__next" title=${nextText}>${nextText}</span>` : null}
-        <button type="button" class="funds__collapse" onClick=${() => onCollapse(true)}><${Icon} name="close" />${t('收起')}</button>
       </div>
     </div>
   </section>`;
