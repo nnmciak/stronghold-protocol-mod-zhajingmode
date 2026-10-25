@@ -11,7 +11,7 @@ export const PROTOCOL_VERSION = 1;
 export const SIM_HZ = 15;   // ★ 2026-10-18 晚：20 → 15（服务端 CPU 再降约 25%）；对外帧率仍是 20Hz，插值不露馅
 export const TICK = 1 / SIM_HZ;
 
-export const APP_VERSION = '0.3.1';
+export const APP_VERSION = '0.3.1-mod.3';
 /** A development build (the public `dev` branch): the title screen, the boot banner and the README say so, and
  * tools/package.mjs refuses to build a release zip from it without --allow-dev. */
 export const DEV_BUILD = /-dev$/.test(APP_VERSION);

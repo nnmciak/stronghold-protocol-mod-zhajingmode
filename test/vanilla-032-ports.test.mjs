@@ -46,8 +46,13 @@ test('HUD：普通模式保留右侧 buff 栏（炸惊隐藏），下面/左边�
   assert.match(c, /REMOVED = \['detail', 'shopbar'\]/);
 });
 
-test('商店资金卡不再有内部「收起」按钮（手机上与下回合资金文案重叠）', () => {
+test('商店资金卡的「收起」按钮保留（owner 确认保留）', () => {
   const sb = fs.readFileSync(new URL('../public/js/ui/shopBar.js', import.meta.url), 'utf8');
-  assert.ok(!sb.includes('funds__collapse'), '内部收起按钮应已删除');
-  assert.ok(!/onCollapse\(true\)/.test(sb));
+  assert.match(sb, /funds__collapse/);
+  assert.match(sb, /onCollapse\(true\)/);
+});
+
+test('版本号已升级到 mod.3', () => {
+  const c = fs.readFileSync(new URL('../shared/constants.js', import.meta.url), 'utf8');
+  assert.match(c, /APP_VERSION = '0\.3\.1-mod\.3'/);
 });
