@@ -30,7 +30,7 @@ import { SkinSection } from '../ui/skinPicker.js';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from '../../vendor/hooks.module.js';
 import { usePresence, LEAVE_MS } from '../ui/transitions.js';
 import { html, Icon, MicroLabel, Button, TierChip, TextField, Countdown, Spinner, confirmDialog, hasDeadline, Modal, Fragment } from '../ui/components.js';
-import { Img, RichText, UnitThumb } from '../ui/gameComponents.js';
+import { Img, RichText, UnitThumb, PromotionIcon } from '../ui/gameComponents.js';
 import { chessAvatarUrl, chessPortraitUrl, subProfIconUrl, bondIconUrl, moduleTypeIconUrl, itemIconUrl, uiUrl } from '../ui/assetUrls.js';
 import { GarrisonBlock, garrisonOf, garrisonsOf, garrisonTypeIconKey } from '../ui/detailPanel.js';
 import { data, useData, localAsset, DATA_FILES } from '../data.js';
@@ -467,12 +467,12 @@ export function OpCard({ m, chess, golden, entries, ops = {}, selected = false, 
   const standInNote = notOwned ? t('未持有（干员持有）：由替补干员上场，替补干员没有潜能与练度') : null;
   return html`<div role="listitem" data-chess=${chess.chessId}
       class=${cx('lo-op', `lo-op--t${chess.tier}`, selected && 'is-sel', changed && 'is-changed', notOwned && 'is-standin', quick && 'is-quick')}>
-    <div class="lo-op__card">
+    <div class="lo-op__card" onClick=${(e) => { if (!e.target.closest?.('button, select, input')) onPick(chess.chessId); }}>
       <div class="lo-op__rail">
         <${TierChip} tier=${chess.tier} size="sm" class="lo-op__tier" />
         <span class="lo-op__lv" title=${t('普通 / 精锐等级')}>
-          <span class="lo-op__lvrow"><i class="lo-op__chev"></i><b class="num">${chess.status?.level ?? '—'}</b></span>
-          ${golden ? html`<span class="lo-op__lvrow is-elite"><i class="lo-op__chev"></i><b class="num">${golden.status?.level ?? '—'}</b></span>` : null}
+          <span class="lo-op__lvrow"><${PromotionIcon} m=${m} phase=${chess.status?.phase} class="lo-op__phase" /><b class="num">${chess.status?.level ?? '—'}</b></span>
+          ${golden ? html`<span class="lo-op__lvrow is-elite"><${PromotionIcon} m=${m} phase=${golden.status?.phase} class="lo-op__phase" /><b class="num">${golden.status?.level ?? '—'}</b></span>` : null}
         </span>
         ${changed ? html`<span class="lo-op__mark" title=${t('已调整')} aria-label=${t('已调整')}></span>` : null}
       </div>

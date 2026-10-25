@@ -356,16 +356,7 @@
 /* 入场动画跟着一起放大，免得从 0.88 跳到 0.95 */
 @keyframes shop-up { from { opacity: 0; transform: translateY(.3rem) scale(.95); } }
 
-/* ★ 2026-10-14（用户）：放大后挡住了棋盘最下面两行 —— 卡片大小保留，改用透明让棋盘透出来。
-   平时 82% 不透明（能看清卡面，也能看到挡住的格子）；鼠标移到商店栏上恢复 100%。
-   想彻底不透明就把 --shop-alpha 改成 1；想更透就 0.7。 */
-:root { --shop-alpha: .82; }
-.shopbar__row { opacity: var(--shop-alpha); transition: opacity .16s var(--ease-out); }
-.shopbar:hover .shopbar__row,
-.shopbar__row:hover,
-.shopbar:focus-within .shopbar__row { opacity: 1; }
-/* 拖拽/放置时不挡视线：正在拖干员时也恢复透明 */
-body.is-dragging .shopbar__row { opacity: var(--shop-alpha); }
+/* ★ 2026-10-26（owner）：取消商店栏半透明 —— 恢复完全不透明（原来的 --shop-alpha 机制整套移除）。 */
 
 /* ★ 2026-10-14（用户）：「能不能把左边的升级按钮也缩小」——
    升级等级卡（.lvcard）单独一套倍率，与干员卡的 --sg 解耦：

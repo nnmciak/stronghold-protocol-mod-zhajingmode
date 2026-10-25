@@ -87,6 +87,16 @@ export function Sprite({ k, class: cls, fallback = null }) {
  * manifest / entry is missing or the image fails.
  * @param {{ group?: string, name: string, class?: string, fallback?: any }} props
  */
+/**
+ * 精英化阶段图标（0.3.2 移植）：按记录真实的 status.phase 显示 E0/E1/E2，避免普通形态被画成精英图标。
+ * @param {{ m?: any, phase?: number, class?: string }} props
+ */
+export function PromotionIcon({ m, phase, class: cls = '' }) {
+  if (!Number.isInteger(phase) || phase < 0 || phase > 2) return null;
+  return html`<${Img} src=${uiUrl(m, `elite/elite_${phase}`)} class=${cls}
+    fallback=${html`<small class=${cls}>E${phase}</small>`} />`;
+}
+
 export function LocalSprite({ group = 'ui/battle', name, class: cls, fallback = null }) {
   return html`<${Img} src=${localAsset(group, name)} class=${cx('lsprite', cls)} fallback=${fallback} />`;
 }

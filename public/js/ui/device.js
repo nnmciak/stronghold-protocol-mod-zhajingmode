@@ -114,6 +114,57 @@ export function useDocClass(name, on = true) {
   }, [name, !!on]);
 }
 
+/** 屏幕常亮（0.3.2 移植）：active 期间持有 Wake Lock；页面重新可见时自动重新申请，释放后清理。 */
+export function installScreenWakeLock(win = globalThis) {
+  const doc = win.document;
+  const wakeLock = win.navigator?.wakeLock;
+  if (!doc || !wakeLock) return () => {};
+  let sentinel = null;
+  let generation = 0;
+  const release = async (lock) => { try { await lock?.release(); } catch { /* best effort */ } };
+  const cancelRetry = () => {
+    doc.removeEventListener('pointerdown', onGesture, true);
+    doc.removeEventListener('touchstart', onGesture, true);
+  };
+  const onGesture = () => {
+    cancelRetry();
+    if (doc.visibilityState === 'visible') void acquire(generation, false);
+  };
+  const acquire = async (request, retry = true) => {
+    try {
+      const lock = await wakeLock.request('screen');
+      if (request !== generation || doc.visibilityState !== 'visible') void release(lock);
+      else sentinel = lock;
+    } catch {
+      if (retry && request === generation && doc.visibilityState === 'visible') {
+        doc.addEventListener('pointerdown', onGesture, true);
+        doc.addEventListener('touchstart', onGesture, { capture: true, passive: true });
+      }
+    }
+  };
+  const update = () => {
+    const request = ++generation;
+    cancelRetry();
+    void release(sentinel);
+    sentinel = null;
+    if (doc.visibilityState === 'visible') void acquire(request);
+  };
+  doc.addEventListener('visibilitychange', update);
+  void update();
+  return () => {
+    ++generation;
+    cancelRetry();
+    doc.removeEventListener('visibilitychange', update);
+    void release(sentinel);
+    sentinel = null;
+  };
+}
+
+/** React 包装：active 为真时持有屏幕常亮。 */
+export function useScreenWakeLock(active) {
+  useEffect(() => (active ? installScreenWakeLock() : undefined), [!!active]);
+}
+
 // ---- fullscreen ----------------------------------------------------------------------------------------------------
 
 export const fullscreen = {

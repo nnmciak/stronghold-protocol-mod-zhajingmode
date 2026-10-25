@@ -961,6 +961,9 @@
 .lo-op__lvrow { display: flex; flex-direction: column; align-items: center; line-height: 1; }
 .lo-op__lvrow b { font-size: max(.15rem, 10px); color: var(--text-md); }
 .lo-op__lvrow.is-elite b { color: var(--gold-2); }
+.lo-op__phase { display: block; flex: none; width: max(.24rem, 14px); height: max(.2rem, 12px); object-fit: contain; opacity: .65; }
+.lo-op__lvrow.is-elite .lo-op__phase { opacity: 1; color: var(--gold-2); }
+.lo-op__lvrow.is-elite img.lo-op__phase { filter: brightness(0) saturate(100%) invert(85%) sepia(70%) saturate(655%) hue-rotate(350deg); }
 .lo-op__chev { width: max(.18rem, 11px); height: max(.12rem, 7px); background: currentColor; color: var(--text-lo);
   clip-path: polygon(0 40%, 50% 0, 100% 40%, 100% 62%, 50% 22%, 0 62%, 0 100%, 50% 60%, 100% 100%, 100% 78%, 50% 38%, 0 78%); }
 .lo-op__lvrow.is-elite .lo-op__chev { color: var(--gold-2); }

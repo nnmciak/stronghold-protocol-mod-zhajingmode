@@ -221,6 +221,13 @@ export function ItemCard({ slot, idx, frozen = false, reason = null, free = fals
   return reason && reason !== t('已售出') && !armed ? html`<${Tooltip} text=${reason} block=${true} class="scard-wrap">${card}<//>` : card;
 }
 
+/** 空栏位（0.3.2/0.3.3 移植）：还没开或已被抽空的槽位显示成空框，而不是「已选择」。 */
+function EmptyCard({ item = false }) {
+  // 用 scard--sold 同一副惰性外框（不可点击、不悬浮），scard--empty 只做额外标记
+  return html`<div class=${cx('scard', 'scard--sold', 'scard--empty', item && 'scard--item')} role="img" aria-label=${t('空栏位：刷新或下回合开始时补满')}
+    title=${t('空栏位：刷新或下回合开始时补满')}></div>`;
+}
+
 function SoldCard({ item = false }) {
   return html`<div class=${cx('scard', 'scard--sold', item && 'scard--item')} aria-label=${t('已售出')}>
     <span class="scard__soldtxt"><${MicroLabel}>SOLD OUT</${MicroLabel}><span>${item ? t('已购买') : t('已招募')}</span></span>
@@ -330,8 +337,11 @@ export function ShopBar({ priv, editable, collapsed, onCollapse, onBuy, onLevel,
   reward = null, onReward, onRewardLater, onArm = null, offBonds = null, onSpecialRefresh = null, onSellBanteng = null, onDeathReturn = null, onMysticRefresh = null, onCashCheque = null }) {
   const shop = priv?.shop || {};
   const slots = Array.isArray(shop.slots) ? shop.slots : [];
-  const chessSlots = slots.map((s, i) => ({ s, i })).filter(({ s }) => !s || s.kind !== 'item');
-  const itemSlots = slots.map((s, i) => ({ s, i })).filter(({ s }) => s && s.kind === 'item');
+  // ★ 0.3.3 移植：空槽没有 kind —— 用服务端下发的 layout 划分干员/装备列（第一期 5 级时装备栏是空的）。
+  const layout = Number.isInteger(shop.layout?.chess) && Number.isInteger(shop.layout?.item) ? shop.layout : null;
+  const indexed = slots.map((s, i) => ({ s, i }));
+  const chessSlots = indexed.filter(({ s, i }) => (layout ? i < layout.chess : !s || s.kind !== 'item'));
+  const itemSlots = indexed.filter(({ s, i }) => (layout ? i >= layout.chess && i < layout.chess + layout.item : s && s.kind === 'item'));
   const frozen = !!shop.frozen;
   const funds = Number(priv?.funds) || 0;
   // 规则10: 下回合最少获得的资金（含利息），由服务端按当前资金预演（round.js nextIncomePreview）。
@@ -452,7 +462,8 @@ export function ShopBar({ priv, editable, collapsed, onCollapse, onBuy, onLevel,
           armed=${armed} onTap=${tapCard} offBonds=${offBonds} />`
         : html`<div class="shopbar__cards">
         ${chessSlots.map(({ s, i }) => {
-          if (!s || s.sold) return html`<${SoldCard} key=${`s${i}`} />`;
+          if (!s) return html`<${EmptyCard} key=${`e${i}`} />`;
+          if (s.sold) return html`<${SoldCard} key=${`s${i}`} />`;
           const reason = shopBlockReason('buy', { priv, editable, slot: s, ...LOOKUPS });
           return html`<${ChessCard} key=${`c${i}:${s.id}`} slot=${s} idx=${i} priv=${priv} frozen=${frozen} onBuy=${onBuy} onDetail=${onDetail} offBonds=${offBonds}
               reason=${reason} armed=${armed === armKey('c', i, s)} onTap=${editable ? (idx) => tapCard('c', idx, s, 'chess', reason, onBuy) : null} />`;
@@ -461,12 +472,13 @@ export function ShopBar({ priv, editable, collapsed, onCollapse, onBuy, onLevel,
       <div class="shopbar__item">
         ${itemSlots.length
           ? itemSlots.map(({ s, i }) => {
+            if (!s) return html`<${EmptyCard} key=${`ie${i}`} item=${true} />`;
             if (s.sold) return html`<${SoldCard} key=${`is${i}`} item=${true} />`;
             const reason = shopBlockReason('buy', { priv, editable, slot: s, ...LOOKUPS });
             return html`<${ItemCard} key=${`i${i}:${s.id}`} slot=${s} idx=${i} frozen=${frozen} onBuy=${onBuy} onDetail=${onDetail} reason=${reason}
               armed=${armed === armKey('i', i, s)} onTap=${editable ? (idx) => tapCard('i', idx, s, 'item', reason, onBuy) : null} />`;
           })
-          : html`<${SoldCard} item=${true} />`}
+          : layout?.item === 0 ? null : html`<${EmptyCard} item=${true} />`}
       </div>
       <div class="funds">
         <div class="funds__hex">
