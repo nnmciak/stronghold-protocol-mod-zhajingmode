@@ -116,7 +116,7 @@ console.log('\n=== ⑥ 未激活 / 隐藏的盟约也进洗牌池（2026-10-26 o
   const active = { yanShip: true, aoShu: true, jinZhun: true };
   const s = fakeCtx(layers, {}, { active });
   s.ctx.modeId = 'mode_single_zhajing';
-  s.ctx.gd = { mode: () => ({ activeBondIds: ['yanShip', 'aoShu', 'jinZhun', 'yuanJian'], inactiveBondIds: ['touziren'] }) };
+  s.ctx.gd = { mode: { activeBondIds: ['yanShip', 'aoShu', 'jinZhun', 'yuanJian'], inactiveBondIds: ['touziren'] } };   // 真实 GameData: gd.mode 是对象
   handlerOf()(s.ctx, { round: 5 });
   console.log('     洗牌后: %s', JSON.stringify(s.result()));
   const ids = s.calls.map((c) => c.id);

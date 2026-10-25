@@ -2032,7 +2032,8 @@ const HOOKS = {
       //   不可叠加盟约（调和/协防/独行/绝技）依旧排除（层数对它们无效果）。
       let allowed = null;
       try {
-        const mode = ctx.gd && typeof ctx.gd.mode === 'function' ? ctx.gd.mode(ctx.modeId) : null;
+        // gd.mode 是**对象**（GameData 构造时 getMode(...) 的结果），不是函数 —— 曾按函数写导致 allowed 永远为 null（池子退回全部）
+        const mode = ctx.gd && ctx.gd.mode && typeof ctx.gd.mode === 'object' ? ctx.gd.mode : null;
         if (mode && Array.isArray(mode.activeBondIds)) allowed = new Set(mode.activeBondIds);
       } catch { /* 无 mode 信息时退回全部 */ }
       const ids = bondIds(ctx).filter((id) => (!allowed || allowed.has(id)) && !ctx.bondNoStack(id));
