@@ -27,7 +27,6 @@
 // teammate's 自选 pieces on the field are rows too (their picks are not sent), opening THEIR operator's card (the unit's
 // pick goes with onMember: never the empty 甄选干员 slot's card).
 
-import { cloneElement } from '../../vendor/preact.module.js';
 import { useEffect, useRef, useState } from '../../vendor/hooks.module.js';
 import { html, BondDisc, Icon, MicroLabel, Tooltip } from './components.js';
 import { RichText, UnitThumb, BondGlyph, GIcon } from './gameComponents.js';
@@ -40,12 +39,14 @@ import { t, tc, tParts, tName } from '../../../shared/i18n.js';
 const cx = (...p) => p.flat().filter(Boolean).join(' ');
 
 
-/** 横向滚动容器（0.3.2 移植 #678）：盟约多时两侧出现 ‹ ›，可以横向滚动看全部；触屏直接拖动。 */
-function BondScroller({ count, children }) {
-  const viewport = useRef(null);
+/** 横向滚动容器（0.3.2 移植 #678）：盟约多时两侧出现 ‹ ›，可以横向滚动看全部；触屏直接拖动。
+ *  用外层容器 + querySelector 拿真正的滚动元素，避免依赖 cloneElement 的 ref（之前箭头点了没反应）。 */
+export function BondScroller({ count, children }) {
+  const box = useRef(null);
   const [edges, setEdges] = useState({ left: false, right: false });
+  const viewport = () => (box.current ? box.current.querySelector('.bstrip') : null);
   useEffect(() => {
-    const el = viewport.current;
+    const el = viewport();
     if (!el) return undefined;
     const update = () => {
       const left = el.scrollLeft > 1, right = el.scrollLeft + el.clientWidth < el.scrollWidth - 1;
@@ -66,11 +67,15 @@ function BondScroller({ count, children }) {
       if (frame !== null) cancelAnimationFrame(frame);
       el.removeEventListener('scroll', update);
     };
-  }, [viewport, count]);
-  const scroll = (direction) => viewport.current?.scrollBy({ left: direction * Math.max(80, viewport.current.clientWidth * .75), behavior: 'smooth' });
-  return html`<div class="bstrip-scroll">
+  }, [count]);
+  const scroll = (direction) => {
+    const el = viewport();
+    if (!el) return;
+    el.scrollBy({ left: direction * Math.max(80, el.clientWidth * .75), behavior: 'smooth' });
+  };
+  return html`<div class="bstrip-scroll" ref=${box}>
     <button type="button" class="bstrip-scroll__arrow" disabled=${!edges.left} aria-label=${t('向左滚动盟约')} onClick=${() => scroll(-1)}>‹</button>
-    ${cloneElement(children, { ref: viewport })}
+    ${children}
     <button type="button" class="bstrip-scroll__arrow" disabled=${!edges.right} aria-label=${t('向右滚动盟约')} onClick=${() => scroll(1)}>›</button>
   </div>`;
 }

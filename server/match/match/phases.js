@@ -364,6 +364,18 @@ export class MatchPhases {
     this.wave = null;
     this.bossWaves = null;
     this.jibianPlan = null;
+    // ★ 2026-10-26（追忆回到同一回合后联防卡死）：下面这些按「回合号」去重/复用的状态必须每回合重来。
+    //   追忆把 14 改写成 10 时，如果第 10 回合此前已经打过联防，`_phase1Driven === 10` 会让新的一轮
+    //   `_afterUniteRound` 直接 return —— 第一段联防打完既不进阶段 2 也不结算，玩家看到的就是
+    //   「18/18 清空但卡在 UNITE」。同一回合重新进入时同样需要清掉上一轮的 relay 残留。
+    this._phase1Driven = null;
+    this.uniteRound = 1;
+    this.unitePlans = [];
+    this._uniteHandoff = null;
+    this._phase1Settle = null;
+    this._relayToken = 0;
+    this._uniteToken = 0;
+    this.deadline = 0;
     const alive = this.alivePlayers();
     // the round's enemies (shared composition, generated now so the prep preview is exact). Planned BEFORE the players'
     // round start: its recompute() checks the board on the field the player deploys on this round (deployFieldOf reads
