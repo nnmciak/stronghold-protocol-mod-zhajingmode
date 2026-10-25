@@ -52,9 +52,9 @@ test('商店资金卡的「收起」按钮保留（owner 确认保留）', () =>
   assert.match(sb, /onCollapse\(true\)/);
 });
 
-test('版本号已升级到 mod.3', () => {
+test('版本号已升级到 mod.4', () => {
   const c = fs.readFileSync(new URL('../shared/constants.js', import.meta.url), 'utf8');
-  assert.match(c, /APP_VERSION = '0\.3\.1-mod\.3'/);
+  assert.match(c, /APP_VERSION = '0\.3\.1-mod\.4'/);
 });
 
 test('盟约栏横向滚动 + ‹ › 箭头（0.3.2 #678）', () => {
