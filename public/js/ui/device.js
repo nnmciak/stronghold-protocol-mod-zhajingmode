@@ -161,6 +161,21 @@ export function installScreenWakeLock(win = globalThis) {
 }
 
 /** React 包装：active 为真时持有屏幕常亮。 */
+/**(0.3.2 移植) 跟随 Fullscreen API 的当前状态。*/
+export function useFullscreen() {
+  const [on, setOn] = useState(() => fullscreen.active());
+  useEffect(() => {
+    const d = globalThis.document;
+    if (!d) return undefined;
+    const upd = () => setOn(fullscreen.active());
+    d.addEventListener('fullscreenchange', upd);
+    d.addEventListener('webkitfullscreenchange', upd);
+    upd();
+    return () => { d.removeEventListener('fullscreenchange', upd); d.removeEventListener('webkitfullscreenchange', upd); };
+  }, []);
+  return on;
+}
+
 export function useScreenWakeLock(active) {
   useEffect(() => (active ? installScreenWakeLock() : undefined), [!!active]);
 }

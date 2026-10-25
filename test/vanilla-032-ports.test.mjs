@@ -9,7 +9,7 @@ test('设备模块提供 Wake Lock，并在战斗阶段启用', () => {
   assert.match(dev, /export function useScreenWakeLock/);
   assert.match(dev, /wakeLock\.request\('screen'\)/);
   const main = fs.readFileSync(new URL('../public/js/main.js', import.meta.url), 'utf8');
-  assert.match(main, /useScreenWakeLock\(combatActive\)/);
+  assert.match(main, /useScreenWakeLock\(combatActive \|\| \(fullscreenWakeLock/);
   assert.match(main, /isCombatPhase\(s\.match\?\.public\?\.phase\)/);
 });
 // 0.3.2 移植自检：干员调配按真实阶段画精英图标 + 行内空白选人
@@ -55,4 +55,29 @@ test('商店资金卡的「收起」按钮保留（owner 确认保留）', () =>
 test('版本号已升级到 mod.3', () => {
   const c = fs.readFileSync(new URL('../shared/constants.js', import.meta.url), 'utf8');
   assert.match(c, /APP_VERSION = '0\.3\.1-mod\.3'/);
+});
+
+test('盟约栏横向滚动 + ‹ › 箭头（0.3.2 #678）', () => {
+  const b = fs.readFileSync(new URL('../public/js/ui/bondStrip.js', import.meta.url), 'utf8');
+  assert.match(b, /function BondScroller/);
+  assert.match(b, /bstrip-scroll__arrow/);
+  assert.ok(!b.includes('slice(0, max)'), '不再截断到 max 个');
+  assert.match(b, /BondScroller} count=\$\{sorted\.length\}/);
+});
+
+test('全屏时保持屏幕常亮（0.3.2 设置项）', () => {
+  const d = fs.readFileSync(new URL('../public/js/ui/device.js', import.meta.url), 'utf8');
+  assert.match(d, /export function useFullscreen/);
+  const g = fs.readFileSync(new URL('../public/js/ui/gameLogic/settings.js', import.meta.url), 'utf8');
+  assert.match(g, /fullscreenWakeLock: false/);
+  const ui = fs.readFileSync(new URL('../public/js/ui/settings.js', import.meta.url), 'utf8');
+  assert.match(ui, /全屏时保持屏幕常亮/);
+  const m = fs.readFileSync(new URL('../public/js/main.js', import.meta.url), 'utf8');
+  assert.match(m, /fullscreenWakeLock && fullscreenActive/);
+});
+
+test('半场视图保留另一半出入口（0.3.2 #595）', () => {
+  const l = fs.readFileSync(new URL('../public/js/render/board3d/layout.js', import.meta.url), 'utf8');
+  assert.match(l, /function sameAreas/);
+  assert.match(l, /S \/ E gates come from the whole grid/);
 });

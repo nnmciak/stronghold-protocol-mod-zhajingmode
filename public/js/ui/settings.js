@@ -415,6 +415,7 @@ export function SettingsModal({ open, onClose }) {
         value=${(Math.min(1.6, Math.max(0.8, Number(s.shopScale) || 1)) - 0.8) / 0.8}
         onInput=${(v) => updateSettings({ shopScale: Math.round((0.8 + v * 0.8) * 20) / 20 })} />
       <${Toggle} label=${t('司凤表情音效')} micro="SIFENG EMOTE SFX" value=${s.emoteSfx} onChange=${(v) => updateSettings({ emoteSfx: v })} />
+<${Toggle} label=${t('全屏时保持屏幕常亮')} micro="SCREEN WAKE LOCK" value=${s.fullscreenWakeLock} onChange=${(v) => updateSettings({ fullscreenWakeLock: v })} />
       <${Slider} label=${t('司凤表情音量')} micro="SIFENG EMOTE VOLUME" icon="play" value=${s.emoteSfxVolume} onInput=${(v) => updateSettings({ emoteSfxVolume: v })} />
       <div class=${s.bossRainlove === 'sifeng' ? 'set-row set-row--vow' : 'set-row'}>
         <span class="set-row__label">${t('Boss战雨爱')}<${MicroLabel}>BOSS BGM<//></span>

@@ -50,7 +50,7 @@ import { GameScreen } from './screens/game.js';
 import { audio, installAudio } from './audio.js';
 import { settingsStore } from './ui/settings.js';
 import { GuideHost } from './ui/guide.js';
-import { installDeviceSupport, useScreenWakeLock } from './ui/device.js';
+import { installDeviceSupport, useScreenWakeLock, useFullscreen } from './ui/device.js';
 import { LoadoutHost } from './screens/loadout.js';
 import { StatsHost } from './screens/stats.js';
 import { recordResult, installStatsRecorder } from './ui/stats.js';
@@ -353,7 +353,9 @@ function App() {
   // 0.3.2 移植：战斗/观战期间保持屏幕常亮（Wake Lock 不支持时静默跳过）
   const combatActive = useStore((s) => selectRoute(s) === 'game' && s.room?.inMatch === true
     && !s.match?.result && isCombatPhase(s.match?.public?.phase));
-  useScreenWakeLock(combatActive);
+  const fullscreenWakeLock = useStore((st) => !!st.fullscreenWakeLock, Object.is, settingsStore);
+  const fullscreenActive = useFullscreen();
+  useScreenWakeLock(combatActive || (fullscreenWakeLock && fullscreenActive));
   useLang(); // a language switch re-renders the whole tree in place
   const [error, resetError] = useErrorBoundary((err) => console.error('[ui] screen crashed', err));
   const Screen = SCREENS[shownRoute] || LobbyScreen;
