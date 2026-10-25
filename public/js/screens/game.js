@@ -77,6 +77,7 @@ import { DetailPanel, resolveDetail } from '../ui/detailPanel.js';
 import { RewardOverlay } from '../ui/rewardOverlay.js';
 import { ChoiceOverlay } from '../ui/choiceOverlay.js';
 import { EnemyJibianOverlay } from '../ui/enemyJibianOverlay.js';
+import { EffectsList } from '../ui/effectsList.js';
 import { JibianPanel } from '../ui/jibianPanel.js';
 import { EnemyDrawer } from '../ui/enemyDrawer.js';
 import { Ticker } from '../ui/ticker.js';
@@ -1505,6 +1506,10 @@ const sp = phase === PHASE.SP_DRAFT ? normalizeSp(priv?.sp, players) : null;
 
       ${String(gd.modeId || '').includes('zhajing') ? html`<div class="gm__rulesbar"><${ZhajingRulesButton} size="sm" /><//></div>` : null}
       <${ZhajingRulesHost} />
+      ${/* ★ 2026-10-26（owner）：右侧 buff 栏只在普通模式显示；炸惊模式不显示。 */ ''}
+      ${!(String(gd?.modeId || pub?.modeId || '').includes('zhajing') || String(pub?.difficulty || '') === 'ZHAJING')
+        ? html`<div class="gm__effects"><${EffectsList} effects=${shownEffects} /></div>`
+        : null}
       <${TeamPanel} pub=${pub} myId=${myId} watching=${watchingNow} onWatch=${watchPlayer} cap=${gd.config?.lpCapPerRound ?? 10} uniteLocal=${uniteLocal}
         self=${Number.isFinite(priv?.lp) ? { lp: priv.lp, pending: liveLpNow.pending, unite: liveLpNow.unite, left: liveLpNow.left } : null}
         observe=${cc ? { canObserve: (p) => observeTarget(p, pub, myId, { observing: watchingOther, ownDone: localDone }), observing: watchingOther, onBack: backHome } : null} />

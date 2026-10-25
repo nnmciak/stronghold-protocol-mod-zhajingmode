@@ -11,9 +11,10 @@ const KEY = 'uiCollapsed';
 const PANELS = [
   // ★ 2026-10-26（owner）：删掉「下面（商店栏）」和「左边（干员详情）」的收起把手；
   //   右侧 buff 栏（效果列）整块不显示了，它的把手也一并去掉。只保留顶部盟约条的把手。
+  { id: 'effects', pos: 'right',  sel: ['.effects'],                  label: 'EFFECTS 效果列' },
   { id: 'bonds',   pos: 'top',    sel: ['.bondbar', '.bonds', '.band-bar', '.bond-bar', '.topbar-bonds', '.hz'], label: '盟约条' },
 ];
-const REMOVED = ['detail', 'effects', 'shopbar'];
+const REMOVED = ['detail', 'shopbar'];
 
 function loadState() {
   try {
