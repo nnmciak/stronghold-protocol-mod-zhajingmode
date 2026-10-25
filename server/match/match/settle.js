@@ -50,6 +50,7 @@ export class MatchSettle {
       losses: {},
     } : null;
     const alive = this.alivePlayers();
+    const lossLog = {};
     for (const ps of alive) {
       const r = this.lastResults.get(ps.playerId) || { leaked: [], perfect: true, coins: 0, layerGains: {}, killed: 0, damageDealt: 0 };
       const counted = (r.leaked || []).filter((l) => l && l.counted !== false).length;
@@ -57,6 +58,7 @@ export class MatchSettle {
       if (this.uniteResultView) this.uniteResultView.losses[ps.playerId] = loss;
       ps.lp -= loss;
       ps.stats.lpLost += loss;
+      if (plan && plan.leakers) lossLog[ps.playerId] = { loss, lp: ps.lp, alive: ps.alive };
       ps.stats.leaks += counted;
       ps.stats.kills += Number(r.killed) || 0;
       ps.stats.dmgDealt += Number(r.damageDealt) || 0;
@@ -77,7 +79,8 @@ export class MatchSettle {
       if (coins > 0) { ps.pendingFunds += coins; ps.stats.fundsGained += coins; }
       for (const b of ps.bounties) b.roundsLeft--;
       ps.bounties = ps.bounties.filter((b) => b.roundsLeft > 0);
-      // IN_BATTLE layer gains, at most the room left under BOND_LAYER_CAP (999, as the battle's live copy:
+      try { if (Object.keys(lossLog).length) this.log.info?.(`[match ${this.roomCode}] R${this.round} 联防扣血 ${JSON.stringify(lossLog)}`); } catch { /* ignore */ }
+    // IN_BATTLE layer gains, at most the room left under BOND_LAYER_CAP (999, as the battle's live copy:
       // Battle.addLayers); a bond at the cap gains nothing and dispatches nothing.
       // ★ 2026-10-15（用户：「联防阶段…可以叠层」）：原来只结算【自己那场】的 gains。联战的叠层记在
       //   uniteResult.perPlayer[pid].layerGains 里（unite.js combineUniteResults 原样拷贝每场的 pp），

@@ -121,7 +121,7 @@ export const LOBBY_DEFAULTS = Object.freeze({
   maxRoomsPerAddr: 16,    // rooms created from one client network that may exist at once (0 = unlimited)
   maxMatchesPerAddr: 8,   // matches started from one client network that may run at once (0 = unlimited)
   resyncMinGapMs: 1000,   // heavy resyncs (match state / result replay) per session at most this often on repeated hellos
-  soloReconnectWindowMs: null, // a dropped solo run stays resumable this long (null = data singleReconnectTime, 24 h)
+  soloReconnectWindowMs: 60 * 60 * 1000, // ★ 2026-10-26（owner）：单人局掉线保留 1 小时（原 null = 官方 24 h；挂机十几小时的幽灵房太多）
 });
 
 /** Official `singleReconnectTime` (s) when the data lacks it (constData, research 01 §1). */

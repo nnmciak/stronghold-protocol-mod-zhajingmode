@@ -336,6 +336,7 @@ export class MatchPhases {
   }
 
   startRound(r) {
+    const prevRound = this.round;
     this.phase = PHASE.ROUND_START;
     this.round = r;
     // ★ 惊变「追忆」(传说, owner 2026-10-16):「你和你的队伍在第十三回合结束时不进入第十四回合，变为进入
@@ -356,6 +357,8 @@ export class MatchPhases {
     //   把 `r` 同步成改写后的回合号，下面每一处都自动跟着走（等价于 startRound 一开始就收到新回合号）。
     //   追忆把 14 改写成 10 之后：不按 boss 轮走、按第 10 回合建波次、玩家回合号也是 10 ✓
     r = this.round;
+    // ★ 2026-10-26：追忆/任何回合回退留痕（诊断「追忆后的 R11」这类问题）
+    try { if (Number.isFinite(prevRound) && r < prevRound) this.log.info?.(`[match ${this.roomCode}] 回合回退 R${prevRound} → R${r}`); } catch { /* ignore */ }
     this.fields = [];
     this.watchers.clear();
     this.unitePlan = null;
