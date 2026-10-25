@@ -208,6 +208,16 @@ export function RosterHead() {
  * `level` 'elite': the skills' details at 精锐 Lv.7 (the shared preview). A chess marked not owned (干员持有) shows the
  * 「替补」 tag: its stand-in fights with a fixed skill and no 潜能 / 练度, the choices here apply once it is owned again.
  */
+/** 行内控件：技能/模组按钮、潜能/练度下拉、链接等 —— 点它们不触发整行选人（0.3.2 #610）。 */
+const ROW_CONTROL_SELECTOR = 'button, select, .lo-select, input, textarea, a';
+function rowControlHit(e) {
+  const target = e?.target;
+  const hit = target?.closest?.(ROW_CONTROL_SELECTOR) ?? null;
+  if (!hit) return false;
+  const row = target.closest('.lo-card') ?? null;
+  return !!row && row.contains(hit);
+}
+
 export function RosterRow({ m, chess, golden, entries, ops = {}, selected, onPick, onChange, onOps, level = 'normal', notOwned = false }) {
   const choice = effectiveChoice(entries, chess, golden);
   const opt = chessOptions(chess, golden);
@@ -217,8 +227,10 @@ export function RosterRow({ m, chess, golden, entries, ops = {}, selected, onPic
   const elite = level === 'elite' && !!golden;
   const slots = [0, 1, 2].map((i) => opt.skillOptions[i] || null);
   const standInNote = notOwned ? t('未持有（干员持有）：由替补干员上场，替补干员没有潜能与练度') : null;
+  const onRowClick = (e) => { if (!rowControlHit(e)) onPick(chess.chessId); };
   return html`<div role="listitem" data-chess=${chess.chessId} data-variant=${elite ? 'elite' : 'normal'}
-      class=${cx('lo-card', `lo-card--t${chess.tier}`, selected && 'is-sel', changed && 'is-changed', notOwned && 'is-standin')}>
+      class=${cx('lo-card', `lo-card--t${chess.tier}`, selected && 'is-sel', changed && 'is-changed', notOwned && 'is-standin')}
+      onClick=${onRowClick}>
     <button type="button" class="lo-card__pick" aria-pressed=${selected ? 'true' : 'false'} title=${chess.name} onClick=${() => onPick(chess.chessId)}>
       <span class="lo-card__art">
         <${Img} src=${skinFor(chess.chessId) ? chessPortraitUrl(m, chess, { skin: skinFor(chess.chessId) }) : chessAvatarUrl(m, chess)} fallback=${html`<span class="lo-card__glyph">${[...(chess.name || '?')][0]}</span>`} />

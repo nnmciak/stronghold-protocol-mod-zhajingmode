@@ -81,3 +81,10 @@ test('半场视图保留另一半出入口（0.3.2 #595）', () => {
   assert.match(l, /function sameAreas/);
   assert.match(l, /S \/ E gates come from the whole grid/);
 });
+
+test('干员调配列表点行内空白选人（0.3.2 #610）', () => {
+  const lo = fs.readFileSync(new URL('../public/js/screens/loadout.js', import.meta.url), 'utf8');
+  assert.match(lo, /function rowControlHit/);
+  assert.match(lo, /onClick=\$\{onRowClick\}/);
+  assert.match(lo, /if \(!rowControlHit\(e\)\) onPick/);
+});
