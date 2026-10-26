@@ -70,7 +70,7 @@ export class BattleEvents {
       (down || (down = [])).push([u.id, r2(u.respawnAt), r2(Math.max(0, u.respawnAt - u.deathAt)), this._downState(u), ...this.restTile(u)]);
     }
     if (down) snap.down = down;
-    let elem = null, ammo = null, wolves = null, neg = null, energy = null, layers = null, charges = null;
+    let elem = null, ammo = null, wolves = null, neg = null, energy = null, layers = null, charges = null, scale = null;
     for (const u of this.units) {
       if (!u.alive || !u.deployed || u.hidden) continue;
       const v = elementView(u, this.time);
@@ -89,6 +89,9 @@ export class BattleEvents {
       if (ly) (layers || (layers = [])).push([u.id, ly]);
       const ch = chargeView(u);
       if (ch) (charges || (charges = [])).push([u.id, ch[0], ch[1]]);
+      // ★ 2026-10-26（owner）：纯视觉缩放（心之钢等）——只在非 1 时下发
+      const vs = Number(u.visualScale);
+      if (Number.isFinite(vs) && vs > 0 && vs !== 1) (scale || (scale = [])).push([u.id, r2(vs)]);
     }
     if (elem) snap.elem = elem;
     if (ammo) snap.ammo = ammo;
@@ -97,6 +100,7 @@ export class BattleEvents {
     if (energy) snap.energy = energy;
     if (layers) snap.layers = layers;
     if (charges) snap.charges = charges;
+    if (scale) snap.scale = scale;
     return snap;
   }
 

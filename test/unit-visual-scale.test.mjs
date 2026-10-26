@@ -3,6 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { makeBattle, enemyRec } from './helpers/battleHarness.js';
 import { unitInfo } from '../server/sim/snapshot.js';
+import { normalizeSnapshot } from '../public/js/render/interp.js';
 
 const setup = () => makeBattle({
   modeId: 'mode_single_zhajing',
@@ -31,4 +32,11 @@ test('设置 visualScale 后透传（保留两位小数）', () => {
   assert.equal(unitInfo(u).scale, 0.67);
   u.visualScale = 0;
   assert.equal(unitInfo(u).scale, undefined, '非法值不发送');
+});
+test('客户端 interp：snap.scale 解析成每单位倍率', () => {
+  const snap = { t: 1, units: [[7, 1, 2, 10, 20, 0, 0, 0, 0]], scale: [[7, 1.3]] };
+  const n = normalizeSnapshot(snap);
+  assert.equal(n.scale.get(7), 1.3);
+  const n2 = normalizeSnapshot({ t: 1, units: [[7, 1, 2, 10, 20, 0, 0, 0, 0]] });
+  assert.equal(n2.scale, null);
 });

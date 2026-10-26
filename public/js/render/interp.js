@@ -147,7 +147,14 @@ export function normalizeSnapshot(snap) {
       (standCut || (standCut = new Map())).set(e[0], e[1]);
     }
   }
-  return { t, units, down, ammo, wolves, coins, neg, stand, standCut, raw: snap };
+  let scale = null;
+  if (Array.isArray(snap.scale)) {
+    for (const e of snap.scale) {
+      if (!Array.isArray(e) || !units.has(e[0]) || !(Number.isFinite(e[1]) && e[1] > 0)) continue;
+      (scale || (scale = new Map())).set(e[0], e[1]);
+    }
+  }
+  return { t, units, down, ammo, wolves, coins, neg, stand, standCut, scale, raw: snap };
 }
 
 /**
@@ -403,6 +410,7 @@ export class SnapshotBuffer {
       o.ammo = A.ammo ? A.ammo.get(id) || null : null;
       o.wolves = A.wolves ? A.wolves.get(id) || null : null;
       o.coins = A.coins?.get(id) ?? null;
+      o.scale = A.scale ? (A.scale.get(id) ?? 1) : 1;
       o.neg = A.neg ? A.neg.get(id) || 0 : 0;
       o.seen = stamp;
     }

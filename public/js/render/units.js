@@ -529,6 +529,7 @@ export class UnitView {
       if (Number.isFinite(q) && q > 0 && info.side === 'ally') this.visScale = q;
     } catch { /* 非浏览器环境 */ }
     this.modelK = this.isEnemy ? enemyModelScale(def) : 1;
+    this.baseModelK = this.modelK;
     this.modelK *= this.visScale;
     // a fast enemy walks on its model's own Run cycle when it has one (PR #275 by @xcdoge: 猎狗pro, moveSpeed 1.9, Run_Loop
     // 0.53 s next to Move_Loop 0.80 s; also 深池侦察犬 1.7). [ASSUMED] the threshold: faster than the standard 1
@@ -893,10 +894,20 @@ export class UnitView {
     return 'idle';
   }
 
+  /** 纯视觉缩放（服务端每帧 snap.scale 或 unitInfo.scale）：只影响模型，不影响数值/判定。 */
+  setVisualScale(k) {
+    const v = Number(k);
+    if (!(Number.isFinite(v) && v > 0) || Math.abs(v - this.visScale) < 1e-6) return;
+    this.visScale = v;
+    this.modelK = this.baseModelK * v;
+    if (this.imp) this.imp.dirty = true;
+  }
+
   /** Apply an interpolated sample (render/interp.js); `t` = the render clock's game time (ring countdowns). */
   sync(s, t) {
     if (!s) return;
     if (Number.isFinite(t)) this.gameT = t;
+    if (Number.isFinite(s.scale) && s.scale > 0) this.setVisualScale(s.scale);
     // the element gauge shown (b.snap `elem`): element, fill 0..1, cooldown end (game s) and length
     this.el = typeof s.el === 'string' ? s.el : null;
     this.elFill = this.el ? s.elFill || 0 : 0; this.elUntil = this.el ? s.elUntil || 0 : 0; this.elDur = this.el ? s.elDur || 0 : 0;

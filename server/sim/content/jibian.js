@@ -457,6 +457,13 @@ function cheatPicks(battle) {
   } catch { return false; }
 }
 
+/** 心之钢的体型倍率：每 10000 最大生命 +3%，上限 +30%（纯视觉）。 */
+export function heartsteelScale(maxHp) {
+  const hp = Number(maxHp) || 0;
+  if (!(hp > 0)) return 1;
+  return 1 + Math.min(0.3, Math.floor(hp / 10000) * 0.03);
+}
+
 export function install(battle) {
   const picks = picksOf(battle);
   const scoped = scopedRefs(battle);
@@ -561,6 +568,53 @@ export function install(battle) {
     battle.on('battleStart', () => { for (const u of battle.allies()) apply(u); }, { priority: 11 });
     battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
     battle.on('layerGain', () => { for (const u of battle.allies()) apply(u); });
+  }
+
+  // 心之钢（传说，owner 2026-10-26）：攻击额外造成 700(+3% 最大生命) 物理伤害，并永久 +10% 该伤害的最大生命
+  //   （每个目标 30s 冷却）；每 10000 最大生命 +3% 体型（最多 +30%，纯视觉）。
+  if (has('jibian_xinzhigang')) {
+    const KEY = 'jibian:xinzhigang';
+    const CD = 30, BASE = 700, HP_RATIO = 0.03, GAIN_RATIO = 0.1;
+    const last = new Map();   // 目标 uid → 上次触发时间
+    const grow = new Map();   // 单位 uid → 累计永久最大生命
+    const refreshScale = (u) => {
+      if (!u) return;
+      const hp = Number(u.s && u.s.maxHp) || 0;
+      const k = heartsteelScale(hp);
+      if (Math.abs(k - (Number(u.visualScale) || 1)) > 1e-9) u.visualScale = k;
+    };
+    const applyHp = (u) => {
+      const n = grow.get(u.uid ?? u.id) || 0;
+      if (!(n > 0)) return;
+      try { battle.addBuff(u, { key: KEY, mods: { hpFlat: n }, refresh: 'replace', persist: true, allowDead: true }); } catch { /* 不影响对局 */ }
+    };
+    battle.on('battleStart', () => { for (const u of battle.allies()) { applyHp(u); refreshScale(u); } }, { priority: 12 });
+    battle.on('deploy', (ctx) => { const u = ctx && ctx.unit; if (u) { applyHp(u); refreshScale(u); } });
+    battle.on('hit', (ctx) => {
+      const dmg = ctx && ctx.dmg;
+      const src = (ctx && (ctx.credit ?? ctx.source)) || null;
+      const t = ctx && ctx.target;
+      if (!dmg || !src || !t || src.side !== 'ally' || t.side !== 'enemy' || !src.alive) return;
+      if (!(count(src.ownerId, 'jibian_xinzhigang') > 0)) return;
+      if (battle.mem && battle.mem.hsBusy) return;      // 附加伤害自己触发的 hit 不再连锁
+      const tid = t.uid ?? t.id;
+      const now = Number(battle.time) || 0;
+      const prev = last.get(tid);
+      if (prev != null && now - prev < CD) return;
+      last.set(tid, now);
+      const hp = Number(src.s && src.s.maxHp) || 0;
+      const amount = BASE + hp * HP_RATIO;
+      if (battle.mem) battle.mem.hsBusy = true;
+      try { battle.dealDamage(src, t, { amount, type: 'phys', canDodge: false, tags: ['jibian:xinzhigang'] }); }
+      catch { /* 目标已离场等 */ }
+      finally { if (battle.mem) battle.mem.hsBusy = false; }
+      const gain = amount * GAIN_RATIO;
+      const k = src.uid ?? src.id;
+      grow.set(k, (grow.get(k) || 0) + gain);
+      applyHp(src);
+      try { battle.heal(src, src, gain, { self: true }); } catch { /* ignore */ }
+      for (const u of battle.allies()) if (u.ownerId === src.ownerId) refreshScale(u);
+    });
   }
 
   // 火力不足恐惧症：我方干员开技能 → 子弹数翻倍（见 doubleAmmoForJibian 的注释）
