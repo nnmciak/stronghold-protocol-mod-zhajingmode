@@ -54,3 +54,10 @@ test('击杀 +1 层：+5% 最大生命 / +5% 体型；阵亡损失 65% 层数', 
   assert.ok(Math.abs(u.s.maxHp - base * 1.05) < 1e-6, '3 层阵亡 → 留 1 层（×1.05）');
   assert.equal(h.b.errors.length, 0);
 });
+
+test('体型上限 3.25', () => {
+  const { h, u, victim } = setup();
+  for (let i = 0; i < 100; i++) h.b.emit('kill', { killer: u, victim });
+  console.log('100 层体型:', u.visualScale);
+  assert.equal(u.visualScale, 3.25, '最大体型应为 3.25');
+});

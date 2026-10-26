@@ -1,4 +1,4 @@
-﻿// server/sim/content/jibian.js — 炸惊模拟 惊变 (jibian) card content.
+// server/sim/content/jibian.js — 炸惊模拟 惊变 (jibian) card content.
 //
 // WHAT THIS FILE OWNS. 炸惊模拟 规则5/6 gives two SP rounds a phase kind of their own: 惊变阶段 (spPhaseKinds, rounds
 // 1 and 7) deals `jibian.cards` cards from `mode_*_zhajing.jibian.pool` (data/config.json) and 企鹅物流的快递 deals
@@ -302,7 +302,8 @@ const setVisScalePart = (u, key, k) => {
     parts[key] = Number(k) || 1;
     let v = 1;
     for (const p of Object.values(parts)) v += (Number(p) || 1) - 1;
-    u.visualScale = Math.max(0.8, Math.round(v * 1000) / 1000);   // 最小体型 0.8（owner 2026-10-26）
+    // 体型范围 0.799 – 3.25（owner 2026-10-26）
+    u.visualScale = Math.max(0.799, Math.min(3.25, Math.round(v * 1000) / 1000));
   } catch { /* 视觉失败不影响对局 */ }
 };
 
