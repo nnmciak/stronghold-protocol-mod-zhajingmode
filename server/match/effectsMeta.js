@@ -636,6 +636,16 @@ export function makeCtx(m, ps, source, hook, ev = null) {
 
     // ---- layers
     addLayers: (bondId, n, opts = {}) => ps.addLayers(bondId, n, { requireActive: !!opts.requireActive, reason: opts.reason || source.key || '' }),
+    /** ★ 2026-10-26（owner）：记录「本局已用掉的一次性惊变」，抽卡时与已拥有的惊变一起排除（追忆用）。 */
+    markJibianConsumed: (id) => {
+      if (typeof id !== 'string' || !id) return;
+      if (!(ps.jibianConsumed instanceof Set)) ps.jibianConsumed = new Set();
+      ps.jibianConsumed.add(id);
+      ps.dirty();
+    },
+    /** 本局已消耗的一次性惊变 id 集合。 */
+    jibianConsumed: () => (ps.jibianConsumed instanceof Set ? new Set(ps.jibianConsumed) : new Set()),
+
     /** ★ 层数直接设值（可增可减）—— 惊变「层数打乱」用；addLayers 只加不减。 */
     setLayers: (bondId, n, opts = {}) => ps.setLayers(bondId, n, { reason: opts.reason || '' }),
 

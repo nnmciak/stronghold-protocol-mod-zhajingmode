@@ -2061,6 +2061,7 @@ const HOOKS = {
       ev.round = 10;                                    // 改为进入第 10 回合整备阶段
       const self = ctx.effects().find((e) => e.key === P + 'jibian_zhuiji');
       if (self) ctx.removeEffect(self.id);              // 之后该惊变失效
+      ctx.markJibianConsumed?.('jibian_zhuiji');        // ★ 2026-10-26：一次性 —— 本局不再回到卡池
       ctx.toast('追忆：回到第 10 回合', 'info');
     },
   },

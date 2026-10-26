@@ -176,6 +176,8 @@ export class MatchSpDraft {
    */
   _jibianOwned(ps) {
     const out = new Set();
+    // ★ 2026-10-26：本局已消耗的一次性惊变（追忆）同样不能再抽到。
+    if (ps && ps.jibianConsumed instanceof Set) for (const id of ps.jibianConsumed) out.add(id);
     for (const e of (ps && ps.effects) || []) {
       if (!e || !e.jibian) continue;
       const id = (e.data && e.data.effectId)
