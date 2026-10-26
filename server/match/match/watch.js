@@ -109,7 +109,8 @@ export class MatchWatch {
   /** The field of the player `ps` follows among `fields` (null when that player has none this phase). */
   _watchTargetField(ps, fields) {
     const pid = this._watchTargetOf(ps);
-    return pid ? fields.find((f) => Array.isArray(f.players) && f.players.includes(pid)) || null : null;
+    return pid ? fields.find((f) => (Array.isArray(f.players) && f.players.includes(pid))
+      || (Array.isArray(f.leakers) && f.leakers.includes(pid))) || null : null;
   }
 
   /** Does `ps` follow a player (an eliminated human or a spectator seat, still in the room)? */
@@ -172,7 +173,9 @@ export class MatchWatch {
   _defaultWatch() {
     this.watchers.clear();
     for (const ps of this._viewers()) {
-      const own = this.fields.find((f) => f.players.includes(ps.playerId));
+      // ★ 2026-10-26：联防里漏怪的人只出现在 `leakers`（`players` 是兜底干员），也要优先看自己的战场
+      const own = this.fields.find((f) => f.players.includes(ps.playerId)
+        || (Array.isArray(f.leakers) && f.leakers.includes(ps.playerId)));
       // an eliminated human / spectator seat: the field of the player it follows (item 56), else the first
       const f = own || this._watchTargetField(ps, this.fields) || this.fields[0];
       if (!f) continue;

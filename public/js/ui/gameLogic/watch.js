@@ -15,7 +15,10 @@ export const ownFieldId = (playerId) => `n:${playerId}`;
  */
 export function homeFieldId(pub, playerId) {
   const fields = Array.isArray(pub?.fields) ? pub.fields : [];
-  const special = fields.find((f) => isObj(f) && f.kind !== 'normal' && Array.isArray(f.players) && f.players.includes(playerId) && f.live !== false);
+  // 联防：漏怪的人不在 players（兜底干员）里，只出现在 leakers —— 那同样是「自己的战场」
+  const special = fields.find((f) => isObj(f) && f.kind !== 'normal' && f.live !== false
+    && ((Array.isArray(f.players) && f.players.includes(playerId))
+      || (Array.isArray(f.leakers) && f.leakers.includes(playerId))));
   if (special) return special.fieldId;
   const me = sortedPlayers(pub).find((p) => p.playerId === playerId);
   if (me && typeof me.fieldId === 'string' && me.fieldId) return me.fieldId;

@@ -417,9 +417,14 @@ const sp = phase === PHASE.SP_DRAFT ? normalizeSp(priv?.sp, players) : null;
   // own board (prep, or a battle field the player fights on) → the stage with the player's overrides; a teammate's
   // board → the plain stage (their overrides are not known here)
   const shownField = showPrep ? null : field;
-  const shownMembers = shownField ? ((Array.isArray(pub?.fields) ? pub.fields : []).find((f) => f && f.fieldId === shownField.fieldId)?.players
-    || (Array.isArray(shownField.players) ? shownField.players : null)) : null;
-  const ownView = showPrep || (shownField ? (shownMembers ? shownMembers.includes(myId) : shownField.fieldId === ownFieldId(myId)) : !watchingOther);
+  const shownRow = shownField ? (Array.isArray(pub?.fields) ? pub.fields : []).find((f) => f && f.fieldId === shownField.fieldId) : null;
+  // 联防：漏怪的人只在 `leakers` 里（`players` 是兜底干员）—— 这一样是「自己的战场」，舞台/商店视图不能当成观战别人
+  const shownMembers = shownField ? (() => {
+    const ps = Array.isArray(shownRow?.players) ? shownRow.players : (Array.isArray(shownField.players) ? shownField.players : []);
+    const ls = Array.isArray(shownRow?.leakers) ? shownRow.leakers : (Array.isArray(shownField.leakers) ? shownField.leakers : []);
+    return [...ps, ...ls];
+  })() : null;
+  const ownView = showPrep || (shownField ? (shownMembers.length ? shownMembers.includes(myId) : shownField.fieldId === ownFieldId(myId)) : !watchingOther);
   // every field is fought on the round's battlefield — 联防 too, its terrain, crates and water included (0.2.1, the
   // owner's decision of 2026-10-07; 0.2.0 drew the escaped levels' empty road there and restored the board on leaving)
   useEffect(() => {

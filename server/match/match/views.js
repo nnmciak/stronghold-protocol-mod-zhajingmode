@@ -41,7 +41,8 @@ export class MatchViews {
   }
 
   fieldOf(ps) {
-    const f = this.fields.find((x) => x.players.includes(ps.playerId));
+    const f = this.fields.find((x) => x.players.includes(ps.playerId)
+      || (Array.isArray(x.leakers) && x.leakers.includes(ps.playerId)));
     return f ? f.fieldId : null;
   }
 
@@ -170,6 +171,8 @@ export class MatchViews {
       })),
       fields: this.fields.map((f) => {
         const v = { fieldId: f.fieldId, kind: f.kind, players: f.players.slice(), live: !!f.live };
+        // 联防：漏怪的人（不在 players 里）也要能认出「这是自己的战场」
+        if (Array.isArray(f.leakers) && f.leakers.length) v.leakers = f.leakers.slice();
         const pr = this._fieldProgress(f);
         if (pr) v.progress = pr;
         return v;

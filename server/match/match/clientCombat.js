@@ -252,6 +252,32 @@ export class MatchClientCombat {
   }
 
   /**
+   * 2026-10-26：联防字段的卡死看门狗（客户端算完却没送结果 / 中途掉线时由服务端接手）。
+   *   5 秒轮询一次；满足任一条件就 takeover：
+   *   · now ≥ 战场时限 + 30 秒（硬上限，客户端再慢也不能无限等）；
+   *   · 已开打 20 秒以上，且连续 45 秒没有任何进度（lastProgressAt 不更新）。
+   *   正常结算/换 authority 时 _runOnServer 会清掉 stallTimer。
+   */
+  _armStallWatch(f) {
+    if (f.stallTimer) { this.cancel(f.stallTimer); f.stallTimer = null; }
+    const tick = () => {
+      f.stallTimer = null;
+      if (f.done || f.mode !== 'client') return;
+      const now = this.sched.now();
+      const lim = f.spec.timeLimit > 0 ? f.spec.timeLimit : 60;
+      const hard = f.startAt + Math.round((lim / this.gameSpeed) * 1000) + 30_000;
+      const inField = now - f.startAt;
+      const quiet = now - (Number(f.lastProgressAt) || f.startAt);
+      if (now >= hard || (inField > 20_000 && quiet > 45_000)) {
+        this._runOnServer(f, 'stall');
+        return;
+      }
+      f.stallTimer = this.later(5_000, tick);
+    };
+    f.stallTimer = this.later(5_000, tick);
+  }
+
+  /**
    * ★ 2026-10-22（owner）：这场战斗有没有真人在看 —— 该场里有连接的真人，或有连接的观战者。
    * 用来决定结果要不要按战场时钟压着发：没人看的场次（纯 AI 场）算完就即时出结果，
    * 有人看的场次保持原来的实时节奏（队友的进度条不会跳）。
@@ -292,6 +318,7 @@ export class MatchClientCombat {
     f.mode = 'server';
     f.authority = null;
     if (f.deadlineTimer) { this.cancel(f.deadlineTimer); f.deadlineTimer = null; }
+    if (f.stallTimer) { this.cancel(f.stallTimer); f.stallTimer = null; }
     // the former authority (still online after a timeout / an invalid result) stops reporting and keeps its view
     if (prev) this.sendTo(prev, { t: 'b.end', battleId: f.battleId, fieldId: f.fieldId, reason: 'takeover' });
     if (f.kind === 'boss' || f.kind === 'hidden') { this._bossServerRun(f); return; }

@@ -70,6 +70,9 @@ export class MatchUnite {
       const fieldId = fields.length === 1 ? 'u' : `u${plan.squad ?? 0}`;
       return {
         fieldId, kind: 'unite', players: plan.helpers.map((p) => p.playerId),
+        // ★ 2026-10-26：把 leakers 也记在战场上 —— 漏怪的人不在 players（那是兜底干员）里，
+        //   默认观战/fieldOf 找不到自己的战场，就会跳到别人的联防去。只做归属标记，不参与 sides/战斗。
+        leakers: plan.leakers.map((p) => p.playerId),
         battle: this.newBattle(this._uniteOpts(plan, limit, fieldId)), live: true,
       };
     });
