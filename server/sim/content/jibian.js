@@ -302,8 +302,8 @@ const setVisScalePart = (u, key, k) => {
     parts[key] = Number(k) || 1;
     let v = 1;
     for (const p of Object.values(parts)) v += (Number(p) || 1) - 1;
-    // 体型范围 0.799 – 3.25（owner 2026-10-26）
-    u.visualScale = Math.max(0.799, Math.min(3.25, Math.round(v * 1000) / 1000));
+    // 体型范围 0.325 – 7.99（owner 2026-10-26）
+    u.visualScale = Math.max(0.325, Math.min(7.99, Math.round(v * 1000) / 1000));
   } catch { /* 视觉失败不影响对局 */ }
 };
 
