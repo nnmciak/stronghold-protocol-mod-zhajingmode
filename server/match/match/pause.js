@@ -27,6 +27,8 @@ export class MatchPause {
       if (!f.cc) continue;
       if (f.deadlineTimer) { this.cancel(f.deadlineTimer); f.deadlineTimer = null; f.rearmDeadline = true; }
       if (f.doneTimer) { this.cancel(f.doneTimer); f.doneTimer = null; f.rearmRelease = true; }
+      // ★ 2026-10-26：联防看门狗也要停 —— 否则暂停期间它的 5s 轮询照跑，可能把还在暂停的战斗判成卡死
+      if (f.stallTimer) { this.cancel(f.stallTimer); f.stallTimer = null; f.rearmStall = true; }
     }
     if (this._bossClock) { this.cancel(this._bossClock); this._bossClock = null; }
     this.markPublic();
@@ -49,8 +51,10 @@ export class MatchPause {
       f.lastProgressAt += d;
       if (f.rearmDeadline && f.mode === 'client') this._armDeadline(f);
       if (f.rearmRelease && f.mode === 'server') this._armRelease(f);
+      if (f.rearmStall && f.mode === 'client' && f.kind === 'unite') this._armStallWatch(f);
       f.rearmDeadline = false;
       f.rearmRelease = false;
+      f.rearmStall = false;
     }
     if (this._bossClockOn && !this._bossClock && (this.phase === PHASE.FINAL_ASSAULT || this.phase === PHASE.HIDDEN_CORE)) {
       this._bossClock = this.later(BOSS_CLOCK_MS, () => this._bossClockTick());

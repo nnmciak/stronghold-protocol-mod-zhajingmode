@@ -37,3 +37,14 @@ test('客户端 homeFieldId：leakers 也算自己的战场', () => {
   assert.equal(homeFieldId(pub, 'leakerB'), 'u1');
   assert.equal(homeFieldId(pub, 'h3'), 'u1');
 });
+test('既漏怪又兜底：优先自己的（leaker）战场', () => {
+  const ordered = [
+    { fieldId: 'u1', kind: 'unite', players: ['leakerA', 'h3'], leakers: ['leakerB'], live: true },
+    { fieldId: 'u0', kind: 'unite', players: ['h1'], leakers: ['leakerA'], live: true },
+  ];
+  const m = { fields: ordered, watchers: new Map(), _viewers: () => [{ playerId: 'leakerA', connected: true }], _sendField: () => {} };
+  Match.prototype._defaultWatch.call(m);
+  assert.equal(m.watchers.get('leakerA'), 'u0', '即使兜底场排在前面，也先看自己的协防场');
+  assert.equal(Match.prototype.fieldOf.call({ fields: ordered }, { playerId: 'leakerA' }), 'u0');
+  assert.equal(homeFieldId({ fields: ordered, players: [] }, 'leakerA'), 'u0');
+});

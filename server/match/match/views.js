@@ -41,8 +41,8 @@ export class MatchViews {
   }
 
   fieldOf(ps) {
-    const f = this.fields.find((x) => x.players.includes(ps.playerId)
-      || (Array.isArray(x.leakers) && x.leakers.includes(ps.playerId)));
+    const f = this.fields.find((x) => Array.isArray(x.leakers) && x.leakers.includes(ps.playerId))
+      || this.fields.find((x) => x.players.includes(ps.playerId));
     return f ? f.fieldId : null;
   }
 

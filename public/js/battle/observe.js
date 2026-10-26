@@ -24,8 +24,8 @@ const fields = (pub) => (Array.isArray(pub?.fields) ? pub.fields.filter(isObj) :
 
 /** The field listing a player, or null. 联防里漏怪的人只出现在 `leakers` 里，也算。 */
 export function fieldOf(pub, playerId) {
-  return fields(pub).find((f) => (Array.isArray(f.players) && f.players.includes(playerId))
-    || (Array.isArray(f.leakers) && f.leakers.includes(playerId))) || null;
+  return fields(pub).find((f) => Array.isArray(f.leakers) && f.leakers.includes(playerId))
+    || fields(pub).find((f) => Array.isArray(f.players) && f.players.includes(playerId)) || null;
 }
 
 /** Display name of a player id ('队友' when unknown). */
