@@ -613,8 +613,10 @@ export function install(battle) {
       const dmg = ctx && ctx.dmg;
       const src = (ctx && (ctx.credit ?? ctx.source)) || null;
       const t = ctx && ctx.target;
-      if (!dmg || !src || !t || src.side !== 'ally' || t.side !== 'enemy' || !src.alive) return;
+      if (!dmg || !src || !t || src.side !== 'ally' || src.kind !== 'op' || t.side !== 'enemy' || !src.alive) return;   // 仅干员（召唤物不触发）
       if (!(count(src.ownerId, 'jibian_xinzhigang') > 0)) return;
+      // 附加伤害自己触发的 hit 不再连锁（双保险：mem 标记 + 伤害 tag）
+      if (Array.isArray(dmg.tags) && dmg.tags.includes('jibian:xinzhigang')) return;
       if (battle.mem && battle.mem.hsBusy) return;      // 附加伤害自己触发的 hit 不再连锁
       const tid = t.uid ?? t.id;
       const now = Number(battle.time) || 0;
@@ -981,7 +983,7 @@ export function install(battle) {
     const KEY = P + 'jibian_tankeyinqing:layers';
     const layers = new Map();     // uid → 层数
     const keyOf = (u) => u.uid ?? u.id;
-    const owned = (u) => !!u && u.side === 'ally' && count(u.ownerId, 'jibian_tankeyinqing') > 0;
+    const owned = (u) => !!u && u.side === 'ally' && u.kind === 'op' && count(u.ownerId, 'jibian_tankeyinqing') > 0;
     const apply = (u) => {
       if (!owned(u)) return;
       const n = layers.get(keyOf(u)) || 0;
@@ -1013,7 +1015,7 @@ export function install(battle) {
     const KEY = P + 'jibian_suoxiaoyinqing:layers';
     const layers = new Map();
     const keyOf = (u) => u.uid ?? u.id;
-    const owned = (u) => !!u && u.side === 'ally' && count(u.ownerId, 'jibian_suoxiaoyinqing') > 0;
+    const owned = (u) => !!u && u.side === 'ally' && u.kind === 'op' && count(u.ownerId, 'jibian_suoxiaoyinqing') > 0;
     const apply = (u) => {
       if (!owned(u)) return;
       const n = layers.get(keyOf(u)) || 0;
