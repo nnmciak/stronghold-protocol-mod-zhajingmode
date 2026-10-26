@@ -32,7 +32,7 @@
 //   ✱ jibian_wenmingdecunxu   文明的存续        对敌方造成的真实伤害 +200%
 //   ✎ jibian_banteng          板藤              卖价 4 起、每回合 +4；商店栏的「出售板藤」键位套现（★ 见下）
 //   ✎ jibian_rencaishichang   人才市场          从干员池中随机获得一个干员（无视等级）
-//   ✱ jibian_xingjieshenti    星界躯体          战斗开始时生命最高的干员：生命 +300%
+//   ✱ jibian_xingjieshenti    星界躯体          我方每个干员：生命 +150%
 //   ✎ jibian_panduolamohe     潘多拉魔盒        失去所有惊变，获得三个随机惊变
 //   ✎ jibian_malubian         我在马路边捡到一分钱  获得 5 资金
 //   ✱ jibian_titawu           踢踏舞            所有干员：每次普通攻击后攻速 +2 持续 2s，可叠加并刷新
@@ -737,7 +737,8 @@ export function install(battle) {
         const nW = ids.get('jibian_wananjiaoguan') ?? 0;
         const nX = ids.get('jibian_xingjieshenti') ?? 0;
         if (nW > 0) passiveBuff(battle, top, P + 'jibian_wananjiaoguan', { hpPct: 1 * nW, defFlat: 400 * nW, blockCnt: 2 * nW });
-        if (nX > 0) passiveBuff(battle, top, P + 'jibian_xingjieshenti', { hpPct: 3 * nX });
+        // ★ 2026-10-26（owner）：星界躯体改成「我方每个干员生命值 +150%」——不再只给血最高的那一个。
+        if (nX > 0) for (const u of field) passiveBuff(battle, u, P + 'jibian_xingjieshenti', { hpPct: 1.5 * nX });
       }
     }
   }, { priority: 10 });
