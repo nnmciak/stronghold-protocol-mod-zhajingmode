@@ -547,6 +547,22 @@ export function install(battle) {
     });
   }
 
+  // 霸王血铠（稀有，owner 2026-10-26）：我方干员获得相当于自身生命值 20% 的额外攻击力
+  if (has('jibian_bawangxuekai')) {
+    const KEY = 'jibian:bawangxuekai';
+    const apply = (u) => {
+      if (!u || u.side !== 'ally' || u.kind !== 'op' || u.ownerId == null) return;
+      if (!(count(u.ownerId, 'jibian_bawangxuekai') > 0)) return;
+      const hp = Number(u.s && u.s.maxHp) || 0;
+      const atk = Math.max(0, Math.floor(hp * 0.2));
+      if (!(atk > 0)) return;
+      try { battle.addBuff(u, { key: KEY, mods: { atkFlat: atk }, refresh: 'replace', persist: true, allowDead: true }); } catch { /* 不影响对局 */ }
+    };
+    battle.on('battleStart', () => { for (const u of battle.allies()) apply(u); }, { priority: 11 });
+    battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
+    battle.on('layerGain', () => { for (const u of battle.allies()) apply(u); });
+  }
+
   // 火力不足恐惧症：我方干员开技能 → 子弹数翻倍（见 doubleAmmoForJibian 的注释）
   if (has('jibian_huolibuzu')) {
     battle.on('skillStart', ({ unit, skill }) => { doubleAmmoForJibian(battle, unit, skill); }, { priority: -20 });
