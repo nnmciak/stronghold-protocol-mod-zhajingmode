@@ -81,12 +81,16 @@ test('2/3/4/5 thresholds apply speed, cast layers, attack and Fever; growth foll
     const u = h.unit(ID('tmoris'));
     near(u.s.aspd, u.base.aspd + (count >= 2 ? 33 : 0), `${count}-member ASPD`);
     near(u.s.atk, u.base.atk * (count >= 4 ? 1.32 : 1), `${count}-member attack`);
-    assert.equal(u.skill.activate('test', { free: true }), true);
-    assert.equal(h.b.players[0].bonds.mujicaShip.layers, count >= 3 ? 11 : 10);
-    assert.equal(getFever(h.b, u), count >= 5 ? 10 : 0);
+    // 2026-10-26：叠层改为「每开启两次技能 +1 层」——第一次不加，第二次 +1
+    h.b.emit('skillStart', { unit: u });
+    assert.equal(h.b.players[0].bonds.mujicaShip.layers, 10, `${count}: 第一次施法不加层`);
+    h.b.emit('skillStart', { unit: u });
+    const expectLayers = count >= 3 ? 11 : 10;
+    assert.equal(h.b.players[0].bonds.mujicaShip.layers, expectLayers, `${count}: 两次施法后层数`);
+    assert.equal(getFever(h.b, u), count >= 5 ? 20 : 0);
     h.step(1);
-    near(u.s.aspd, u.base.aspd + (count >= 2 ? 25 + 0.8 * (count >= 3 ? 11 : 10) : 0), 'dynamic speed');
-    if (count >= 4) near(u.s.atk, u.base.atk * (1.23 + 0.009 * 11), 'dynamic attack');
+    near(u.s.aspd, u.base.aspd + (count >= 2 ? 25 + 0.8 * expectLayers : 0), 'dynamic speed');
+    if (count >= 4) near(u.s.atk, u.base.atk * (1.23 + 0.009 * expectLayers), 'dynamic attack');
     assert.deepEqual(h.b.errors, []);
   }
   const normal = battle(['tmoris'], { count: 5, layers: 10, modeId: 'mode_single_normal' });

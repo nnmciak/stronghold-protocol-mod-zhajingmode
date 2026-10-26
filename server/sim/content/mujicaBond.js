@@ -40,9 +40,15 @@ export function install(battle) {
     for (const u of ops) if (has(u, 'oblvns') || has(u, 'oblvns_b')) addFever(battle, u, traitLayers(battle, u, MUJICA_BOND) / 2);
   });
   // 若麦的层数加成已移到休整期结束时结算（卫戍特质 onPrepEnd），部署时不再加层。
+  // ★ 2026-10-26（owner）：叠层从「每次开启技能 +1」改为「每开启两次技能 +1」。
+  //   计数按玩家（同队所有【颂乐人偶】干员的施法都算），只影响 3 名档的叠层；5 名档的 Fever 仍是每次施法 +10。
+  const castCounts = new Map();
+
   battle.on('skillStart', ({ unit }) => {
     if (!S.isOp(unit) || !S.isMember(battle, unit, MUJICA_BOND)) return;
-    if (rank(battle, unit.ownerId, 3)) S.gainLayers(battle, {
+    const casts = (castCounts.get(unit.ownerId) || 0) + 1;
+    castCounts.set(unit.ownerId, casts);
+    if (rank(battle, unit.ownerId, 3) && casts % 2 === 0) S.gainLayers(battle, {
       playerId: unit.ownerId, bonds: MUJICA_BOND, n: 1, source: unit, reason: 'bond',
     });
     if (rank(battle, unit.ownerId, 5)) addFever(battle, unit, 10);
