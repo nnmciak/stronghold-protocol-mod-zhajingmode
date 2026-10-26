@@ -26,7 +26,7 @@ export function install(battle) {
       if (active && S.isMember(battle, u, MUJICA_BOND)) {
         S.passiveBuff(battle, u, 'bond:mujica', S.directMods(
           { atk: rank(battle, u.ownerId, 4) ? 0.23 + 0.009 * L : 0 },
-          { aspd: 25 + 0.8 * L },
+          { aspd: 25 + 0.1 * L },
         ));
       }
       if (has(u, 'oblvns') || has(u, 'oblvns_b')) S.passiveBuff(battle, u, 'gar:mujica:oblvns',
