@@ -346,19 +346,7 @@ const sp = phase === PHASE.SP_DRAFT ? normalizeSp(priv?.sp, players) : null;
     const P = penRef.current;
     if (!view || on === P.on) return;
     if (on) {
-      // 0.3.2 移植：点空白关闭盟约弹层（.bpop/.bslot 自身交互除外）
-  useEffect(() => {
-    const screen = hudElRef.current?.parentElement;
-    if (!screen) return undefined;
-    const onDown = (e) => {
-      if (!live.current.bondOpen || e.target?.closest?.('.bpop, .bslot, .dbond')) return;
-      setBondOpen(null);
-    };
-    screen.addEventListener('pointerdown', onDown, true);
-    return () => screen.removeEventListener('pointerdown', onDown, true);
-  }, []);
-
-  const L = live.current;
+      const L = live.current;
       if (L.pub?.phase !== PHASE.PREP) return;
       if (L.facing) return;
       P.on = true;
@@ -382,6 +370,18 @@ const sp = phase === PHASE.SP_DRAFT ? normalizeSp(priv?.sp, players) : null;
   }, [view]);
   const togglePenRef = useRef(togglePen);
   togglePenRef.current = togglePen;
+
+  // 0.3.2 移植：点空白关闭盟约弹层（.bpop/.bslot 自身交互除外）
+  useEffect(() => {
+    const screen = hudElRef.current?.parentElement;
+    if (!screen) return undefined;
+    const onDown = (e) => {
+      if (!live.current.bondOpen || e.target?.closest?.('.bpop, .bslot, .dbond')) return;
+      setBondOpen(null);
+    };
+    screen.addEventListener('pointerdown', onDown, true);
+    return () => screen.removeEventListener('pointerdown', onDown, true);
+  }, []);
 
   // the stage as the own board looks: terrain 机变 cards open / reclassify tiles and remove crates (stageOverrides)
   const baseStage = gd.ready ? gd.stage(pub?.stageId) : null;
