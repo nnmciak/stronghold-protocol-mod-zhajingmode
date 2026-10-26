@@ -941,20 +941,52 @@ export function install(battle) {
   }
 
   // ---- 2. 击杀: 坦克引擎 / 缩小引擎 (permanent stacks) and 罪恶快感 (20 SP)
-  if (has('jibian_tankeyinqing') || has('jibian_suoxiaoyinqing') || has('jibian_zuiegankuai')) {
+  if (has('jibian_suoxiaoyinqing') || has('jibian_zuiegankuai')) {
     battle.on('kill', (ctx) => {
       const killer = ctx && ctx.killer;
       const victim = ctx && ctx.victim;
       if (!killer || !victim || victim.side !== 'enemy' || killer.side !== 'ally') return;
       const pid = killer.ownerId;
-      const nT = count(pid, 'jibian_tankeyinqing');
       const nS = count(pid, 'jibian_suoxiaoyinqing');
       const nZ = count(pid, 'jibian_zuiegankuai');
       // "每击倒一名敌人永久提升血量1%" / "…技力恢复速度0.05/s": one stack per kill, on the KILLER (a summon's kill
       // is credited to the summon, which is what the card's 你的干员 covers — 召唤物 are the operator's own pieces).
-      for (let i = 0; i < nT; i++) stackBuff(battle, killer, P + 'jibian_tankeyinqing', { hpPct: 0.01 });
       for (let i = 0; i < nS; i++) stackBuff(battle, killer, P + 'jibian_suoxiaoyinqing', { spRecoveryFlat: 0.05 });
       if (nZ > 0 && killer.skill) for (let i = 0; i < nZ; i++) killer.skill.gainSp(20, 'jibian');
+    });
+  }
+
+  // 坦克引擎（owner 2026-10-26 改版）：我方干员获得特质「击杀 +1 层：体型 +5%、最大生命 +5%，可无限叠加；阵亡损失 65% 层数」。
+  //   层数按**单位**记（谁击杀谁叠），因此用 uid 作为 key；死亡时留 floor(层数×35%)。
+  if (has('jibian_tankeyinqing')) {
+    const KEY = P + 'jibian_tankeyinqing:layers';
+    const layers = new Map();     // uid → 层数
+    const keyOf = (u) => u.uid ?? u.id;
+    const owned = (u) => !!u && u.side === 'ally' && count(u.ownerId, 'jibian_tankeyinqing') > 0;
+    const apply = (u) => {
+      if (!owned(u)) return;
+      const n = layers.get(keyOf(u)) || 0;
+      try { battle.addBuff(u, { key: KEY, mods: { hpPct: 0.05 * n }, refresh: 'replace', persist: true, allowDead: true }); } catch { /* 不影响对局 */ }
+      const k = 1 + 0.05 * n;
+      if (Math.abs(k - (Number(u.visualScale) || 1)) > 1e-9) u.visualScale = k;
+    };
+    battle.on('battleStart', () => { for (const u of battle.allies()) apply(u); }, { priority: 12 });
+    battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
+    battle.on('kill', (ctx) => {
+      const k = ctx && ctx.killer;
+      if (!k || !owned(k)) return;
+      const id = keyOf(k);
+      layers.set(id, (layers.get(id) || 0) + 1);
+      apply(k);
+    });
+    battle.on('death', (ctx) => {
+      const u = ctx && ctx.unit;
+      if (!u || !owned(u)) return;
+      const id = keyOf(u);
+      const n = layers.get(id) || 0;
+      if (!(n > 0)) return;
+      layers.set(id, Math.floor(n * 0.35));   // 阵亡损失 65%
+      apply(u);
     });
   }
 

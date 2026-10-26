@@ -14,7 +14,7 @@ test('数据：两套池 + 传说 + 文案 + 图标', () => {
     const c = cfg.modes[mid].jibian.pool.find((x) => x.effectId === CARD);
     assert.ok(c, `${mid} 缺心之钢`);
     assert.equal(c.name, '心之钢');
-    assert.equal(c.rarity, 'legendary');
+    assert.equal(c.rarity, 'legend');
     assert.match(c.desc, /700/);
     assert.match(c.desc, /3%/);
     assert.match(c.desc, /30 秒/);
