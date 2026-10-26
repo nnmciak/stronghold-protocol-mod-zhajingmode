@@ -302,7 +302,7 @@ const setVisScalePart = (u, key, k) => {
     parts[key] = Number(k) || 1;
     let v = 1;
     for (const p of Object.values(parts)) v += (Number(p) || 1) - 1;
-    u.visualScale = Math.max(0.15, Math.round(v * 1000) / 1000);
+    u.visualScale = Math.max(0.8, Math.round(v * 1000) / 1000);   // 最小体型 0.8（owner 2026-10-26）
   } catch { /* 视觉失败不影响对局 */ }
 };
 

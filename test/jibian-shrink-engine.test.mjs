@@ -55,6 +55,14 @@ test('击杀叠层：体型 -4% / 技力恢复 +0.05；阵亡损失 65%', () => 
   assert.equal(h.b.errors.length, 0);
 });
 
+test('体型下限 0.8：叠到第 6 层也不再变小', () => {
+  const { h, u, victim } = setup();
+  for (let i = 0; i < 10; i++) h.b.emit('kill', { killer: u, victim });
+  console.log('10 层体型:', u.visualScale.toFixed(3));
+  assert.equal(u.visualScale, 0.8, '最小体型应为 0.8');
+  assert.ok(u.s.spRecovery > 1.4, '技力恢复仍继续叠加');
+});
+
 test('与坦克引擎共存：体型乘区相加（+5% −4% = +1%）', () => {
   const { h, u, victim } = setup([CARD, 'jibian_tankeyinqing']);
   h.b.emit('kill', { killer: u, victim });
