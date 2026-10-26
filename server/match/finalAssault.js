@@ -77,8 +77,11 @@ export function bossPoolHp(gd, bossId, aliveCount, opts = {}) {
   const baseHp = modeScale ? Number(modeScale.baseHp) : NaN;
   // ★ 2026-10-23（owner）：隐秘核心的 Boss 血量单独翻倍（默认 ×2，可用 mode.hiddenBossHpMul 调）。
   const hiddenMul = opts && opts.hidden ? Math.max(0, Number((gd && gd.mode && gd.mode.hiddenBossHpMul) ?? 2) || 2) : 1;
+  // ★ 2026-10-26（反馈：「敌方隐秘惊变改变血量后结算还是原血量」）：共享血池也必须吃敌方隐秘惊变的
+  //   Boss 血量修正（目前是「搞定他们的头儿」−50%），否则结算/血条都按原血量。
+  const ejMul = Array.isArray(opts && opts.enemyJibian) && opts.enemyJibian.includes('ejibian_gaodingtouer') ? 0.5 : 1;
   if (modeScale && modeScale.ladder && Number.isFinite(baseHp) && baseHp > 0) {
-    return Math.max(1, Math.round(bossLadderHp(baseHp, modeScale.ladder, aliveCount) * hiddenMul));
+    return Math.max(1, Math.round(bossLadderHp(baseHp, modeScale.ladder, aliveCount) * hiddenMul * ejMul));
   }
   const boss = gd.boss(bossId);
   const diff = gd.difficulty;
@@ -89,7 +92,7 @@ export function bossPoolHp(gd, bossId, aliveCount, opts = {}) {
   const modeMul = typeof gd.bossPoolHpMul === 'number' && gd.bossPoolHpMul > 0 ? gd.bossPoolHpMul : 1;
   const share = typeof gd.bossPoolShare === 'function' ? gd.bossPoolShare(aliveCount)
     : bossPoolShareOf(gd.mode && gd.mode.bossHpScale, gd.config && gd.config.bossHpScale, !!gd.isSolo, aliveCount);
-  return Math.max(1, Math.round(base * modeMul * share * tune * hiddenMul));
+  return Math.max(1, Math.round(base * modeMul * share * tune * hiddenMul * ejMul));
 }
 
 /**
