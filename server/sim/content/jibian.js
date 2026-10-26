@@ -329,6 +329,13 @@ export function installJibianBonds(battle, owned, playerId = null) {
     } catch { return []; }
   };
 
+  // 钢化你心（owner 2026-10-26）：我方所有干员生命值 +100%（最终乘算 hpMul ×2）
+  if (has('steel_heart')) {
+    const apply = (u) => { if (mine(u)) BOND_ATTR(battle, u, 'steel_heart', { hpMul: 2 }); };
+    battle.on('battleStart', () => { for (const u of allies()) apply(u); }, { priority: 20 });
+    battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
+  }
+
   // 现代最强：技能不需要技力、攻击力 +1000%、攻速 +360、攻击距离 +2
   if (has('modern_strongest')) {
     const apply = (u) => {
