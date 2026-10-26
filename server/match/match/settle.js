@@ -1,4 +1,4 @@
-﻿// server/match/match/settle.js — Match methods: SETTLE (the LP loss — a leaker's 联防 survivors —, stats, bounty coins,
+// server/match/match/settle.js — Match methods: SETTLE (the LP loss — a leaker's 联防 survivors —, stats, bounty coins,
 // the IN_BATTLE layer gains clamped by layerGainRoom, CHAR_DAMAGE tickers, eliminations, the 联防 outcome the SETTLE
 // view carries) and RESULT (finish: m.result to every human still here, onEnd).
 // Installed on Match.prototype by server/match/Match.js (a method container: never instantiated; `this` is the match).
@@ -34,7 +34,15 @@ export class MatchSettle {
             bounced: plan.notReentered ? (plan.notReentered.get(pid) || 0) : 0,
           };
         }
-        this.log.info?.(`[match ${this.roomCode}] R${this.round} 联防结算 uniteRan=${uniteRan} synthetic=${!!(uniteResult && uniteResult.synthetic)} ${JSON.stringify(detail)}`);
+        const helpers = Array.isArray(plan.helpers) ? plan.helpers.length : 0;
+        // ★ 2026-10-26：uniteRan=false 时把「为什么没开打」一起打出来 —— 下次「兜住却扣血」能直接定位
+        const why = uniteRan ? '' : ` 未开打原因{leakers:${plan.leakers.length},helpers:${helpers},`
+          + `result:${uniteResult ? 'obj' : 'null'},relayPlans:${Array.isArray(this.relayPlans) ? this.relayPlans.length : 0},`
+          + `phase1:${this._phase1Settle ? 1 : 0},fields:${(this.fields || []).filter((f) => f && f.kind === 'unite').length}}`;
+        this.log.info?.(`[match ${this.roomCode}] R${this.round} 联防结算 uniteRan=${uniteRan} synthetic=${!!(uniteResult && uniteResult.synthetic)} ${JSON.stringify(detail)}${why}`);
+        if (!uniteRan && helpers > 0) {
+          this.log.warn?.(`[match ${this.roomCode}] R${this.round} 联防异常：helpers=${helpers} 但 uniteRan=false（结果丢失？）`);
+        }
       }
     } catch { /* 诊断日志不影响结算 */ }
     // The 联防's outcome as data for the SETTLE view (m.public.uniteResult, views.js; GitHub #235, PR #112 by @Convey123):
