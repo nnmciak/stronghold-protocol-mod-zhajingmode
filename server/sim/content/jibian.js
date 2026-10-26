@@ -2058,10 +2058,10 @@ const HOOKS = {
   jibian_zhuiji: {
     onRoundWouldStart(ctx, ev) {
       if (!ev || Number(ev.round) !== 14) return;      // 卡面写的"第十三回合结束"= 即将进入第 14 回合
+      // ★ 2026-10-26（owner）：一次性但**不销毁** —— 卡保留在手上的惊变列表里，只是失效、不能再触发第二次。
+      if (ctx.jibianConsumed?.().has('jibian_zhuiji')) return;
       ev.round = 10;                                    // 改为进入第 10 回合整备阶段
-      const self = ctx.effects().find((e) => e.key === P + 'jibian_zhuiji');
-      if (self) ctx.removeEffect(self.id);              // 之后该惊变失效
-      ctx.markJibianConsumed?.('jibian_zhuiji');        // ★ 2026-10-26：一次性 —— 本局不再回到卡池
+      ctx.markJibianConsumed?.('jibian_zhuiji');        // 记入本局已消耗（也保证不会再抽出第二张）
       ctx.toast('追忆：回到第 10 回合', 'info');
     },
   },
