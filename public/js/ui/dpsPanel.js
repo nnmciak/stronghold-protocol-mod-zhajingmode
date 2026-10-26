@@ -18,7 +18,7 @@ import { useMemo } from '../../vendor/hooks.module.js';
 import { html } from './components.js';
 import { Img } from './gameComponents.js';
 import { data } from '../data.js';
-import { avatarUrl } from '../assets.js';
+import { avatarUrl, enemyIconUrl } from '../assets.js';
 import { t } from '../../../shared/i18n.js';
 
 /** 最多显示几行,多出来的收成 "+N"。一屏 10.8rem 高、一行约 .27rem,右下角十行放得下。 */
@@ -85,7 +85,7 @@ export function DpsPanel({ dmg, owner = null }) {
     <ul class="dpsbox__list">
       ${shown.map((r) => html`<li class="dpsbox__row" key=${r.id}>
         <${Img}
-          src=${avatarUrl(m, r.id)}
+          src=${avatarUrl(m, r.id) || enemyIconUrl(m, r.id)}
           class="dpsbox__ava"
           alt=""
           fallback=${html`<i class="dpsbox__ava dpsbox__ava--none"></i>`} />

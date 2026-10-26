@@ -523,7 +523,7 @@ export function install(battle) {
         for (const u of ops) { atk += Number(u.s && u.s.atk) || 0; hp += Number(u.s && u.s.maxHp) || 0; }
         if (!(atk > 0) || !(hp > 0)) continue;
         const share = 0.3;
-        const out = spawnYanyou(battle, pid, { atk: atk * share, hp: hp * share, count: n, atkMul: 1, dmgTakenMul: 1, limit: 9 });
+        const out = spawnYanyou(battle, pid, { atk: atk * share, hp: hp * share, count: n, atkMul: 1, dmgTakenMul: 1, limit: 9, spread: true });
         for (const y of out) y.mem.bondYan = true;
       }
     }, { priority: 6 });

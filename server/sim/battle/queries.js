@@ -292,9 +292,10 @@ export class BattleQueries {
    * @param {any} u 伤害来源单位(必须是我方干员)
    * @param {number} dealt 本次造成的伤害
    */
-  trackOpDmg(u, dealt) {
+  trackOpDmg(u, dealt, idOverride = null) {
     if (!(dealt > 0) || !u) return;
-    const id = (u.def && u.def.charId) || u.defId;
+    // ★ 2026-10-26：炎佑（召唤物）也进 DPS 面板 —— 用固定 id 合并所有炎佑的伤害
+    const id = idOverride || (u.def && u.def.charId) || u.defId;
     if (!id) return;
     const ownerId = u.ownerId ?? null;
     const key = `${ownerId ?? '-'}\u0000${id}`;

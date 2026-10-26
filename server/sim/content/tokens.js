@@ -1373,19 +1373,48 @@ function mapCharKeys(battle) {
  * never stood (community report of 2026-10-06 「Touch策略给的医疗干员会跟炎盟约的炎祐冲突，无法同时出场」).
  */
 function airTile(battle, playerId, taken) {
+  return airTilePick(battle, playerId, taken, null);
+}
+
+/**
+ * ★ 2026-10-26（owner 惊变「龙的传人」）：召唤多只时**分散**落点，而不是全部挤在中心附近。
+ * `chosen` 为已选的格子；依次挑「离已选点最远」的空格（同类地形优先），做出铺开效果。
+ */
+function airTileSpread(battle, playerId, taken, chosen) {
+  return airTilePick(battle, playerId, taken, chosen, true);
+}
+
+/**
+ * @param {Array<[number, number]>|null} chosen 已选点（分散模式）
+ * @param {boolean} forceSpread true = 第一只也按「离中心最近」挑（忽略地形优先级），之后按最远点铺开
+ */
+function airTilePick(battle, playerId, taken, chosen, forceSpread = false) {
   const R = battle.rect;
   const ps = battle.getPlayer(playerId);
   let c0 = R.c0, c1 = R.c1;
   if (battle.players.length > 1 && ps) { if (ps.half === 'R') c0 = Math.max(c0, 11); else c1 = Math.min(c1, 10); }
   const cr = (R.r0 + R.r1) / 2, cc = (c0 + c1) / 2;
   const held = mapCharKeys(battle);
+  const list = Array.isArray(chosen) ? chosen : [];
+  const spread = forceSpread || list.length > 0;
   let best = null, bs = null;
   for (let r = R.r0; r <= R.r1; r++) {
     for (let c = c0; c <= c1; c++) {
       if (taken.has(r * COLS + c) || held.has(r * COLS + c) || !tileFree(battle, r, c)) continue;
       const t = battle.grid.tile(r, c);
       const cls = t.build === 'NONE' && t.pass !== 'ALL' ? 0 : t.build === 'NONE' ? 1 : 2;
-      const s = [cls, hypot(r - cr, c - cc), r * COLS + c];
+      let s;
+      if (spread && list.length) {
+        let minD = Infinity;
+        for (const [rr, cc2] of list) minD = Math.min(minD, Math.hypot(r - rr, c - cc2));
+        // 分散：距离优先（越远越好），同距离再按地形/坐标定序
+        s = [-minD, cls, r * COLS + c];
+      } else if (spread) {
+        // 第一只：取离场地中心最近的空格（忽略地形优先级），给后续铺开留出四周
+        s = [hypot(r - cr, c - cc), cls, r * COLS + c];
+      } else {
+        s = [cls, hypot(r - cr, c - cc), r * COLS + c];
+      }
       let less = !bs;
       if (!less) for (let i = 0; i < 3; i++) { if (s[i] < bs[i] - 1e-9) { less = true; break; } if (s[i] > bs[i] + 1e-9) break; }
       if (less) { best = [r, c]; bs = s; }
@@ -1400,7 +1429,7 @@ function airTile(battle, playerId, taken) {
  * 自身攻击力、生命值增加召唤自身的玩家场地上的所有【炎】盟约干员攻击力、生命值的30%（最终加算）". atkMul (9 炎: ×1.5,
  * [ASSUMED] on the whole ATK) and dmgTakenMul (9 炎: 0.1) are applied as a persistent buff. Returns the spawned units.
  */
-export function spawnYanyou(battle, playerId, { atk, hp, atkMul = 1, dmgTakenMul = 1, count = 1, limit = null } = {}) {
+export function spawnYanyou(battle, playerId, { atk, hp, atkMul = 1, dmgTakenMul = 1, count = 1, limit = null, spread = false } = {}) {
   const rec = battle.data.rawToken?.(TOKEN_IDS.yanyou) ?? battle.data.rawEnemy?.(TOKEN_IDS.yanyou) ?? null;
   if (!rec) return [];
   const def = yanyouFallbackDef(battle);
@@ -1409,15 +1438,18 @@ export function spawnYanyou(battle, playerId, { atk, hp, atkMul = 1, dmgTakenMul
   const n = Math.max(0, Math.min(Math.floor(num(count, 1)), cap));
   const out = [];
   const taken = new Set();
+  const chosen = [];
   const base = rec.stats || {};
   const stats = {};
   if (num(atk, -1) >= 0) stats.atk = num(base.atk, 0) + num(atk, 0);
   if (num(hp, 0) > 0) stats.maxHp = num(base.maxHp, 0) + num(hp, 1);
   const ps = battle.getPlayer(playerId);
   for (let i = 0; i < n; i++) {
-    const tile = airTile(battle, playerId, taken);
+    // ★ 2026-10-26：龙的传人一次召很多只 → 分散落点；普通炎盟约仍按原逻辑靠近中心
+    const tile = spread ? airTileSpread(battle, playerId, taken, chosen) : airTile(battle, playerId, taken);
     if (!tile) break;
     taken.add(tile[0] * COLS + tile[1]);
+    chosen.push(tile);
     const u = battle.spawnToken(playerId, TOKEN_IDS.yanyou, tile[0], tile[1], { ...(def ? { def } : {}), stats, dir: ps ? ps.dir : 'RIGHT' });
     if (!u) continue;
     const mods = {};

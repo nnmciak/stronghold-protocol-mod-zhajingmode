@@ -334,6 +334,8 @@ export function applyHpLoss(battle, source, target, amount, dmg) {
     if (source.side === 'ally') {
       // DPS 面板: 每名干员累计(battle.dmgByOp → b.snap.dmg),按干员而不是按战场单位,所以阵亡后伤害仍在
       if (source.kind === 'op') battle.trackOpDmg(source, dealt);
+      // ★ 2026-10-26（owner）：炎佑是召唤物，但也要算进 DPS 面板（合并成一行，用炎佑的图标）
+      else if (source.kind === 'token' && source.mem && source.mem.bondYan) battle.trackOpDmg(source, dealt, 'enemy_9012_acloon');
       if (source.ownerId != null) { const pp = battle._pp(source.ownerId); if (pp) pp.damageDealt += dealt; }
     }
   }
