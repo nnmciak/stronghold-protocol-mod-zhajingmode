@@ -293,6 +293,19 @@ const GALAXY_TRIO = Object.freeze([
 //   数据见 data/jibianBonds.json；判定见 ./jibianBonds.js。prep 侧的效果在
 //   server/match/effectsMeta.js（层数加成 / 免单 / 发卡）里按同一个 activeBonds() 结果实现。
 // =====================================================================================
+/** 纯视觉体型：多个效果各写一份乘区（1 = 不变），相加后落到 u.visualScale。 */
+const setVisScalePart = (u, key, k) => {
+  try {
+    if (!u) return;
+    const mem = (u.mem = u.mem || {});
+    const parts = (mem.visScaleParts = mem.visScaleParts || {});
+    parts[key] = Number(k) || 1;
+    let v = 1;
+    for (const p of Object.values(parts)) v += (Number(p) || 1) - 1;
+    u.visualScale = Math.max(0.15, Math.round(v * 1000) / 1000);
+  } catch { /* 视觉失败不影响对局 */ }
+};
+
 const BOND_ATTR = (battle, unit, key, mods) => {
   try { battle.addBuff(unit, { key: `jibianbond:${key}`, mods }); } catch { /* 出错不影响对局 */ }
 };
@@ -587,8 +600,7 @@ export function install(battle) {
     const refreshScale = (u) => {
       if (!u) return;
       const hp = Number(u.s && u.s.maxHp) || 0;
-      const k = heartsteelScale(hp);
-      if (Math.abs(k - (Number(u.visualScale) || 1)) > 1e-9) u.visualScale = k;
+      setVisScalePart(u, 'heartsteel', heartsteelScale(hp));
     };
     const applyHp = (u) => {
       const n = grow.get(u.uid ?? u.id) || 0;
@@ -956,11 +968,9 @@ export function install(battle) {
       const victim = ctx && ctx.victim;
       if (!killer || !victim || victim.side !== 'enemy' || killer.side !== 'ally') return;
       const pid = killer.ownerId;
-      const nS = count(pid, 'jibian_suoxiaoyinqing');
       const nZ = count(pid, 'jibian_zuiegankuai');
       // "每击倒一名敌人永久提升血量1%" / "…技力恢复速度0.05/s": one stack per kill, on the KILLER (a summon's kill
       // is credited to the summon, which is what the card's 你的干员 covers — 召唤物 are the operator's own pieces).
-      for (let i = 0; i < nS; i++) stackBuff(battle, killer, P + 'jibian_suoxiaoyinqing', { spRecoveryFlat: 0.05 });
       if (nZ > 0 && killer.skill) for (let i = 0; i < nZ; i++) killer.skill.gainSp(20, 'jibian');
     });
   }
@@ -976,8 +986,7 @@ export function install(battle) {
       if (!owned(u)) return;
       const n = layers.get(keyOf(u)) || 0;
       try { battle.addBuff(u, { key: KEY, mods: { hpPct: 0.05 * n }, refresh: 'replace', persist: true, allowDead: true }); } catch { /* 不影响对局 */ }
-      const k = 1 + 0.05 * n;
-      if (Math.abs(k - (Number(u.visualScale) || 1)) > 1e-9) u.visualScale = k;
+      setVisScalePart(u, 'tank', 1 + 0.05 * n);
     };
     battle.on('battleStart', () => { for (const u of battle.allies()) apply(u); }, { priority: 12 });
     battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
@@ -995,6 +1004,38 @@ export function install(battle) {
       const n = layers.get(id) || 0;
       if (!(n > 0)) return;
       layers.set(id, Math.floor(n * 0.35));   // 阵亡损失 65%
+      apply(u);
+    });
+  }
+
+  // 缩小引擎（owner 2026-10-26 改版）：击杀 +1 层：体型 -4%、技力恢复 +0.05/s，无限叠加；阵亡损失 65% 层数。
+  if (has('jibian_suoxiaoyinqing')) {
+    const KEY = P + 'jibian_suoxiaoyinqing:layers';
+    const layers = new Map();
+    const keyOf = (u) => u.uid ?? u.id;
+    const owned = (u) => !!u && u.side === 'ally' && count(u.ownerId, 'jibian_suoxiaoyinqing') > 0;
+    const apply = (u) => {
+      if (!owned(u)) return;
+      const n = layers.get(keyOf(u)) || 0;
+      try { battle.addBuff(u, { key: KEY, mods: { spRecoveryFlat: 0.05 * n }, refresh: 'replace', persist: true, allowDead: true }); } catch { /* 不影响对局 */ }
+      setVisScalePart(u, 'shrink', 1 - 0.04 * n);
+    };
+    battle.on('battleStart', () => { for (const u of battle.allies()) apply(u); }, { priority: 12 });
+    battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
+    battle.on('kill', (ctx) => {
+      const k = ctx && ctx.killer;
+      if (!k || !owned(k)) return;
+      const id = keyOf(k);
+      layers.set(id, (layers.get(id) || 0) + 1);
+      apply(k);
+    });
+    battle.on('death', (ctx) => {
+      const u = ctx && ctx.unit;
+      if (!u || !owned(u)) return;
+      const id = keyOf(u);
+      const n = layers.get(id) || 0;
+      if (!(n > 0)) return;
+      layers.set(id, Math.floor(n * 0.35));
       apply(u);
     });
   }
