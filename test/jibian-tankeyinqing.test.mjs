@@ -14,6 +14,7 @@ test('数据：两套池 + 新文案', () => {
     assert.match(c.desc, /5%/);
     assert.match(c.desc, /65%/);
     assert.match(c.desc, /无限叠加/);
+    assert.equal(c.flavor, undefined, '不需要小字');
   }
 });
 
