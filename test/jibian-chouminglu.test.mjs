@@ -24,7 +24,7 @@ test('数据：两套池 + 稀有度 + 图标 + 羁绊成员', () => {
   const bonds = JSON.parse(fs.readFileSync(new URL('../data/jibianBonds.json', import.meta.url), 'utf8'));
   const fan = bonds.bonds.find((b) => b.id === 'roguelike_fan');
   assert.ok(fan.members.includes(CARD), '应属于集成战略爱好者');
-  assert.ok(bondHintsFor(CARD, new Set([CARD, 'jibian_zhuiji'])).some((h) => h.name === '集成战略爱好者' && h.have === 2));
+  assert.ok(bondHintsFor(CARD, new Set([CARD, 'jibian_zhuiji', 'jibian_banteng'])).some((h) => h.name === '集成战略爱好者' && h.have === 3));
 });
 
 const setup = (effects) => {
