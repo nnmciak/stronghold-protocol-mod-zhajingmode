@@ -57,6 +57,10 @@ export function unitInfo(u) {
     // view built mid-battle (fieldMeta — a watched teammate's field, 联防 observers, a reconnect) starts on that clip set
     form: typeof u.form === 'string' ? u.form : undefined,
     uid: u.uid ?? undefined,
+    // ★ 2026-10-26（owner）：纯视觉缩放（不改任何数值/判定）。效果模块写 `u.visualScale`，这里原样下发；
+    //   1 / 未设置时不发键，绝大多数单位不增加流量。
+    scale: Number.isFinite(Number(u.visualScale)) && Number(u.visualScale) > 0 && Number(u.visualScale) !== 1
+      ? Math.round(Number(u.visualScale) * 100) / 100 : undefined,
     // DESIGN §16: the equipped skill's index (the renderer / audio pick that skill's Spine clip and sound)
     skillIndex: u.side === 'ally' && Number.isInteger(d.skill?.index) ? d.skill.index : undefined,
     // DESIGN §16: an elite ally's equipped module (uniEquipId | 'none'; display only — a teammate's unit in a shared

@@ -520,7 +520,16 @@ export class UnitView {
     this.isBoss = !!info.boss;
     // enemies: the official prefab's size factor (1 for operators, summons and enemies at the standard size)
     const def = this.isEnemy && ctx.lookupDef ? ctx.lookupDef(info) : null;
+    // ★ 2026-10-26（owner）：纯视觉缩放倍率（服务端 unit.scale）；不参与任何数值/判定。
+    const visK = Number(info.scale);
+    this.visScale = Number.isFinite(visK) && visK > 0 ? visK : 1;
+    // 本地预览用：?opscale=1.3 让本客户端把所有干员模型放大/缩小（纯视觉，仅自己视角；服务端数据优先）
+    try {
+      const q = Number(new URLSearchParams(location.search).get('opscale'));
+      if (Number.isFinite(q) && q > 0 && info.side === 'ally') this.visScale = q;
+    } catch { /* 非浏览器环境 */ }
     this.modelK = this.isEnemy ? enemyModelScale(def) : 1;
+    this.modelK *= this.visScale;
     // a fast enemy walks on its model's own Run cycle when it has one (PR #275 by @xcdoge: 猎狗pro, moveSpeed 1.9, Run_Loop
     // 0.53 s next to Move_Loop 0.80 s; also 深池侦察犬 1.7). [ASSUMED] the threshold: faster than the standard 1
     this.moveFast = this.isEnemy && Number(def?.stats?.moveSpeed) > 1;
@@ -1301,7 +1310,7 @@ export class UnitView {
     placeOnGround(this.ctx, this.shadow, this.ctx.layers.shadow, this.y, shz);
     const sh = cam.project(this.x, this.y, shz, SH_P);
     this.shadow.position.set(sh.x, sh.y);
-    const shw = s * (this.isBoss ? 1.6 : 0.95) / this.shadow.texture.width;
+    const shw = s * (this.isBoss ? 1.6 : 0.95) * this.visScale / this.shadow.texture.width;
     this.shadow.scale.set(shw, shw * (this.shadow.texture === shadowTexture() ? 1 : 1.05));
     this.shadow.alpha = 0.5 * alpha * (this.lift > 0 ? 0.6 : 1);
 
