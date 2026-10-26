@@ -160,6 +160,9 @@ export class PlayerItems {
    *   非叠加物品（绝大多数）完全不受影响：它们各自占一格，行为与以前逐字节相同。
    */
   _stackMaxOf(rec) {
+    // ★ 2026-10-26（反馈：「非炸惊也装备了三个装备」）：叠加/同系列共格是**炸惊专属**规则，
+    //   普通难度必须回到「每格一件、最多 equipPerChess 件」，否则 3 把同系列锤会挤进 1 格。
+    if (!this.gd.zhajing) return 0;
     const n = Number(rec && rec.stackMax);
     return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
   }
