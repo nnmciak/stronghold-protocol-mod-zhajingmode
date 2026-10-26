@@ -1727,6 +1727,11 @@ export async function createFieldView(host, options = {}) {
       case 'status': { const v = views.get(e[1]); if (v) { v.onStatus?.(e[2], !!e[3]); wiring.status(v, e[2], !!e[3]); } break; }
       case 'fx': {
         if (e[1] === 'mujicaFever') { mujicaHud.update(e[4]); break; }
+        if (e[1] === 'heartsteel') {   // 惊变「心之钢」触发音（纯音效，无粒子）
+          const d = e[4] && typeof e[4] === 'object' ? e[4] : {};
+          try { audio.battle('heartsteel', { volume: 0.85, unitKey: `hs:${d.src ?? d.id ?? 0}` }); } catch { /* 音效不影响战斗 */ }
+          break;
+        }
         if (e[1] === 'mujicaSound') break;
         if (e[4] && typeof e[4] === 'object' && e[4].consumed && e[4].id != null) {
           consumedIds.add(e[4].id);

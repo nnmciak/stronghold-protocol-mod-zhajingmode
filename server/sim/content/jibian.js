@@ -608,6 +608,7 @@ export function install(battle) {
       try { battle.dealDamage(src, t, { amount, type: 'phys', canDodge: false, tags: ['jibian:xinzhigang'] }); }
       catch { /* 目标已离场等 */ }
       finally { if (battle.mem) battle.mem.hsBusy = false; }
+      try { battle.fx('heartsteel', { x: src.x, y: src.y, id: src.id, src: src.id }); } catch { /* 音效事件失败不影响伤害 */ }
       const gain = amount * GAIN_RATIO;
       const k = src.uid ?? src.id;
       grow.set(k, (grow.get(k) || 0) + gain);

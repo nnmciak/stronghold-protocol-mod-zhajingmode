@@ -48,6 +48,8 @@ test('攻击附加 700+3%最大生命，并按 10% 增长永久最大生命；30
   const amount = 700 + hp0 * 0.03;
   const ehp0 = e.hp;
   h.b.emit('hit', { dmg: { tags: [] }, source: u, target: e });
+  const evs = h.b.drainEvents();
+  assert.ok(evs.some((x) => Array.isArray(x) && x[0] === 'fx' && x[1] === 'heartsteel'), '触发时应发 heartsteel 音效事件');
   const dealt = ehp0 - e.hp;
   console.log('最大生命:', hp0, '| 附加伤害:', amount.toFixed(1), '| 实际掉血:', dealt.toFixed(1), '| 新最大生命:', u.s.maxHp.toFixed(1));
   assert.ok(dealt > amount * 0.9, `应造成约 ${amount.toFixed(0)} 伤害，实际 ${dealt.toFixed(1)}`);
