@@ -567,6 +567,8 @@ export class AudioManager {
     this.wantBgm = null;      // desired key (kept while locked)
     this.bgm = null;          // { key, loopUrl, nodes: [{src, gain}], gain }
     this.bgmToken = 0;
+    this.greatSeal = null;    // 伟大封印分段音乐 { src, gain, idx, token }
+    this.gsToken = 0;
     this.units = new Map();   // battle unit id → defId
     this.lastAttacker = new Map(); // target id → { def, at } of the hostile attack last aimed at it (its impact sound)
     this.consumed = new Set();     // summons used up by their own effect (香槟炸弹 exploded): no death sound
@@ -818,11 +820,64 @@ export class AudioManager {
   // ---- BGM ------------------------------------------------------------------------------------------------
 
   /**
+   * 伟大封印：把 9 段音频按顺序播放，最后一段结束后回到第一段（直到下一个整备阶段 stopGreatSeal）。
+   * 只在触发时加载第 1 段；后续段落边播边预加载。
+   */
+  playGreatSeal() {
+    try {
+      if (!this.ctx) return;
+      const list = this.getManifest()?.audio?.bgm?.greatseal?.segments;
+      if (!Array.isArray(list) || !list.length) return;
+      this.stopGreatSeal();
+      this._fadeOutBgm();
+      const token = ++this.gsToken;
+      const gain = this.ctx.createGain();
+      gain.connect(this.bgmGain);
+      const t0 = this.ctx.currentTime + 0.05;
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(1, t0 + FADE_S);
+      const state = { token, list, gain, src: null };
+      this.greatSeal = state;
+      const play = async (i) => {
+        let buf = null;
+        try { buf = await this._buffer(list[i]); } catch { buf = null; }
+        if (token !== this.gsToken || !buf || !this.ctx) return;
+        const src = this.ctx.createBufferSource();
+        src.buffer = buf;
+        src.connect(gain);
+        src.start();
+        state.src = src;
+        try { this._buffer(list[(i + 1) % list.length]); } catch { /* prefetch only */ }
+        src.onended = () => { if (token === this.gsToken) play((i + 1) % list.length); };
+      };
+      play(0);
+    } catch { /* 音乐不影响战斗 */ }
+  }
+
+  stopGreatSeal() {
+    const s = this.greatSeal;
+    this.greatSeal = null;
+    this.gsToken++;
+    if (!s) return;
+    try {
+      if (s.src) { s.src.onended = null; try { s.src.stop(); } catch { /* already stopped */ } }
+      if (s.gain && this.ctx) {
+        const t = this.ctx.currentTime;
+        s.gain.gain.cancelScheduledValues(t);
+        s.gain.gain.setValueAtTime(s.gain.gain.value, t);
+        s.gain.gain.linearRampToValueAtTime(0, t + 0.25);
+        setTimeout(() => { try { s.gain.disconnect(); } catch { /* ignore */ } }, 400);
+      }
+    } catch { /* ignore */ }
+  }
+
+  /**
    * Switch BGM (null stops). Same loop URL ⇒ no restart.
    * @param {string|null} key see bgmKeyFor
    */
   playBgm(key) {
     try {
+      if (this.greatSeal) this.stopGreatSeal();
       this.bgmKey = key;   // the LOGICAL key: setVolumes re-plays it when 司凤版大厅BGM is toggled
       // ★ 2026-10-25：自定义大厅音乐（ui/lobbyMusic.js）接管时，默认大厅 BGM 必须让位 ——
       //   之前这个钩子只被 lobbyMusic 挂上、audio 从没读过，于是两首同时响（「自定义音乐和大厅音乐重合」）。
@@ -1524,6 +1579,7 @@ export function installAudio(deps) {
             // 下一个 PREP（或对局结束时）才交还 BGM；SETTLE / 战斗结束暂停期间继续循环
             if (pub && pub.phase !== 'PREP' && pub.phase !== 'RESULT' && pub.phase !== 'LOBBY') return;
             audio.bgmHold = null;
+            audio.stopGreatSeal();
           }
           // 开战 BGM: the round's own track out of bgm.combatAlts (骑士之日 / 无畏者 are fixed per round, not drawn),
           // so every client of a room hears the same one, a mid-fight re-render (or a teammate view) never switches,
