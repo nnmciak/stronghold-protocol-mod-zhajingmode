@@ -554,6 +554,7 @@ export class AudioManager {
      */
     this.bossRainlove = 'off';
     this.bgmKey = null;       // the last LOGICAL key playBgm was asked for (so a settings flip can re-resolve it)
+    this.bgmHold = null;      // 伟大封印处决音乐：循环到下一个 PREP 再交还给阶段 BGM
     this.buffers = new Map(); // url → Promise<AudioBuffer|null> (insertion order = LRU)
     this.bufBytes = new Map(); // url → decoded PCM bytes (the byte budget of the LRU, see _buffer)
     this.warned = new Set();
@@ -1518,6 +1519,12 @@ export function installAudio(deps) {
       const sync = (s) => {
         try {
           const pub = s.match?.public ?? null;
+          // 伟大封印处决音乐：从处决后一直循环，直到进入下一个 PREP 才交还给阶段 BGM
+          if (audio.bgmHold) {
+            // 下一个 PREP（或对局结束时）才交还 BGM；SETTLE / 战斗结束暂停期间继续循环
+            if (pub && pub.phase !== 'PREP' && pub.phase !== 'RESULT' && pub.phase !== 'LOBBY') return;
+            audio.bgmHold = null;
+          }
           // 开战 BGM: the round's own track out of bgm.combatAlts (骑士之日 / 无畏者 are fixed per round, not drawn),
           // so every client of a room hears the same one, a mid-fight re-render (or a teammate view) never switches,
           // and the next round moves on by the table. 联防 shares its round ⇒ same key ⇒ the loop keeps playing.

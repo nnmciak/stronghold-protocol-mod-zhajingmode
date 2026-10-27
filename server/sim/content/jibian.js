@@ -1333,6 +1333,8 @@ export function install(battle) {
         const amount = (Number(top.hp) || Number(top.s.maxHp) || 0) + 1e6;
         battle.dealDamage(u, top, battle.makeDamage({ amount, type: 'true', canDodge: false, tags: ['jibian', 'greatseal'] }));
       } catch { /* 目标已死：忽略 */ }
+      // 处决表现：客户端收到后循环播放伟大封印音乐，直到下一个整备阶段
+      try { battle.fx('greatseal', { x: top.x, y: top.y, id: top.id, playerId: u.ownerId }); } catch { /* 不影响处决 */ }
       // 本整备期不能再部署结城理：把标记写到玩家状态上（整备期部署时读它）
       try {
         const ps = (battle.players || []).find((p) => p && p.playerId === u.ownerId);

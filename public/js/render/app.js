@@ -1732,6 +1732,10 @@ export async function createFieldView(host, options = {}) {
           try { audio.battle('heartsteel', { volume: 0.85, unitKey: `hs:${d.src ?? d.id ?? 0}` }); } catch { /* 音效不影响战斗 */ }
           break;
         }
+        if (e[1] === 'greatseal') {   // 惊变「伟大封印」处决：循环音乐，直到下一个整备阶段
+          try { audio.playBgm('greatseal'); audio.bgmHold = 'greatseal'; } catch { /* 音乐不影响战斗 */ }
+          break;
+        }
         if (e[1] === 'mujicaSound') break;
         if (e[4] && typeof e[4] === 'object' && e[4].consumed && e[4].id != null) {
           consumedIds.add(e[4].id);
