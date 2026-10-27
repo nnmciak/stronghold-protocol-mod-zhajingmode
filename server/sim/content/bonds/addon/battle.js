@@ -593,7 +593,16 @@ export function install(battle) {
       if (u.alive || u.removed || u.mem[ID.indom] === battle.time) return;
       if (banked || (st && battle.rng() < prob(bb, L(battle, st, ID.indom)))) {
         u.mem[ID.indom] = battle.time;
-        if (battle.redeploy(u, { free: true })) fxOn(battle, 'revive', u, 'bond:indomShip', 'redeploy');
+        // ★ 2026-10-27（反馈：「触发不屈会扣部署费用」）：不屈的再部署是免费的，记录 DP 前后值；
+        //   若 DP 真的减少，说明是 deploy 钩子里的其他效果扣的，而不是 redeploy(free)。
+        const dp0 = u.ownerId != null ? (battle.getPlayer(u.ownerId)?.dp ?? null) : null;
+        const ok = battle.redeploy(u, { free: true });
+        const dp1 = u.ownerId != null ? (battle.getPlayer(u.ownerId)?.dp ?? null) : null;
+        if (ok) {
+          battle.log?.(`[indom] ${u.defId || u.id} pid=${u.ownerId} free redeploy dp ${dp0} -> ${dp1}`);
+          if (dp0 != null && dp1 != null && dp1 < dp0 - 1e-9) battle.log?.(`[indom][WARN] 不屈免费部署却扣了 DP：${dp0} -> ${dp1}`);
+          fxOn(battle, 'revive', u, 'bond:indomShip', 'redeploy');
+        }
       }
     }, { priority: 10 });
     battle.on('dollSwap', ({ unit: u }) => {
