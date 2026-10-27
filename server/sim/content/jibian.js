@@ -355,10 +355,13 @@ export function installJibianBonds(battle, owned, playerId = null) {
     const apply = (u) => {
       if (!mine(u)) return;
       if (u.skill && !u.skill.noSkill) u.skill.spCostMul = 0;
-      BOND_ATTR(battle, u, 'modern', { atkPct: 10, attackSpeed: 360, range: 2 });
+      // ★ 2026-10-28：键名必须是 buffs 的 `aspd` / `rangeExtend`（原来写成 attackSpeed / range，
+      //   聚合时被静默忽略 —— 玩家反馈「攻速、攻击距离没生效」）。优先级 -100：晚于六眼（10）执行，
+      //   否则六眼的 spCostMul=0.1 会把「不再需要技力」覆盖回去。
+      BOND_ATTR(battle, u, 'modern', { atkPct: 10, aspd: 360, rangeExtend: 2 });
     };
-    battle.on('battleStart', () => { for (const u of allies()) apply(u); }, { priority: 20 });
-    battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
+    battle.on('battleStart', () => { for (const u of allies()) apply(u); }, { priority: -100 });
+    battle.on('deploy', (ctx) => apply(ctx && ctx.unit), { priority: -100 });
   }
 
   // 重振荣光：卡西米尔干员 攻击力 +100%（二档翻倍）、攻击距离 +1
