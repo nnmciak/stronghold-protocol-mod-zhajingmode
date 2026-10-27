@@ -247,6 +247,7 @@ export function makeBattle(opts = {}) {
     units: (opts.units ?? []).map((u, i) => ({ uid: u.uid ?? i + 1, kind: u.kind ?? 'chess', ...diyEntry(u), ...(u.standIn ? { standIn: true } : null) })),
     bonds: opts.bonds ?? {}, bandId: opts.bandId ?? null, playerEffects: opts.playerEffects ?? [],
     forge: opts.forge ?? null,
+    greatSealUsed: opts.greatSealUsed ?? false,
     shopLevel: Number.isInteger(opts.shopLevel) ? opts.shopLevel : 1,
   }];
   const hookNames = opts.hooks ?? ALL_HOOKS;

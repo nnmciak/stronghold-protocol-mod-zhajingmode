@@ -150,6 +150,7 @@ export class MatchCombat {
         if (ps && ban && ban.playerId === pid) {
           const round = Number(ban.round) || 0;
           try {
+            ps.greatSealUsed = true; // 整场比赛只触发一次
             for (const piece of ps.board.values()) {
               if (piece && String(piece.chessId || piece.id).startsWith('chess_zj_60_5')) piece.greatSealBanRound = round;
             }

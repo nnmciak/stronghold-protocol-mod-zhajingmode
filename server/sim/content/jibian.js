@@ -1317,6 +1317,9 @@ export function install(battle) {
       if (!cid.startsWith('chess_zj_60_5')) return;
       // ★ 2026-10-28：按 owner 检查两张卡（原来用全局 has，队友的卡也能替自己触发）
       if (!(count(u.ownerId, 'jibian_sanyuewuri') > 0 && count(u.ownerId, 'jibian_zonggongji') > 0)) return;
+      // ★ 2026-10-28：整局（整场比赛）只触发一次 —— 上一次战斗的标记随 battleInput 带进来
+      const simP = typeof battle.getPlayer === 'function' ? battle.getPlayer(u.ownerId) : null;
+      if (simP && simP.input && simP.input.greatSealUsed) return;
       // 一局一次：Battle 上没有 mem（旧代码读 battle.mem 永远 undefined），用 Battle 自带字段
       if (battle.__greatSealUsed) return;
       battle.__greatSealUsed = true;

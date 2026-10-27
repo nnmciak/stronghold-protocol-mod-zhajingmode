@@ -309,6 +309,8 @@ export class PlayerRound {
       // ★ 2026-10-25：策略「山岸风花·神通法」按「调度中心等级」加层 —— 战斗侧拿不到 match 的 shop，
       //   所以把等级随参战数据一起下发（服务端 / 客户端模拟都用这一份输入）。
       shopLevel: this.shop && Number.isInteger(this.shop.level) ? this.shop.level : 1,
+      // 伟大封印：整场比赛只能触发一次，跨战斗带到下一次输入
+      greatSealUsed: !!this.greatSealUsed,
       bandId: this.bandId,
       playerEffects: this.effects.filter((e) => e.battle !== false).map((e) => ({
         id: e.id, key: e.key ?? null, source: e.iconKind ?? null, params: e.params ?? null, counter: e.counter ?? null, data: e.data ?? null,

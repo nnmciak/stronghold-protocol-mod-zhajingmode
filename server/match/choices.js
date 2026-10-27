@@ -650,8 +650,8 @@ function jibianGrantForBond(m, ps, before) {
           // ★ 2026-10-23（owner）：「羁绊之力」属于所有羁绊，但不能被这张羁绊的奖励抽出来
           //   （否则它自己又会给所有羁绊 +1 人，滚雪球）。
           const pool = a.def.members.filter((id) => id !== 'jibian_jibangzhili' && !owned.has(id));
-          const tierIdx = a.def.tiers.indexOf(a.tier) + 1;   // 1 或 2
-          for (let k = 0; k < Math.max(1, tierIdx) && pool.length; k++) {
+          // ★ 2026-10-28（owner）：二档（6 张）也只给一张，不是两张
+          for (let k = 0; k < 1 && pool.length; k++) {
             const pick = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
             // ★ 2026-10-22（owner）：带上卡面数据（name/desc/rarity/flavor）。
             //   原来只传 id，effectsView 的兜底 `name: e.name || e.id` 会把内部 id（如 jibian_xxx#4）

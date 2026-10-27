@@ -3,13 +3,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { makeBattle, enemyRec } from './helpers/battleHarness.js';
 
-const setup = ({ chessId, effects, enemyHp = 1000, enemyDef = 0 }) => {
+const setup = ({ chessId, effects, enemyHp = 1000, enemyDef = 0, greatSealUsed = false }) => {
   const h = makeBattle({
     modeId: 'mode_single_zhajing',
     units: [{ chessId, row: 9, col: 4 }],
     enemies: [{ key: 'dummy', time: 0, route: { start: [9, 5], end: [9, 5], checkpoints: [], motion: 'WALK' } }],
     defs: { enemies: { dummy: enemyRec({ key: 'dummy', hp: enemyHp, atk: 0, def: enemyDef, res: 0, speed: 0 }) } },
     playerEffects: effects.map((key) => ({ key: `jibian:${key}` })),
+    greatSealUsed,
     autoFinish: false, timeLimit: 8,
   });
   h.step(1);
@@ -39,4 +40,13 @@ test('伟大封印：结城理死亡处决血量最高敌人，一局一次', ()
   assert.ok(e.alive === false || e.hp <= 0, '血量最高的敌人应被处决');
   const res = h.b.result();
   assert.ok(res.greatSealBan && res.greatSealBan.playerId === 'p1', '战报应带伟大封印禁部署标记');
+});
+
+test('伟大封印：整局已触发过时不再触发', () => {
+  const h = setup({ chessId: 'chess_zj_60_5_a', effects: ['jibian_sanyuewuri', 'jibian_zonggongji'], enemyHp: 12345, greatSealUsed: true });
+  const u = h.b.allyUnits.find((x) => x.kind === 'op' && String(x.chessId || x.defId).startsWith('chess_zj_60_5'));
+  const e = h.b.enemies.find((x) => x.alive !== false && x.s);
+  h.b.kill(u, null);
+  assert.equal(h.b.__greatSealUsed, undefined, '整局已用过不应再触发');
+  assert.ok(e.alive !== false && e.hp > 0, '敌人不应被处决');
 });

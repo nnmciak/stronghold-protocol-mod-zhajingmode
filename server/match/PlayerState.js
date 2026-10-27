@@ -218,6 +218,8 @@ export class PlayerState {
     this._tempDue = new Map();
     /** @type {Map<string, any>} 'r,c' → piece */
     this.board = new Map();
+    /** 伟大封印：整场比赛只触发一次（跨战斗保留） */
+    this.greatSealUsed = false;
     /** persistent bond layers */
     this.layers = {};
     /** computed bond states */
