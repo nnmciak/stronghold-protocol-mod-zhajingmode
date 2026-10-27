@@ -145,6 +145,20 @@ export class MatchCombat {
         this.lastResults.set(pid, pp || { killed: 0, total: 0, leaked: [], perfect: true, layerGains: {}, coins: 0, damageDealt: 0, unitsEnd: [], unitStats: [] });
         // the views show the layers the battle reached until settle() makes them persistent (DESIGN §20.15)
         const ps = this.players.get(pid);
+        // 伟大封印：本场结城理阵亡 → 本整备期这块棋子不能再上场
+        const ban = res && res.greatSealBan;
+        if (ps && ban && ban.playerId === pid) {
+          const round = Number(ban.round) || 0;
+          try {
+            for (const piece of ps.board.values()) {
+              if (piece && String(piece.chessId || piece.id).startsWith('chess_zj_60_5')) piece.greatSealBanRound = round;
+            }
+            for (const piece of ps.hand) {
+              if (piece && String(piece.chessId || piece.id).startsWith('chess_zj_60_5')) piece.greatSealBanRound = round;
+            }
+            ps.dirty();
+          } catch { /* 标记失败不影响结算 */ }
+        }
         const gains = pp && pp.layerGains && typeof pp.layerGains === 'object' ? pp.layerGains : null;
         if (ps && gains && Object.keys(gains).length) { ps.pendingLayerGains = { ...gains }; ps.dirty(); }
       }

@@ -241,6 +241,8 @@ export class BattleLifecycle {
     // ★「异戒神将」(content/ejibian.js)：本场有敌人把伤害减免叠满 90% —— 随战报交给 Match，
     //   由它在 SETTLE 前播报一次（「注意！有敌人适应了你的攻击」+ 专属音频）。
     if (this.yijieAdapted) res.adapted = true;
+    // 伟大封印：本场结城理阵亡的回合，交给 Match 在本整备期禁止再部署
+    if (this.__greatSealBan) res.greatSealBan = this.__greatSealBan;
     return res;
   }
 

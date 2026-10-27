@@ -37,4 +37,6 @@ test('伟大封印：结城理死亡处决血量最高敌人，一局一次', ()
   console.log('结城理死亡后敌人 hp:', e.hp, 'alive:', e.alive, 'greatSealUsed:', h.b.__greatSealUsed);
   assert.equal(h.b.__greatSealUsed, true);
   assert.ok(e.alive === false || e.hp <= 0, '血量最高的敌人应被处决');
+  const res = h.b.result();
+  assert.ok(res.greatSealBan && res.greatSealBan.playerId === 'p1', '战报应带伟大封印禁部署标记');
 });

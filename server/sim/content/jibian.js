@@ -1320,6 +1320,7 @@ export function install(battle) {
       // 一局一次：Battle 上没有 mem（旧代码读 battle.mem 永远 undefined），用 Battle 自带字段
       if (battle.__greatSealUsed) return;
       battle.__greatSealUsed = true;
+      battle.__greatSealBan = { playerId: u.ownerId, round: Number(battle.round) || 0 };
       // ★ 2026-10-28：battle.enemies 是数组，不是函数；旧写法恒返回 []，所以从来没处决过
       const foes = (battle.enemies || []).filter((e) => e && e.alive !== false && e.s);
       if (!foes.length) return;
