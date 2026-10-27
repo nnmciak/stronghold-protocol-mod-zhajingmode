@@ -224,16 +224,22 @@
 
 /* ---- bond strip ---------------------------------------------------------------------------------------- */
 /* 盟约栏 (owner's request): centred under the top bar, like the official 卫戍协议 — the strip is always visible and
-   has no 收起 tab, so this is a plain centred row. It used to hug the left edge with a fold toggle (GitHub #142). */
-.gm__bonds { position: absolute; left: 50%; transform: translateX(-50%); top: 1.36rem; max-width: calc(100% - 2.4rem);
+   has no 收起 tab, so this is a plain centred row. It used to hug the left edge with a fold toggle (GitHub #142).
+   ★ 2026-10-27（owner：「这上面的盟约条会不会太长了」）：不再铺满整屏 —— 最多占 62vw（上限 46rem），
+   超出的盟约用两侧 ‹ › 横向滚动（BondScroller 已按 scrollWidth 显示箭头），圆盘不再被压小。 */
+.gm__bonds { position: absolute; left: 50%; transform: translateX(-50%); top: 1.36rem;
+  max-width: min(62vw, 46rem);
   pointer-events: none; display: flex; align-items: flex-start; justify-content: center; gap: max(.1rem, 8px); }
+@media (max-width: 900px) {
+  .gm__bonds { max-width: calc(100% - 1.2rem); }
+}
 /* Only the bond discs (and the +N chip) take the pointer: the strip's box spans the width under the top bar, where the
    top board row's units stand (row 12 at 16:9 / 21:9 / 720p / phones, the boss field's row 5 in a boss prep) — it used
    to swallow the taps and drags on them (review of user playtest #2 item 8: every own unit reachable). */
 .gm__bonds > *, .gm__bonds .bstrip { pointer-events: none; }
 .gm__bonds .bslot, .gm__bonds .bstrip__more { pointer-events: auto; }
-.gm__bond-list { min-width: 0; display: flex; justify-content: center; }
-.bstrip-scroll { display: flex; align-items: center; min-width: 0; gap: .04rem; }
+.gm__bond-list { min-width: 0; max-width: 100%; flex: 0 1 auto; display: flex; justify-content: center; }
+.bstrip-scroll { display: flex; align-items: center; min-width: 0; max-width: 100%; gap: .04rem; }
 /* 让内边距护住光环/层数，又不把圆盘压进棋盘 */
 .gm__bonds .bstrip-scroll .bstrip { min-width: 0; overflow-x: auto; overflow-y: hidden; padding: .08rem 0; margin: -.08rem 0;
   pointer-events: auto; touch-action: pan-x; scrollbar-width: thin; }
