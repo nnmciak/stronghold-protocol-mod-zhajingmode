@@ -18,7 +18,7 @@ const BONDS = [
   { id: 'cheat', name: '出老千', tiers: [2], members: ['jibian_daluandou', 'jibian_xuedingedemao', 'jibian_shenmishangdian', 'jibian_gaoluzhipiao', 'jibian_erjiguan'], effect: '你的部分惊变效果改变。' },
   { id: 'modern_strongest', name: '现代最强', tiers: [3], members: ['jibian_liuyan', 'jibian_wuxiaxian', 'jibian_qingpaibeibu'], effect: '你的所有干员释放技能不再需要技力，攻击力+1000%，攻击速度+360，攻击距离+2。' },
   { id: 'army_alert', name: '惊动军方', tiers: [2], members: ['jibian_yanrenhuifei', 'jibian_yanguoyouji', 'jibian_chixiaojianfa'], effect: '你立刻获得一个精锐望。' },
-  { id: 'great_seal', name: '伟大封印', tiers: [2], members: ['jibian_sanyuewuri', 'jibian_zonggongji'], effect: '当你的结城理死亡时，立刻处死场上血量最高的敌人，且你的结城理本回合无法再部署（一局一次）。' },
+  { id: 'great_seal', name: '伟大封印', tiers: [2], members: ['jibian_sanyuewuri', 'jibian_zonggongji'], effect: '当你的结城理死亡时，立刻处死场上血量最高的敌人，且你的结城理本回合无法再部署（仅限一次）。' },
   { id: 'true_investor', name: '真·投资人', tiers: [4], members: ['jibian_touziren', 'jibian_touziweilai', 'jibian_shenmishangdian', 'jibian_gaoluzhipiao', 'jibian_banteng', 'jibian_juanzeng', 'jibian_panduolamohe', 'jibian_malubian', 'jibian_jinjiuzhibei', 'jibian_rencaishichang'], effect: '返还触发前消耗的所有资金，并使每个【获得时】效果翻倍。' },
   { id: 'toopainful', name: '因为太怕痛就全点防御力了', tiers: [2, 3], members: ['jibian_zheshe', 'jibian_jianshou', 'jibian_daoqiangburu', 'jibian_fushi'], effect: '一档：防御力和法术抗性增加70%；二档：被你干员阻挡的敌人每秒受到最大生命值10%的真实伤害。' },
   { id: 'glorious_evo', name: '光荣进化', tiers: [2], members: ['jibian_jiarudaqun', 'jibian_chuncuideqiangda', 'jibian_moguiyu'], effect: '你的【阿戈尔】干员基础数值提升300%。' },
