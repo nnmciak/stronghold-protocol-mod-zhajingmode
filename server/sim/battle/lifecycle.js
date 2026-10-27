@@ -172,9 +172,8 @@ export class BattleLifecycle {
     // a client result listing it would be rejected (fields.js validateClientResult 'leak key').
     for (const e of this.enemies) {
       if (!e.alive || e.isBoss || e.mem.noLeak) continue;
-      // ★ 2026-10-28（反馈：「兜住的怪时间到了又扣血」）：联防战场上仍被阻挡的敌人算「兜住」，
-      //   时间到不按漏怪记账；只有没被挡住、真的突破的才计入。
-      if (this.kind === 'unite' && e.blockedBy) continue;
+      // 2026-10-28 回退：联防超时时**被阻挡但还活着**的怪仍按漏怪结算（“兜住”= 击杀，不是挡住）。
+      //   之前加的 `e.blockedBy` 跳过是错的，会让玩家靠阻挡拖到超时免伤。
       this._recordLeak(e, true);
     }
     this.unspawned = [];
