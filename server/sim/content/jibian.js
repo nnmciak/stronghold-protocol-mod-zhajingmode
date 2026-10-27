@@ -362,6 +362,17 @@ export function installJibianBonds(battle, owned, playerId = null) {
     };
     battle.on('battleStart', () => { for (const u of allies()) apply(u); }, { priority: -100 });
     battle.on('deploy', (ctx) => apply(ctx && ctx.unit), { priority: -100 });
+    // ★ 2026-10-28（owner）：「需求技力 1，技能结束返还 1 点」—— 引擎把 0 倍率钳到最低 1 点，
+    //   技能结束时补回这 1 点，效果就是下一次技能依旧立刻可用，技力条保留但永远回满。
+    //   只对真正吃到 modern（spCostMul=0）的单位生效，避免和六眼的 0.1 混在一起。
+    battle.on('skillEnd', (ctx) => {
+      const u = ctx && ctx.unit;
+      if (!u || !mine(u)) return;
+      const sk = u.skill;
+      if (!sk || sk.noSkill || sk.kind === 'passive') return;
+      if (Number(sk.spCostMul) !== 0) return; // 没吃到「不再需要技力」的单位不返
+      sk.gainSp(1, 'bond');
+    });
   }
 
   // 重振荣光：卡西米尔干员 攻击力 +100%（二档翻倍）、攻击距离 +1

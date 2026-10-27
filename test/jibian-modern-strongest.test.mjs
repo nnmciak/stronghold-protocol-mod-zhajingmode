@@ -28,3 +28,14 @@ test('现代最强：3 张触发，攻击/攻速/距离/技力全生效', () => 
   assert.equal(full.skill.spCostMul, 0, '技力消耗倍率应为 0');
   assert.ok(full.skill.spCost <= 1, '技力消耗应降到最低');
 });
+
+test('现代最强：技能结束返还 1 点技力', () => {
+  const u = setup(CARDS);
+  const sk = u.skill;
+  sk.sp = 0;
+  sk.charges = 0;
+  sk.active = false;
+  sk.battle.emit('skillEnd', { unit: u, skill: sk, reason: 'test' });
+  console.log('返还后 sp', sk.sp, 'charges', sk.charges);
+  assert.ok(sk.sp + sk.charges * sk.spCost >= 1, '技能结束应返还至少 1 点技力');
+});
