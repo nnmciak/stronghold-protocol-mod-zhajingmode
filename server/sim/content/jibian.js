@@ -383,7 +383,7 @@ export function installJibianBonds(battle, owned, playerId = null) {
       if (!mine(u)) return;
       const bonds = (u.def && u.def.bonds) || [];
       if (!bonds.includes('kazimierzShip')) return;
-      BOND_ATTR(battle, u, 'glory', { atkPct: mul, range: 1 });
+      BOND_ATTR(battle, u, 'glory', { atkPct: mul, rangeExtend: 1 });
     };
     battle.on('battleStart', () => { for (const u of allies()) apply(u); }, { priority: 20 });
     battle.on('deploy', (ctx) => apply(ctx && ctx.unit));
@@ -1313,25 +1313,30 @@ export function install(battle) {
       const u = ctx && ctx.unit;
       if (!u || u.side !== 'ally' || u.kind !== 'op' || !u.s) return;
       // 只认结城理（炸惊棋库里 chess_zj_60_5_a/_b）
-      const cid = String(u.chessId || u.baseId || '');
+      const cid = String(u.chessId || u.baseId || u.defId || '');
       if (!cid.startsWith('chess_zj_60_5')) return;
-      if (battle.mem && battle.mem.greatSealUsed) return;
-      if (battle.mem) battle.mem.greatSealUsed = true;
-      // 场上血量最高的敌人
-      const foes = (typeof battle.enemies === 'function' ? battle.enemies() : []).filter((e) => e && e.alive !== false && e.s);
+      // ★ 2026-10-28：按 owner 检查两张卡（原来用全局 has，队友的卡也能替自己触发）
+      if (!(count(u.ownerId, 'jibian_sanyuewuri') > 0 && count(u.ownerId, 'jibian_zonggongji') > 0)) return;
+      // 一局一次：Battle 上没有 mem（旧代码读 battle.mem 永远 undefined），用 Battle 自带字段
+      if (battle.__greatSealUsed) return;
+      battle.__greatSealUsed = true;
+      // ★ 2026-10-28：battle.enemies 是数组，不是函数；旧写法恒返回 []，所以从来没处决过
+      const foes = (battle.enemies || []).filter((e) => e && e.alive !== false && e.s);
       if (!foes.length) return;
       let top = foes[0];
-      for (const e of foes) if ((e.s.hp || 0) > (top.s.hp || 0)) top = e;
+      for (const e of foes) if ((Number(e.s.maxHp) || 0) > (Number(top.s.maxHp) || 0)) top = e;
       try {
-        battle.dealDamage(u, top, battle.makeDamage({ amount: (top.s.hp || 0) + 1e6, type: 'true', canDodge: false, tags: ['jibian', 'greatseal'] }));
+        const amount = (Number(top.hp) || Number(top.s.maxHp) || 0) + 1e6;
+        battle.dealDamage(u, top, battle.makeDamage({ amount, type: 'true', canDodge: false, tags: ['jibian', 'greatseal'] }));
       } catch { /* 目标已死：忽略 */ }
       // 本整备期不能再部署结城理：把标记写到玩家状态上（整备期部署时读它）
       try {
         const ps = (battle.players || []).find((p) => p && p.playerId === u.ownerId);
-        const round = Number(battle.m && battle.m.round) || 0;
+        const round = Number(battle.round) || 0; // ★ 原来读 battle.m.round（Battle 没有 m），永远是 0
         if (ps) {
           ps.mem = ps.mem || {};
           ps.mem.greatSealBanRound = round;
+          if (ps.input && typeof ps.input === 'object') ps.input.greatSealBanRound = round;
           for (const piece of [...(ps.board || []), ...(ps.hand || [])]) {
             const pid = String((piece && (piece.chessId || piece.id)) || '');
             if (pid.startsWith('chess_zj_60_5')) piece.greatSealBanRound = round;
