@@ -172,6 +172,9 @@ export class BattleLifecycle {
     // a client result listing it would be rejected (fields.js validateClientResult 'leak key').
     for (const e of this.enemies) {
       if (!e.alive || e.isBoss || e.mem.noLeak) continue;
+      // ★ 2026-10-28（反馈：「兜住的怪时间到了又扣血」）：联防战场上仍被阻挡的敌人算「兜住」，
+      //   时间到不按漏怪记账；只有没被挡住、真的突破的才计入。
+      if (this.kind === 'unite' && e.blockedBy) continue;
       this._recordLeak(e, true);
     }
     this.unspawned = [];
