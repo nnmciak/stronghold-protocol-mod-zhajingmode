@@ -544,6 +544,20 @@ export class MatchBoss {
           this._charDamageTickers(ps, pp);
         }
         if (pp && ps) this._settleBossBounties(ps, pp);
+        // 伟大封印：Boss 战里结城理阵亡 → 写回整局一次 + 本整备期禁部署
+        if (ps && res.greatSealBan && res.greatSealBan.playerId === pid) {
+          const round = Number(res.greatSealBan.round) || 0;
+          try {
+            ps.greatSealUsed = true;
+            for (const piece of ps.board.values()) {
+              if (piece && String(piece.chessId || piece.id).startsWith('chess_zj_60_5')) piece.greatSealBanRound = round;
+            }
+            for (const piece of ps.hand) {
+              if (piece && String(piece.chessId || piece.id).startsWith('chess_zj_60_5')) piece.greatSealBanRound = round;
+            }
+            ps.dirty();
+          } catch { /* 标记失败不影响结算 */ }
+        }
         // ★ 2026-10-20（owner）：「第一层 boss 叠的层带不到隐秘核心 / 隐秘叠的层带不到结算」。
         //   boss 战结束原来只统计伤害和悬赏，**没把战斗内的 layerGains 并入 ps.layers**；
         //   普通回合在 settle.js 里做同一件事（上限 bondLayerCap，并 dispatch onLayers）。
