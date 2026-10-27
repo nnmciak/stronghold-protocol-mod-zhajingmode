@@ -25,6 +25,10 @@ export class MatchSettle {
     try {
       if (plan && plan.leakers) {
         const detail = {};
+        const unspawnedBy = {};
+        for (const u of ((uniteResult && uniteResult.unspawned) || [])) {
+          if (u && u.sourcePlayerId) unspawnedBy[u.sourcePlayerId] = (unspawnedBy[u.sourcePlayerId] || 0) + 1;
+        }
         for (const lk of plan.leakers) {
           const pid = lk.playerId;
           const own = this.lastResults.get(pid);
@@ -32,6 +36,7 @@ export class MatchSettle {
             byUnite: uniteRan ? Math.max(0, survivors.get(pid) || 0) : null,
             ownLeaks: (own && Array.isArray(own.leaked) ? own.leaked.filter((l) => l && l.counted !== false).length : 0),
             bounced: plan.notReentered ? (plan.notReentered.get(pid) || 0) : 0,
+            unspawned: unspawnedBy[pid] || 0,
           };
         }
         const helpers = Array.isArray(plan.helpers) ? plan.helpers.length : 0;

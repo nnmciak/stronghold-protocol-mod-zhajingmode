@@ -1074,6 +1074,16 @@ export function buildUniteWave(gd, leaked, helperCount, timeLimit) { // eslint-d
       k++;
     }
   }
+  // ★ 2026-10-28（owner：按设计不该有时间到还没出场的怪）：模板的 spawn time 可能超过联防时限，
+  //   导致 _timeout 把未出场单位记成 unspawned 扣血。这里把所有出场时间等比压进 timeLimit - 3 秒内。
+  const limit = Math.max(1, Number(timeLimit) || 60);
+  const cap = Math.max(0.5, limit - 3);
+  let maxT = 0;
+  for (const s of spawns) maxT = Math.max(maxT, Number(s.time) || 0);
+  if (maxT > cap) {
+    const k = cap / maxT;
+    for (const s of spawns) s.time = Math.max(0, Math.round((Number(s.time) || 0) * k * 100) / 100);
+  }
   spawns.sort((a, b) => a.time - b.time);
   return { templateId, spawns, routes };
 }
