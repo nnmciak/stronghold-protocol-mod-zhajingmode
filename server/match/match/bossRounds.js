@@ -580,6 +580,13 @@ export class MatchBoss {
         this.hiddenLayerSum = this.alivePlayers().reduce((sum, p) => sum + p.activatedLayers(), 0);
       } catch { /* 计算失败就沿用旧值 */ }
       const eligible = victory && !!this.hiddenBossId && hiddenEligible(this.gd, { layerSum: this.hiddenLayerSum, teamLp: this.teamLp });
+      // 诊断：为什么开/不开隐秘核心（R14 结算后看这一行）
+      try {
+        const hc = this.gd.hiddenCore;
+        const threshold = this.gd.isSolo ? hc.single : hc.multi;
+        const alive = this.alivePlayers();
+        this.log.info?.(`[match ${this.roomCode}] R${this.round} 隐秘判定 victory=${victory} hiddenBossId=${this.hiddenBossId || '-'} layerSum=${this.hiddenLayerSum} threshold=${threshold} teamLp=${this.teamLp} alive=${alive.length} perPlayer=${alive.map((p) => `${p.playerId}:${p.activatedLayers()}`).join(',')} eligible=${eligible}`);
+      } catch { /* 诊断日志不影响结算 */ }
       this.later(this.scaled(DELAYS.SETTLE), () => {
         if (eligible) {
           this.hiddenReached = true;
